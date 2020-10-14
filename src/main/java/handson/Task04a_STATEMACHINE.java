@@ -6,24 +6,26 @@ import com.commercetools.api.models.state.StateReferenceBuilder;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import com.commercetools.api.models.state.StateTypeEnum;
 import handson.impl.StateMachineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task04a_STATEMACHINE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = Logger.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        final StateMachineService stateMachineService = new StateMachineService(client, "training-011-avensia-test");
+        final StateMachineService stateMachineService = new StateMachineService(client, getProjectKey("mh-dev-admin."));
 
             // TODO
             // Use StateMachineService.java to create your designed order state machine

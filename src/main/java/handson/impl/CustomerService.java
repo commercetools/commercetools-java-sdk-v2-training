@@ -9,7 +9,9 @@ import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifi
 import com.fasterxml.jackson.databind.JsonNode;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -43,24 +45,23 @@ public class CustomerService {
             final String lastName,
             final String country) {
 
-        return
-                apiRoot
+        return apiRoot
                         .withProjectKey(projectKey)
                         .customers()
-                        .post(
-                                CustomerDraftBuilder.of()
-                                    .email(email)
-                                    .password(password)
-                                    .key(customerKey)
-                                    .addresses(
+                        .post(CustomerDraftBuilder.of()
+                                .email(email)
+                                .password(password)
+                                .firstName(firstName)
+                                .lastName(lastName)
+                                .key(customerKey)
+                                .addresses(
                                         Arrays.asList(
                                                 AddressBuilder.of()
-                                                    .country(country)
-                                                    .build())
-                                    )
+                                                        .country(country)
+                                                        .build())
+                                )
                                 .defaultShippingAddress(0L)
-                                .build()
-                        )
+                                .build())
                         .execute();
 
     }
@@ -91,8 +92,8 @@ public class CustomerService {
                         .emailConfirm()
                         .post(
                                CustomerEmailVerifyBuilder.of()
-                                                            .tokenValue(customerToken.getValue())
-                                                            .build()
+                                    .tokenValue(customerToken.getValue())
+                                    .build()
                                 )
                         .execute();
     }
@@ -113,22 +114,18 @@ public class CustomerService {
                         .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
-                        .post(
-                                CustomerUpdateBuilder.of()
-                                    .version(customer.getVersion())
-                                    .actions(
-                                            Arrays.asList(
-                                                    CustomerSetCustomerGroupActionBuilder.of()
-                                                            .customerGroup(
-                                                                    CustomerGroupResourceIdentifierBuilder.of()
-                                                                            .key(customerGroup.getKey())
-                                                                            .build()
-                                                            )
-                                                            .build()
-                                            )
-                                    )
-                                    .build()
-                        )
+                        .post(CustomerUpdateBuilder.of()
+                                .version(customer.getVersion())
+                                .actions(
+                                        Arrays.asList(
+                                            CustomerSetCustomerGroupActionBuilder.of()
+                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                        .key(customerGroup.getKey())
+                                                        .build())
+                                                .build()
+                                        )
+                                )
+                                .build())
                         .execute();
     }
 

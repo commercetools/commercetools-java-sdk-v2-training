@@ -45,7 +45,7 @@ public class CartService {
                         .post(
                                 CartDraftBuilder.of()
                                         .currency("EUR")
-                                        .deleteDaysAfterLastModification(90l)
+                                        .deleteDaysAfterLastModification(90L)
                                         .customerEmail(customer.getEmail())
                                         .customerId(customer.getId())
                                         .country(
@@ -76,7 +76,7 @@ public class CartService {
                         .post(
                                 CartDraftBuilder.of()
                                         .currency("EUR")
-                                        .deleteDaysAfterLastModification(90l)
+                                        .deleteDaysAfterLastModification(90L)
                                         .anonymousId("123456789")
                                         .country("DE")
                                         .build()

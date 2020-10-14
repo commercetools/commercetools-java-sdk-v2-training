@@ -6,15 +6,17 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.subscription.*;
 import com.commercetools.api.models.type.ResourceTypeId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 /**
  * Create a subscription for customer change requests.
@@ -24,9 +26,9 @@ public class Task08a_SUBSCRIPTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
             logger.info("Created subscription: " +
                     client
