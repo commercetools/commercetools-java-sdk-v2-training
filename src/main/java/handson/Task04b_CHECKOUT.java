@@ -8,13 +8,14 @@ import handson.impl.CartService;
 import handson.impl.CustomerService;
 import handson.impl.OrderService;
 import handson.impl.PaymentService;
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 /**
@@ -26,14 +27,14 @@ public class Task04b_CHECKOUT {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
         CustomerService customerService = new CustomerService(client, projectKey);
         CartService cartService = new CartService(client, projectKey);
         OrderService orderService = new OrderService(client, projectKey);
         PaymentService paymentService = new PaymentService(client, projectKey);
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
 
             // TODO: Fetch a channel if your inventory mode will not be NONE

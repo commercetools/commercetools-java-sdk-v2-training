@@ -9,29 +9,31 @@ import handson.impl.CustomerService;
 import handson.impl.OrderService;
 import handson.impl.PaymentService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART;
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task04c_CART_MERGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
         CustomerService customerService = new CustomerService(client, projectKey);
         CartService cartService = new CartService(client, projectKey);
         OrderService orderService = new OrderService(client, projectKey);
         PaymentService paymentService = new PaymentService(client, projectKey);
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
             // TODO: cart merging
             // complete, add products, payment, ... test
