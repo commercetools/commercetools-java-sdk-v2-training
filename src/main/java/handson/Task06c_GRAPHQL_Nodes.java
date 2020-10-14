@@ -91,10 +91,10 @@ public class Task06c_GRAPHQL_Nodes {
 
         // Solution using Nodes
         //
-        Task06c_GRAPHQL_Nodes task06C_graphqlNodes = new Task06c_GRAPHQL_Nodes();
-        ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
-        String token = thirdPartyClientService.createClientAndFetchToken("UC6k6y0EFoloW6bizT5PskhW", "wj3tWTnXY1Y4I__DKeoaKpeUBujm27mI", projectKey);
-        task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
+//        Task06c_GRAPHQL_Nodes task06C_graphqlNodes = new Task06c_GRAPHQL_Nodes();
+//        ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
+//        String token = thirdPartyClientService.createClientAndFetchToken("UC6k6y0EFoloW6bizT5PskhW", "wj3tWTnXY1Y4I__DKeoaKpeUBujm27mI", projectKey);
+//        task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
 
     }
 }

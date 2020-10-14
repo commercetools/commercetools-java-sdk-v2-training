@@ -1,10 +1,16 @@
 package handson.impl;
 
-// import com.commercetools.importer.client.ApiRoot;
+//// import com.commercetools.importer.client.ApiRoot;
+
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.importapi.defaultconfig.ImportApiFactory;
 import com.commercetools.ml.defaultconfig.MLApiRootFactory;
+import io.vrap.rmf.base.client.ApiHttpClient;
+import io.vrap.rmf.base.client.AuthenticationToken;
+import io.vrap.rmf.base.client.http.*;
+import io.vrap.rmf.base.client.oauth2.ClientCredentials;
+import io.vrap.rmf.base.client.oauth2.TokenSupplier;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -22,49 +28,51 @@ public class ClientService {
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
-        return
-                ApiFactory.create(
-                    prop.getProperty(prefix + "clientId"),
-                    prop.getProperty(prefix + "clientSecret"),
-                    prop.getProperty(prefix + "scopes"),
-                    prop.getProperty(prefix + "authUrl"),
-                    prop.getProperty(prefix + "apiUrl")
-                );
+        String clientId = prop.getProperty(prefix + "clientId");
+        String clientSecret = prop.getProperty(prefix + "clientSecret");
+        String scopes = prop.getProperty(prefix + "scopes");
+
+        return ApiFactory.create(
+                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
+                prop.getProperty(prefix + "authUrl"),
+                prop.getProperty(prefix + "apiUrl")
+        );
     }
 
     /**
-     * @throws IOException
      * @return
+     * @throws IOException
      */
     public static com.commercetools.importapi.client.ApiRoot createImportApiClient(final String prefix) throws IOException {
 
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String clientId = prop.getProperty(prefix + "clientId");
+        String clientSecret = prop.getProperty(prefix + "clientSecret");
+        String scopes = prop.getProperty(prefix + "scopes");
 
-        return
-                ImportApiFactory.create(
-                        prop.getProperty(prefix + "clientId"),
-                        prop.getProperty(prefix + "clientSecret"),
-                        prop.getProperty(prefix + "scopes"),
-                        prop.getProperty(prefix + "authUrl"),
-                        prop.getProperty(prefix + "apiUrl")
-                );
+        return ImportApiFactory.create(
+                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
+                prop.getProperty(prefix + "authUrl"),
+                prop.getProperty(prefix + "apiUrl")
+        );
     }
 
     /**
-     * @throws IOException
      * @return
+     * @throws IOException
      */
     public static com.commercetools.ml.client.ApiRoot createMLApiClient(final String prefix) throws IOException {
 
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String clientId = prop.getProperty(prefix + "clientId");
+        String clientSecret = prop.getProperty(prefix + "clientSecret");
+        String scopes = prop.getProperty(prefix + "scopes");
 
         return
                 MLApiRootFactory.create(
-                        prop.getProperty(prefix + "clientId"),
-                        prop.getProperty(prefix + "clientSecret"),
-                        prop.getProperty(prefix + "scopes"),
+                        ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
                         prop.getProperty(prefix + "authUrl"),
                         prop.getProperty(prefix + "apiUrl")
                 );
@@ -93,7 +101,6 @@ public class ClientService {
         return
                 null;
     }
-
 
 
 }

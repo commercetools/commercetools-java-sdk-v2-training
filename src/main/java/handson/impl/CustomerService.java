@@ -43,24 +43,25 @@ public class CustomerService {
             final String lastName,
             final String country) {
 
-        return
-                apiRoot
+        CustomerDraft customerDraft = CustomerDraftBuilder.of()
+                                        .email(email)
+                                        .password(password)
+                                        .firstName(firstName)
+                                        .lastName(lastName)
+                                        .key(customerKey)
+                                        .addresses(
+                                                Arrays.asList(
+                                                        AddressBuilder.of()
+                                                                .country(country)
+                                                                .build())
+                                        )
+                                        .defaultShippingAddress(0L)
+                                        .build();
+
+        return apiRoot
                         .withProjectKey(projectKey)
                         .customers()
-                        .post(
-                                CustomerDraftBuilder.of()
-                                    .email(email)
-                                    .password(password)
-                                    .key(customerKey)
-                                    .addresses(
-                                        Arrays.asList(
-                                                AddressBuilder.of()
-                                                    .country(country)
-                                                    .build())
-                                    )
-                                .defaultShippingAddress(0L)
-                                .build()
-                        )
+                        .post(customerDraft)
                         .execute();
 
     }
@@ -91,8 +92,8 @@ public class CustomerService {
                         .emailConfirm()
                         .post(
                                CustomerEmailVerifyBuilder.of()
-                                                            .tokenValue(customerToken.getValue())
-                                                            .build()
+                                    .tokenValue(customerToken.getValue())
+                                    .build()
                                 )
                         .execute();
     }

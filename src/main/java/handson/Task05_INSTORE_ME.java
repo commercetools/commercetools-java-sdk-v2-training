@@ -5,9 +5,10 @@ import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.me.MyCartDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.*;
-import okhttp3.*;
+//import okhttp3.*;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -74,39 +75,39 @@ public class Task05_INSTORE_ME {
         String customerLogon = "password";
 
         ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
-        String metoken = thirdPartyClientService.createClientAndFetchMeToken(clientID, clientSecret, projectKey, customerEmail, customerLogon);
+//        String metoken = thirdPartyClientService.createClientAndFetchMeToken(clientID, clientSecret, projectKey, customerEmail, customerLogon);
 
-        logger.info("Fetched me-token: " + metoken);
-
-        // TODO: Solution using ThirdParty
-        //
-        OkHttpClient myAPIClient = new OkHttpClient();
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-        Response response = null;
+//        logger.info("Fetched me-token: " + metoken);
+//
+//        // TODO: Solution using ThirdParty
+//        //
+//        OkHttpClient myAPIClient = new OkHttpClient();
+//        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+//        Response response = null;
 
         JSONObject simpleCart = new JSONObject();
         simpleCart.put("currency", "EUR");
         ObjectMapper objectMapper = new ObjectMapper();
-        try {
-
-            Request oAuthRequest = new Request.Builder()
-                    .url("https://api.europe-west1.gcp.commercetools.com/" + projectKey + "/me/carts")
-                    .post(
-                           RequestBody.create(MediaType.parse("application/json; charset=utf-8"), simpleCart.toString())
-                    )
-                    .addHeader("Authorization", "Bearer " + metoken)
-                    .addHeader("cache-control", "no-cache")
-                    .build();
-
-            response = myAPIClient.newCall(oAuthRequest).execute();
-
-            String bodyString = new String(response.body().bytes(), "UTF-8");
-            logger.info("Create a simple me-cart: " + bodyString);
-
-        } catch (IOException e) {
-            logger.info("Execption" + e.toString());
-        }
-        response.body().close();
+//        try {
+//
+//            Request oAuthRequest = new Request.Builder()
+//                    .url("https://api.europe-west1.gcp.commercetools.com/" + projectKey + "/me/carts")
+//                    .post(
+//                           RequestBody.create(MediaType.parse("application/json; charset=utf-8"), simpleCart.toString())
+//                    )
+//                    .addHeader("Authorization", "Bearer " + metoken)
+//                    .addHeader("cache-control", "no-cache")
+//                    .build();
+//
+//            response = myAPIClient.newCall(oAuthRequest).execute();
+//
+//            String bodyString = new String(response.body().bytes(), "UTF-8");
+//            logger.info("Create a simple me-cart: " + bodyString);
+//
+//        } catch (IOException e) {
+//            logger.info("Execption" + e.toString());
+//        }
+//        response.body().close();
 
         // TODO: Solution using ConstantToken-apiRoot (then move this to Session 09, performance)
         // TODO: Solution using MeEndpoint-apiRoot

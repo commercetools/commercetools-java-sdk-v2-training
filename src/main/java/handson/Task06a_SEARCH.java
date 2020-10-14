@@ -5,8 +5,6 @@ import com.commercetools.api.models.category.Category;
 import com.commercetools.api.models.product.FacetResults;
 import com.commercetools.api.models.product.ProductProjectionPagedSearchResponse;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;

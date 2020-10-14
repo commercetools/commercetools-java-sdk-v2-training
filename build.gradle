@@ -25,8 +25,9 @@ plugins {
 }
 
 ext {
-    sdkVersion = "1.0.0-20200901062627"             // higher version for long in cart but not yet findable
+    sdkVersion = "1.0.0-20200831122709"             // higher version for long in cart but not yet findable
 }
+
 allprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.8
@@ -48,11 +49,12 @@ repositories {
 
 
 dependencies {
-    implementation 'com.commercetools:commercetools-sdk-api:1.0.0-20200828132950'           // higher version for long quantity in cart
-    implementation 'com.commercetools:commercetools-sdk-importapi:1.0.0-20200828132950'
-    implementation 'com.commercetools:commercetools-sdk-ml:1.0.0-20200828132950'
-    implementation 'com.commercetools:okhttp-client:1.0.0-20200828132950'
-    implementation 'com.commercetools:rmf-java-base:1.0.0-20200828132950'
+    implementation 'com.commercetools.sdk:commercetools-sdk-java-api:1.1.2'           // higher version for long quantity in cart
+    implementation 'com.commercetools.sdk:commercetools-sdk-java-importapi:1.1.2'
+    implementation 'com.commercetools.sdk:commercetools-sdk-java-ml:1.1.2'
+    implementation 'com.commercetools.sdk:okhttp-client:1.1.2'
+    implementation 'com.commercetools.sdk:rmf-java-base:1.1.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
     // implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha0'
 
     // Sync Library + old jvm sdk v1

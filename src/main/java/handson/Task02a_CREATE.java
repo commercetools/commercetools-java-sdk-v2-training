@@ -25,14 +25,14 @@ public class Task02a_CREATE {
 
         Logger logger = Logger.getLogger(Task02a_CREATE.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, "training-011-avensia-test");
+        CustomerService customerService = new CustomerService(client, "barbara-merchant-center");
 
-        logger.log(Level.INFO, "Customer fetch: " +
-                customerService
-                        .getCustomerByKey("customer-michele")
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
-        );
+//        logger.log(Level.INFO, "Customer fetch: " +
+//                customerService
+//                        .getCustomerByKey("customer-michele")
+//                        .toCompletableFuture().get()
+//                        .getBody().getEmail()
+//        );
 
             // TODO:
             //  CREATE a customer
@@ -48,12 +48,11 @@ public class Task02a_CREATE {
                                     "hartwig",
                                     "DE"
                             )
-                            .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult.getBody().getCustomer(), 5))
+                            .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult.getBody().getCustomer(), 15))
                             .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(customerTokenApiHttpResponse.getBody()))
                             .toCompletableFuture().get()
                             .getBody()
         );
-
 
     }
 }
