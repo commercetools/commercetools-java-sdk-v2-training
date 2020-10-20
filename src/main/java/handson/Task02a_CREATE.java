@@ -41,11 +41,11 @@ public class Task02a_CREATE {
             //
         logger.log(Level.INFO, "Customer created: " +
                             customerService.createCustomer(
-                                    "michael12@example.com",
+                                    "barby@example.com",
                                     "password",
-                                    "customer-michael12",
-                                    "michael",
-                                    "hartwig",
+                                    "customer-barbara",
+                                    "barbara",
+                                    "palumbo",
                                     "DE"
                             )
                             .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult.getBody().getCustomer(), 15))

@@ -9,7 +9,9 @@ import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifi
 import com.fasterxml.jackson.databind.JsonNode;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -108,28 +110,23 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(Customer customer, CustomerGroup customerGroup) {
+    public CompletableFuture<ApiHttpResponse<Customer>> updateCustomerAssigningCustomerGroup(Customer customer, CustomerGroup customerGroup) {
+        List<CustomerUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(CustomerSetCustomerGroupActionBuilder.of()
+                     .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                            .key(customerGroup.getKey())
+                            .build())
+                     .build());
+        CustomerUpdate customerUpdate = CustomerUpdateBuilder.of()
+                .version(customer.getVersion())
+                .actions(updateActions)
+                .build();
         return
                 apiRoot
                         .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
-                        .post(
-                                CustomerUpdateBuilder.of()
-                                    .version(customer.getVersion())
-                                    .actions(
-                                            Arrays.asList(
-                                                    CustomerSetCustomerGroupActionBuilder.of()
-                                                            .customerGroup(
-                                                                    CustomerGroupResourceIdentifierBuilder.of()
-                                                                            .key(customerGroup.getKey())
-                                                                            .build()
-                                                            )
-                                                            .build()
-                                            )
-                                    )
-                                    .build()
-                        )
+                        .post(customerUpdate)
                         .execute();
     }
 

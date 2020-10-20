@@ -4,6 +4,7 @@ package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
+import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.importapi.defaultconfig.ImportApiFactory;
 import com.commercetools.ml.defaultconfig.MLApiRootFactory;
 import io.vrap.rmf.base.client.ApiHttpClient;
@@ -30,12 +31,12 @@ public class ClientService {
 
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
-        String scopes = prop.getProperty(prefix + "scopes");
+//        String scopes = prop.getProperty(prefix + "scopes");
 
         return ApiFactory.create(
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
-                prop.getProperty(prefix + "authUrl"),
-                prop.getProperty(prefix + "apiUrl")
+                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
         );
     }
 

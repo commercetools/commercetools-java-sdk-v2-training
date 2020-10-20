@@ -6,6 +6,7 @@ import handson.impl.CustomerService;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ public class Task02b_UPDATE_Group {
 
         Logger logger = Logger.getLogger(Task02b_UPDATE_Group.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, "training-011-avensia-test");
+        CustomerService customerService = new CustomerService(client, "barbara-merchant-center");
 
         // TODO:
         //  GET a customer
@@ -34,14 +35,14 @@ public class Task02b_UPDATE_Group {
         //
         logger.log(Level.INFO, "Customer assigned to group: " +
                 customerService
-                    .getCustomerByKey("customer-michele")
+                    .getCustomerByKey("customer-barbara")
                     .thenCombineAsync(
                             customerService.getCustomerGroupByKey("outdoor"),
                             (customer, customerGroup) ->
-                                    customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
+                                    customerService.updateCustomerAssigningCustomerGroup(customer.getBody(), customerGroup.getBody())
                                     // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
                     )
-                    .thenComposeAsync(apiHttpResponseCompletableFuture -> apiHttpResponseCompletableFuture.toCompletableFuture())
+                    .thenComposeAsync(CompletableFuture::toCompletableFuture)
                     .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
                     .toCompletableFuture().get()
                     .getBody().getCustomerGroup()
