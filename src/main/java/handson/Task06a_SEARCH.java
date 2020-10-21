@@ -74,10 +74,8 @@ public class Task06a_SEARCH {
 //                .withFilterFacets("variants.price.centAmount:range (10000 to 100000)")
 
                 // TODO: Simulate click on facet box from attribute size
-                 .withFilterFacets("variants.attributes.size:10")
-
-                .execute()
-                .toCompletableFuture().get()
+                .withFilterFacets("variants.attributes.size:10")
+                .executeBlocking()
                 .getBody();
 
         int size = productProjectionPagedSearchResponse.getResults().size();
