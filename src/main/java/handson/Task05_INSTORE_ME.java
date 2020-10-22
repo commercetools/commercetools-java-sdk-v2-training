@@ -29,7 +29,7 @@ public class Task05_INSTORE_ME {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final String storeKey = "berlin-store";
         final ApiRoot client = createApiClient("mh-dev-admin.");
 

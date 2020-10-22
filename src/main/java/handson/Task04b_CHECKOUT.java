@@ -27,10 +27,10 @@ public class Task04b_CHECKOUT {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
-        CustomerService customerService = new CustomerService(client, getProjectKey("mh-dev-admin."));
+        CustomerService customerService = new CustomerService(client, projectKey);
         CartService cartService = new CartService(client, projectKey);
         OrderService orderService = new OrderService(client, projectKey);
         PaymentService paymentService = new PaymentService(client, projectKey);

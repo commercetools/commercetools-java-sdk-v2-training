@@ -7,10 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
@@ -41,7 +39,7 @@ public class Task02b_UPDATE_Group {
                     .thenCombineAsync(
                             customerService.getCustomerGroupByKey("outdoor"),
                             (customer, customerGroup) ->
-                                    customerService.updateCustomerAssigningCustomerGroup(customer.getBody(), customerGroup.getBody())
+                                    customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
                                     // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
                     )
                     .thenComposeAsync(CompletableFuture::toCompletableFuture)

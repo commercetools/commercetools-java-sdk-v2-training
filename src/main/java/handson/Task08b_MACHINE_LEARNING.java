@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createMLApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 public class Task08b_MACHINE_LEARNING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-ml-admin.");
         final ApiRoot client = createMLApiClient("mh-ml-admin.");
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 

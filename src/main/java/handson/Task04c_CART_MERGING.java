@@ -19,13 +19,14 @@ import java.util.concurrent.ExecutionException;
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART;
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task04c_CART_MERGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
         CustomerService customerService = new CustomerService(client, projectKey);

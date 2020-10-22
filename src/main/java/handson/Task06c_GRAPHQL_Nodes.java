@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import javax.json.*;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task06c_GRAPHQL_Nodes {
@@ -61,7 +62,7 @@ public class Task06c_GRAPHQL_Nodes {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());

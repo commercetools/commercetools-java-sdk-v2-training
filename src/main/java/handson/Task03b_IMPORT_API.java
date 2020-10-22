@@ -22,14 +22,14 @@ public class Task03b_IMPORT_API {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String sinkKey = "berlin-store-prices";
-        final String projectKey = "raining-011-avensia-test";
+        final String projectKey = getProjectKey("mh-import-admin.");
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         // TODO
         //  Get an API Client for Import-API
         //
         final ApiRoot client = createImportApiClient("mh-import-admin.");
-        final ImportService importService = new ImportService(client, getProjectKey("mh-import-admin."));
+        final ImportService importService = new ImportService(client, projectKey);
         ObjectMapper objectMapper = new ObjectMapper();
 
         // TODO

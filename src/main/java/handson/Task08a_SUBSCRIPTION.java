@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 /**
  * Create a subscription for customer change requests.
@@ -25,7 +26,7 @@ public class Task08a_SUBSCRIPTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
