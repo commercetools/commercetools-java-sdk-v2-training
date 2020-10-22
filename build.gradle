@@ -26,7 +26,9 @@ plugins {
 
 ext {
     versions = [
-        commercetools: "1.1.2"
+        commercetools: "1.1.2",
+        slf4j: "1.7.21",
+        logback: "1.1.7",
     ]
 }
 
@@ -55,6 +57,9 @@ dependencies {
     implementation "com.commercetools.sdk:commercetools-sdk-java-importapi:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-sdk-java-ml:${versions.commercetools}"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "ch.qos.logback:logback-classic:${versions.logback}"
+
     // implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha0'
 
     // Sync Library + old jvm sdk v1

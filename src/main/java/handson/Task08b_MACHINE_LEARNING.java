@@ -2,12 +2,13 @@ package handson;
 
 
 import com.commercetools.ml.client.ApiRoot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSOutput;
 
 import javax.crypto.spec.PSource;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createMLApiClient;
 
@@ -17,7 +18,7 @@ public class Task08b_MACHINE_LEARNING {
 
         final String projectKey = "training-011-avensia-test";
         final ApiRoot client = createMLApiClient("mh-ml-admin.");
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
             // TODO: Use the Category Recommendation API
             // Query a recommendation for a name and image

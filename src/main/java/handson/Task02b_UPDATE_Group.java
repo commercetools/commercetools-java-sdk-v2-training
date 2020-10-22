@@ -3,15 +3,17 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 /**
  * Configure sphere client and get project information.
@@ -24,18 +26,18 @@ public class Task02b_UPDATE_Group {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = Logger.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, "barbara-merchant-center");
+        CustomerService customerService = new CustomerService(client, getProjectKey("mh-dev-admin."));
 
         // TODO:
         //  GET a customer
         //  GET a customer group
         //  ASSIGN the customer to the customer group
         //
-        logger.log(Level.INFO, "Customer assigned to group: " +
+        logger.info("Customer assigned to group: " +
                 customerService
-                    .getCustomerByKey("customer-barbara")
+                    .getCustomerByKey("customer-michele")
                     .thenCombineAsync(
                             customerService.getCustomerGroupByKey("outdoor"),
                             (customer, customerGroup) ->

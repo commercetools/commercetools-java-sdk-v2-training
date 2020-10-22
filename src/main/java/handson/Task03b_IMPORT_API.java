@@ -6,13 +6,15 @@ import com.commercetools.importapi.models.common.Money;
 import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.ImportService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createImportApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task03b_IMPORT_API {
@@ -22,12 +24,12 @@ public class Task03b_IMPORT_API {
         final String sinkKey = "berlin-store-prices";
         final String projectKey = "raining-011-avensia-test";
 
-        Logger logger = Logger.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         // TODO
         //  Get an API Client for Import-API
         //
         final ApiRoot client = createImportApiClient("mh-import-admin.");
-        final ImportService importService = new ImportService(client, projectKey);
+        final ImportService importService = new ImportService(client, getProjectKey("mh-import-admin."));
         ObjectMapper objectMapper = new ObjectMapper();
 
         // TODO

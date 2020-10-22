@@ -7,6 +7,8 @@ import com.commercetools.api.models.category.CategoryReferenceBuilder;
 import com.commercetools.api.models.customer.CustomerSetCustomerGroupActionBuilder;
 import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
 import com.commercetools.api.models.product.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Filter;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
 
@@ -22,9 +23,9 @@ public class Task06a_SEARCH {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "barbara-merchant-center";
+        final String projectKey = "training-011-avensia-test";
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = Logger.getLogger(Task06a_SEARCH.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task06a_SEARCH.class.getName());
 
         Category plantSeedCategory = client
                 .withProjectKey(projectKey)

@@ -45,25 +45,23 @@ public class CustomerService {
             final String lastName,
             final String country) {
 
-        CustomerDraft customerDraft = CustomerDraftBuilder.of()
-                                        .email(email)
-                                        .password(password)
-                                        .firstName(firstName)
-                                        .lastName(lastName)
-                                        .key(customerKey)
-                                        .addresses(
-                                                Arrays.asList(
-                                                        AddressBuilder.of()
-                                                                .country(country)
-                                                                .build())
-                                        )
-                                        .defaultShippingAddress(0L)
-                                        .build();
-
         return apiRoot
                         .withProjectKey(projectKey)
                         .customers()
-                        .post(customerDraft)
+                        .post(CustomerDraftBuilder.of()
+                                .email(email)
+                                .password(password)
+                                .firstName(firstName)
+                                .lastName(lastName)
+                                .key(customerKey)
+                                .addresses(
+                                        Arrays.asList(
+                                                AddressBuilder.of()
+                                                        .country(country)
+                                                        .build())
+                                )
+                                .defaultShippingAddress(0L)
+                                .build())
                         .execute();
 
     }
@@ -111,22 +109,23 @@ public class CustomerService {
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> updateCustomerAssigningCustomerGroup(Customer customer, CustomerGroup customerGroup) {
-        List<CustomerUpdateAction> updateActions = new ArrayList<>();
-        updateActions.add(CustomerSetCustomerGroupActionBuilder.of()
-                     .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                            .key(customerGroup.getKey())
-                            .build())
-                     .build());
-        CustomerUpdate customerUpdate = CustomerUpdateBuilder.of()
-                .version(customer.getVersion())
-                .actions(updateActions)
-                .build();
         return
                 apiRoot
                         .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
-                        .post(customerUpdate)
+                        .post(CustomerUpdateBuilder.of()
+                                .version(customer.getVersion())
+                                .actions(
+                                        Arrays.asList(
+                                            CustomerSetCustomerGroupActionBuilder.of()
+                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                        .key(customerGroup.getKey())
+                                                        .build())
+                                                .build()
+                                        )
+                                )
+                                .build())
                         .execute();
     }
 

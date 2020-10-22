@@ -7,12 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.*;
 //import okhttp3.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.*;
 
@@ -33,7 +34,7 @@ public class Task05_INSTORE_ME {
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
         CustomerService customerService = new CustomerService(client, projectKey);
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
         // TODO: Create an instore cart
         // Use CartDrafts

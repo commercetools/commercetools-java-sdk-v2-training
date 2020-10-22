@@ -31,7 +31,6 @@ public class ClientService {
 
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
-//        String scopes = prop.getProperty(prefix + "scopes");
 
         return ApiFactory.create(
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
@@ -40,6 +39,12 @@ public class ClientService {
         );
     }
 
+    public static String getProjectKey(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "projectKey");
+    }
     /**
      * @return
      * @throws IOException
@@ -50,12 +55,11 @@ public class ClientService {
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
-        String scopes = prop.getProperty(prefix + "scopes");
 
         return ImportApiFactory.create(
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
-                prop.getProperty(prefix + "authUrl"),
-                prop.getProperty(prefix + "apiUrl")
+                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
         );
     }
 
@@ -69,13 +73,12 @@ public class ClientService {
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
-        String scopes = prop.getProperty(prefix + "scopes");
 
         return
                 MLApiRootFactory.create(
-                        ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).withScopes(scopes).build(),
-                        prop.getProperty(prefix + "authUrl"),
-                        prop.getProperty(prefix + "apiUrl")
+                        ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                        com.commercetools.ml.defaultconfig.ServiceRegion.GCP_EUROPE.getOAuthTokenUrl(),
+                        com.commercetools.ml.defaultconfig.ServiceRegion.GCP_EUROPE.getApiUrl()
                 );
     }
 

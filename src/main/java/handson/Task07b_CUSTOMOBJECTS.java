@@ -3,10 +3,11 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 import javax.json.*;
 
 import static handson.impl.ClientService.createApiClient;
@@ -18,7 +19,7 @@ public class Task07b_CUSTOMOBJECTS {
 
         final String projectKey = "training-011-avensia-test";
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
 
             // TODO:
