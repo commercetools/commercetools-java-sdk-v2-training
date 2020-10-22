@@ -4,25 +4,20 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.category.Category;
 import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.category.CategoryReferenceBuilder;
-import com.commercetools.api.models.customer.CustomerSetCustomerGroupActionBuilder;
-import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
 import com.commercetools.api.models.product.*;
+import io.vrap.rmf.base.client.utils.json.VrapJsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Filter;
+import java.util.stream.Collectors;
 
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
 
 public class Task06a_SEARCH {
 
-    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
+    public static void main(String[] args) throws Exception {
 
         final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
@@ -42,15 +37,8 @@ public class Task06a_SEARCH {
 
         // to get categoryReference
         CategoryReference plantSeedCategoryReference = CategoryReferenceBuilder.of().id(plantSeedCategory.getId()).build();
+
         // filter from product projection query response
-//        ProductProjectionPagedQueryResponse productProjectionPagedQueryResponseWithFilter = client
-//                .withProjectKey(projectKey)
-//                .productProjections()
-//                .get()
-//                .withStaged(true)
-//                .withWhere("categories=" + "\"" + plantSeedCategoryReference +  "\"")
-//                .withLocaleProjection("DE")
-//                .execute().get().getBody();
 
         // the effective filter from the search response
         // params found in the product projection search https://docs.commercetools.com/api/projects/products-search#search-productprojections
@@ -64,19 +52,19 @@ public class Task06a_SEARCH {
 
                 // TODO Restrict on category plant-seeds
                 .withMarkMatchingVariants(true)
+//                .withFilterQuery("categories.id:\"" + plantSeedCategoryReference.getId() + "\"")
 
                 // TODO Get all Facets for Enum size and Number weight_in_kg
                 .withFacet("variants.attributes.size")
                 .withFacet("variants.attributes.weight_in_kg")
-                .withFilterQuery("categories.id:\"" + plantSeedCategoryReference.getId() + "\"")
 
                 // TODO Give price range on products with no effect on facets
-                .withFilter("variants.price.centAmount:range (10000 to 100000)")
+                // .withFilter("variants.price.centAmount:range (100 to 100000)")
                 // TODO: with effect on facets
-//                .withFilterFacets("variants.price.centAmount:range (10000 to 100000)")
+                // .withFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
                 // TODO: Simulate click on facet box from attribute size
-                .withFilterFacets("variants.attributes.size:10")
+                .withFilterFacets("variants.attributes.size.label:\"box\"")
                 .executeBlocking()
                 .getBody();
 
@@ -85,7 +73,28 @@ public class Task06a_SEARCH {
 
         List<ProductProjection> result =  productProjectionPagedSearchResponse.getResults().subList(0, size);
 
+//
+//        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
+//        logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values());
+//        FacetResults facetResults = productProjectionPagedSearchResponse.getFacets();
+//        facetResults.values().forEach((s, jsonNode) -> System.out.println(s + " " + jsonNode.textValue()));
+//        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
+//
+//        logger.info("Facet Weight: ");
+//        FacetResult weightRangeFacetResult = VrapJsonUtils.getConfiguredObjectMapper().convertValue(productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg"), FacetResult.class);
+//        if (weightRangeFacetResult instanceof RangeFacetResult) {
+//            logger.info("Weight: Nr. of Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().size());
+//            logger.info("Weight: Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().toString());
+//        }
+//        logger.info("Facet Size: ");
+//        FacetResult sizeBoxFacetResult = VrapJsonUtils.getConfiguredObjectMapper().convertValue(productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.size"), FacetResult.class);
+//        if (sizeBoxFacetResult instanceof TermFacetResult) {
+//            logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString()).collect(Collectors.joining(",")));
+//        }
+
         System.out.println("products searched: ");
         result.forEach((r) -> System.out.println(r.getKey()));
+
+        System.exit(0);
     }
 }
