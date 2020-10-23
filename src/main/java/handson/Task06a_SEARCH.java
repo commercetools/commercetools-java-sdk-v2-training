@@ -5,11 +5,13 @@ import com.commercetools.api.models.category.Category;
 import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.category.CategoryReferenceBuilder;
 import com.commercetools.api.models.product.*;
+import com.commercetools.api.product.FacetResultsAccessor;
 import io.vrap.rmf.base.client.utils.json.VrapJsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static handson.impl.ClientService.createApiClient;
@@ -76,18 +78,18 @@ public class Task06a_SEARCH {
 //
 //        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
 //        logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values());
-//        FacetResults facetResults = productProjectionPagedSearchResponse.getFacets();
-//        facetResults.values().forEach((s, jsonNode) -> System.out.println(s + " " + jsonNode.textValue()));
+//        Map<String, FacetResult> facetResults= productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
+//        facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
 //        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
 //
 //        logger.info("Facet Weight: ");
-//        FacetResult weightRangeFacetResult = VrapJsonUtils.getConfiguredObjectMapper().convertValue(productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg"), FacetResult.class);
+//        FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets().get("variants.attributes.weight_in_kg");
 //        if (weightRangeFacetResult instanceof RangeFacetResult) {
 //            logger.info("Weight: Nr. of Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().size());
 //            logger.info("Weight: Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().toString());
 //        }
 //        logger.info("Facet Size: ");
-//        FacetResult sizeBoxFacetResult = VrapJsonUtils.getConfiguredObjectMapper().convertValue(productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.size"), FacetResult.class);
+//        FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets().get("variants.attributes.size");
 //        if (sizeBoxFacetResult instanceof TermFacetResult) {
 //            logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString()).collect(Collectors.joining(",")));
 //        }
