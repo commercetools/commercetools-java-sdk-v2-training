@@ -39,7 +39,7 @@ public class Task06b_PAGEDQUERY {
             // Give last id, start with slightly modified first id OR: do not use id when fetching first page
             // Give product type id
             //
-            String last_id = "642b9b40-5dae-4051-8647-d22e9ca98044";
+            String lastId = "642b9b40-5dae-4051-8647-d22e9ca98044";
             String productTypeId = "7f30329c-bfaa-4c75-97bf-58caf1103900";
 
         ProductPagedQueryResponse productPagedQueryResponse =
@@ -60,13 +60,12 @@ public class Task06b_PAGEDQUERY {
 
                         // use this for following pages
                         .withWhere("")
-                        // .plusPredicates(m -> m.id().isGreaterThan(last_id))
+                        // .plusPredicates(m -> m.id().isGreaterThan(lastId))
 
                         // always use this
                         .withWithTotal(false)
 
-                        .execute()
-                        .toCompletableFuture().get()
+                        .executeBlocking()
                         .getBody();
 
         // Print results

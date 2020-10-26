@@ -33,9 +33,6 @@ public class Task06a_SEARCH {
                 .toCompletableFuture().get()
                 .getBody();
 
-
-        // example of other kind of filter
-
         // to get categoryReference
         CategoryReference plantSeedCategoryReference = CategoryReferenceBuilder.of().id(plantSeedCategory.getId()).build();
 
