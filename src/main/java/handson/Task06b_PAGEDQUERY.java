@@ -2,11 +2,11 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.product.ProductPagedQueryResponse;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
 
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
@@ -42,30 +42,31 @@ public class Task06b_PAGEDQUERY {
             String lastId = "642b9b40-5dae-4051-8647-d22e9ca98044";
             String productTypeId = "7f30329c-bfaa-4c75-97bf-58caf1103900";
 
+           //  link to give to our customers https://docs.commercetools.com/api/predicates/query
+
         ProductPagedQueryResponse productPagedQueryResponse =
                 client.withProjectKey(projectKey)
                         .products()
                         .get()
 
-                        // withPredicate or without Prodicate for filtering
-                        // .withPredicates(m -> m.productType().is(ProductType.reference(productTypeId)))
-                        .withWhere("")
+                        .withWhere("productType(id = :productTypeId)")
+                        .addQueryParam("var.productTypeId", productTypeId)
 
                         // Important, internally we use id > $lastId, it will not work without this line
-                        .withSort("")
-                        //.withSort(m -> m.id().sort().asc())
+                        .withSort("id asc")
 
                         // Limit the size per page
                         .withLimit(PAGE_SIZE)
 
                         // use this for following pages
-                        .withWhere("")
-                        // .plusPredicates(m -> m.id().isGreaterThan(lastId))
+                        .withWhere("id > :lastId")
+                        .addQueryParam("var.lastId", lastId)
 
                         // always use this
                         .withWithTotal(false)
 
-                        .executeBlocking()
+                        .execute()
+                        .toCompletableFuture().get()
                         .getBody();
 
         // Print results
@@ -73,6 +74,7 @@ public class Task06b_PAGEDQUERY {
             productPagedQueryResponse.getResults().forEach(
                     product -> logger.info("Product: " + product.getId())
             );
+        System.exit(0);
 
     }
 }
