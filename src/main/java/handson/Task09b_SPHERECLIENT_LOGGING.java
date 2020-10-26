@@ -5,10 +5,7 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import handson.impl.ClientService;
-import io.vrap.rmf.base.client.ApiHttpHeaders;
-import io.vrap.rmf.base.client.AuthenticationToken;
-import io.vrap.rmf.base.client.ClientFactory;
-import io.vrap.rmf.base.client.VrapHttpClient;
+import io.vrap.rmf.base.client.*;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
 import io.vrap.rmf.base.client.oauth2.AnonymousSessionTokenSupplier;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
@@ -58,12 +55,19 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
-                Collections.singletonList(
+                new ArrayList<>(Arrays.asList(
                         (request, next) -> {
                             request.withHeader(ApiHttpHeaders.X_CORRELATION_ID, projectKey + "/" + UUID.randomUUID().toString());
                             return next.apply(request);
-                        }
-                )
+                        },
+                        (request, next) -> next.apply(request).whenComplete((response, throwable) -> {
+                            if (throwable.getCause() instanceof ApiHttpException) {
+                                logger.info(((ApiHttpException)throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                            } else {
+                                logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                            }
+                        })
+                ))
         );
 
             // 5
@@ -74,9 +78,9 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
-                Collections.singletonList(
+                new ArrayList<>(Collections.singletonList(
                         new RetryMiddleware(3, Arrays.asList(500, 503))
-                )
+                ))
         );
     }
 
