@@ -21,7 +21,7 @@ public class Task09a_ERROR_HANDLING {
 
         final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());
         CustomerService customerService = new CustomerService(client, projectKey);
 
 

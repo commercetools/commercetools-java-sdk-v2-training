@@ -24,9 +24,14 @@ public class Task02b_UPDATE_Group {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
+        // TODO:
+        //  Provide your Api client prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
-        final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, getProjectKey("mh-dev-admin."));
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client, getProjectKey(apiClientPrefix));
 
         // TODO:
         //  GET a customer
@@ -35,9 +40,9 @@ public class Task02b_UPDATE_Group {
         //
         logger.info("Customer assigned to group: " +
                 customerService
-                    .getCustomerByKey("customer-michele")
+                    .getCustomerByKey("customer-michael15")
                     .thenCombineAsync(
-                            customerService.getCustomerGroupByKey("outdoor"),
+                            customerService.getCustomerGroupByKey("outdoor-customer-group"),
                             (customer, customerGroup) ->
                                     customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
                                     // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
@@ -45,7 +50,7 @@ public class Task02b_UPDATE_Group {
                     .thenComposeAsync(CompletableFuture::toCompletableFuture)
                     .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
                     .toCompletableFuture().get()
-                    .getBody().getCustomerGroup()
+                    .getBody().getEmail()
         );
     }
 

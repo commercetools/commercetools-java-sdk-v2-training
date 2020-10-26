@@ -1,4 +1,4 @@
-// package handson;
+package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
@@ -25,9 +25,14 @@ public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
+        // TODO:
+        //  Provide your Api client prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+
         Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
-        final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, getProjectKey("mh-dev-admin."));
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client, getProjectKey(apiClientPrefix));
 
         logger.info("Customer fetch: " +
                 customerService
