@@ -2,12 +2,18 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.customer.Customer;
+import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
+import io.vrap.rmf.base.client.error.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
@@ -33,13 +39,13 @@ public class Task09a_ERROR_HANDLING {
         logger.info("Customer fetch: " +
                 customerService
                         .getCustomerByKey("customer-michele-WRONG-KEY")
+                        .thenApply(ApiHttpResponse::getBody) // unpack response body
                         .exceptionally(throwable -> {
                             logger.info("I am not existing");
                             // handle it
-                            return  null;
+                            return CustomerBuilder.of().email("anonymous@example.org").build(); // e.g. return anon customer
                         })
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
+                        .toCompletableFuture().get().getEmail()
         );
 
 
@@ -48,7 +54,9 @@ public class Task09a_ERROR_HANDLING {
         Optional<Customer> optionalCustomer = Optional.ofNullable(
                 customerService
                         .getCustomerByKey("customer-michele-WRONG-KEY")
-                        .toCompletableFuture().get().getBody()
+                        .thenApply(ApiHttpResponse::getBody)
+                        .exceptionally(throwable -> null)
+                        .toCompletableFuture().get()
         );
 
         if (!optionalCustomer.isPresent()) {
@@ -68,5 +76,6 @@ public class Task09a_ERROR_HANDLING {
                 catch (Exception e) { }
         });
 
+        System.exit(0);
     }
 }
