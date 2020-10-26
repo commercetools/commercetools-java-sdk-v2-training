@@ -2,12 +2,14 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.product.ProductPagedQueryResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task06b_PAGEDQUERY {
@@ -17,10 +19,10 @@ public class Task06b_PAGEDQUERY {
     //
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = "training-011-avensia-test";
+        final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
 
-        Logger logger = Logger.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
         // UseCases
             // Fetching ALL products
@@ -37,7 +39,7 @@ public class Task06b_PAGEDQUERY {
             // Give last id, start with slightly modified first id OR: do not use id when fetching first page
             // Give product type id
             //
-            String last_id = "642b9b40-5dae-4051-8647-d22e9ca98044";
+            String lastId = "642b9b40-5dae-4051-8647-d22e9ca98044";
             String productTypeId = "7f30329c-bfaa-4c75-97bf-58caf1103900";
 
         ProductPagedQueryResponse productPagedQueryResponse =
@@ -58,13 +60,12 @@ public class Task06b_PAGEDQUERY {
 
                         // use this for following pages
                         .withWhere("")
-                        // .plusPredicates(m -> m.id().isGreaterThan(last_id))
+                        // .plusPredicates(m -> m.id().isGreaterThan(lastId))
 
                         // always use this
                         .withWithTotal(false)
 
-                        .execute()
-                        .toCompletableFuture().get()
+                        .executeBlocking()
                         .getBody();
 
         // Print results

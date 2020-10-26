@@ -3,13 +3,15 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 /**
@@ -23,11 +25,11 @@ public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = Logger.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
-        CustomerService customerService = new CustomerService(client, "training-011-avensia-test");
+        CustomerService customerService = new CustomerService(client, getProjectKey("mh-dev-admin."));
 
-        logger.log(Level.INFO, "Customer fetch: " +
+        logger.info("Customer fetch: " +
                 customerService
                         .getCustomerByKey("customer-michele")
                         .toCompletableFuture().get()
@@ -39,7 +41,7 @@ public class Task02a_CREATE {
             //  CREATE a email verification token
             //  Verify customer
             //
-        logger.log(Level.INFO, "Customer created: " +
+        logger.info("Customer created: " +
                             customerService.createCustomer(
                                     "michael12@example.com",
                                     "password",
@@ -53,7 +55,6 @@ public class Task02a_CREATE {
                             .toCompletableFuture().get()
                             .getBody()
         );
-
 
     }
 }

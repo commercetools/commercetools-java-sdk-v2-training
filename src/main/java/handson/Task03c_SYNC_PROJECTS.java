@@ -1,11 +1,12 @@
 package handson;
 
 import handson.impl.ClientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 
 
@@ -13,7 +14,7 @@ public class Task03c_SYNC_PROJECTS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = Logger.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
 
         // TODO
         //  Have docker installed
