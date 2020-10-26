@@ -1,4 +1,4 @@
-package handson;
+// package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.state.State;
@@ -23,7 +23,7 @@ public class Task04a_STATEMACHINE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task04a_STATEMACHINE.class.getName());
         final ApiRoot client = createApiClient("mh-dev-admin.");
         final StateMachineService stateMachineService = new StateMachineService(client, getProjectKey("mh-dev-admin."));
 

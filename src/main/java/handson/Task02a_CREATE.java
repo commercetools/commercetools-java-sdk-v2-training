@@ -1,4 +1,4 @@
-package handson;
+// package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
@@ -31,7 +31,7 @@ public class Task02a_CREATE {
 
         logger.info("Customer fetch: " +
                 customerService
-                        .getCustomerByKey("customer-michele")
+                        .getCustomerByKey("customer-alex-242281870")
                         .toCompletableFuture().get()
                         .getBody().getEmail()
         );
@@ -43,17 +43,17 @@ public class Task02a_CREATE {
             //
         logger.info("Customer created: " +
                             customerService.createCustomer(
-                                    "michael12@example.com",
+                                    "michael15@example.com",
                                     "password",
-                                    "customer-michael12",
+                                    "customer-michael15",
                                     "michael",
                                     "hartwig",
                                     "DE"
                             )
-                            .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult.getBody().getCustomer(), 5))
-                            .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(customerTokenApiHttpResponse.getBody()))
+                            .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
+                            .thenComposeAsync(customerService::verifyEmail)
                             .toCompletableFuture().get()
-                            .getBody()
+                            .getBody().toPrettyString()
         );
 
     }

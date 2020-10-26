@@ -1,4 +1,4 @@
-package handson.impl;
+package impl;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.common.AddressBuilder;
@@ -66,6 +66,27 @@ public class CustomerService {
 
     }
 
+    public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(
+            final ApiHttpResponse<CustomerSignInResult> customerSignInResultApiHttpResponse,
+            final long timeToLiveInMinutes
+    ) {
+
+        final Customer customer = customerSignInResultApiHttpResponse.getBody().getCustomer();
+
+        return
+                apiRoot
+                        .withProjectKey(projectKey)
+                        .customers()
+                        .emailToken()
+                        .post(
+                                CustomerCreateEmailTokenBuilder.of()
+                                        .id(customer.getId())
+                                        .ttlMinutes(timeToLiveInMinutes)
+                                        .build()
+                        )
+                        .execute();
+    }
+
     public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(final Customer customer, final long timeToLiveInMinutes) {
 
         return
@@ -78,6 +99,23 @@ public class CustomerService {
                                         .id(customer.getId())
                                         .ttlMinutes(timeToLiveInMinutes)
                                 .build()
+                        )
+                        .execute();
+    }
+
+    public CompletableFuture<ApiHttpResponse<JsonNode>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
+
+        final CustomerToken customerToken = customerTokenApiHttpResponse.getBody();
+
+        return
+                apiRoot
+                        .withProjectKey(projectKey)
+                        .customers()
+                        .emailConfirm()
+                        .post(
+                                CustomerEmailVerifyBuilder.of()
+                                        .tokenValue(customerToken.getValue())
+                                        .build()
                         )
                         .execute();
     }
