@@ -1,6 +1,7 @@
 package handson;
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.graph_ql.GraphQLRequestBuilder;
 import com.commercetools.api.models.graph_ql.GraphQLResponse;
 import com.commercetools.api.models.graph_ql.GraphQLResponseBuilder;
@@ -26,7 +27,7 @@ import static handson.impl.ClientService.getProjectKey;
 public class Task06c_GRAPHQL_Nodes {
 
 
-    public void fetchProductTotalsViaGraphQLandNodes(String token, String projectID) {
+    public void fetchProductTotalsViaGraphQLandNodes(String token, String projectKey) {
 
         try {
            Map<String, String> headers = new HashMap<>();
@@ -37,7 +38,7 @@ public class Task06c_GRAPHQL_Nodes {
                    new GraphQLTemplate()
                            .query(
                                    GraphQLRequestEntity.Builder()
-                                        .url("https://api.europe-west1.gcp.commercetools.com/" + projectID + "/graphql")
+                                        .url(ServiceRegion.GCP_EUROPE_WEST1 + projectKey + "/graphql")
                                         .headers(headers)
                                         .request(ProductCustomerQuery.class)
                                            .arguments(new Arguments("products",
@@ -47,7 +48,7 @@ public class Task06c_GRAPHQL_Nodes {
                                         .build(),
                                    ProductCustomerQuery.class
                            );
-            System.out.println("Total products: " + responseEntity.getResponse().getProducts().getTotal());
+           System.out.println("Total products: " + responseEntity.getResponse().getProducts().getTotal());
            responseEntity.getResponse().getProducts().getResults().forEach(result ->
                    System.out.println("Id: " + result.getId() + "Name: " + result.getMasterData().getCurrent().getName()));
             System.out.println("Total customers: " + responseEntity.getResponse().getCustomers().getTotal());
