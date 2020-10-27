@@ -4,6 +4,7 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ServiceRegion;
+import com.commercetools.api.models.project.Project;
 import handson.impl.ClientService;
 import io.vrap.rmf.base.client.*;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -70,7 +72,15 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 ))
         );
 
-            // 5
+        // or per request
+        final ApiHttpResponse<Project> projectApiHttpResponse = client
+                .withProjectKey(projectKey)
+                .get()
+                .withHeader(ApiHttpHeaders.X_CORRELATION_ID, UUID.randomUUID().toString())
+                .execute()
+                .get();
+
+        // 5
             // Simulate failover, 5xx errors
 
 
