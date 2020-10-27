@@ -38,7 +38,7 @@ public class Task06c_GRAPHQL_Nodes {
                    new GraphQLTemplate()
                            .query(
                                    GraphQLRequestEntity.Builder()
-                                        .url(ServiceRegion.GCP_EUROPE_WEST1 + projectKey + "/graphql")
+                                        .url(ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl() + "/" + projectKey + "/graphql")
                                         .headers(headers)
                                         .request(ProductCustomerQuery.class)
                                            .arguments(new Arguments("products",
@@ -98,6 +98,6 @@ public class Task06c_GRAPHQL_Nodes {
         ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
         String token = thirdPartyClientService.createClientAndFetchToken("UC6k6y0EFoloW6bizT5PskhW", "wj3tWTnXY1Y4I__DKeoaKpeUBujm27mI", projectKey);
         task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
-
+        System.exit(0);
     }
 }
