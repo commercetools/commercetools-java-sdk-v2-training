@@ -21,16 +21,18 @@ public class Task03b_IMPORT_API {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
+        // TODO
+        //  Check your prefix for an Import Api Client
+        //  Provide a price sink key
+        //
+        String apiImportClientPrefix = "mh-dev-import.";
         final String sinkKey = "berlin-store-prices";
         final String projectKey = getProjectKey("mh-import-admin.");
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
-        // TODO
-        //  Get an API Client for Import-API
-        //
-        final ApiRoot client = createImportApiClient("mh-import-admin.");
+        final ApiRoot client = createImportApiClient(apiImportClientPrefix);
         final ImportService importService = new ImportService(client, projectKey);
-        ObjectMapper objectMapper = new ObjectMapper();
+
 
         // TODO
         //  CREATE a price import sink
@@ -60,6 +62,7 @@ public class Task03b_IMPORT_API {
                                 .get()
                                 .execute()
                                 .toCompletableFuture().get()
+                                .getBody().getResults().get(0).getResourceType()
                         );
             logger.info("Report on all queued import operations on our price import sink {} " +
                             client
@@ -69,6 +72,7 @@ public class Task03b_IMPORT_API {
                                 .get()
                                 .execute()
                                 .toCompletableFuture().get()
+                                .getBody().getStates().getImported()
                     );
 
     }
