@@ -35,7 +35,14 @@ public class PaymentService {
         this.projectKey = projectKey;
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> createPaymentAndAddToCart(final Cart cart, String psp_Name, String psp_Method, String interfaceId, String interactionId) {
+    public CompletableFuture<ApiHttpResponse<Cart>> createPaymentAndAddToCart(
+            final ApiHttpResponse<Cart> cartApiHttpResponse,
+            String psp_Name,
+            String psp_Method,
+            String interfaceId,
+            String interactionId) {
+
+        final Cart cart = cartApiHttpResponse.getBody();
 
         return
                 apiRoot

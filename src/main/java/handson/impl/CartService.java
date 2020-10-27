@@ -33,10 +33,11 @@ public class CartService {
     /**
      * Creates a cart for the given customer.
      *
-     * @param customer the customer
      * @return the customer creation completion stage
      */
-    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final Customer customer) {
+    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
+
+        final Customer customer = customerApiHttpResponse.getBody();
 
         return
                 apiRoot
@@ -77,7 +78,7 @@ public class CartService {
                                 CartDraftBuilder.of()
                                         .currency("EUR")
                                         .deleteDaysAfterLastModification(90L)
-                                        .anonymousId("123456789")
+                                        .anonymousId("an" + System.nanoTime())
                                         .country("DE")
                                         .build()
                         )
@@ -85,14 +86,19 @@ public class CartService {
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(final Cart cart, final Channel channel, final String ... skus) {
+    public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
+            final ApiHttpResponse<Cart> cartApiHttpResponse,
+            final Channel channel,
+            final String ... skus) {
+
+        final Cart cart = cartApiHttpResponse.getBody();
 
         List<CartUpdateAction> cartAddLineItemActions =                         // Cast
                 Stream.of(skus)
                     .map(s ->
                             CartAddLineItemActionBuilder.of()
                             .sku(s)
-                            // .quantity(Double.valueOf(1L))                    // Setting the quantity requires double but json expects long
+                            .quantity(1L)
                             .supplyChannel(
                                     ChannelResourceIdentifierBuilder.of()
                                             .id(channel.getId())
@@ -119,7 +125,10 @@ public class CartService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(final Cart cart, final String code) {
+    public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(
+            final ApiHttpResponse<Cart> cartApiHttpResponse, final String code) {
+
+        final Cart cart = cartApiHttpResponse.getBody();
 
         return
                 apiRoot
@@ -142,7 +151,9 @@ public class CartService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final Cart cart) {
+    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final ApiHttpResponse<Cart> cartApiHttpResponse) {
+
+        final Cart cart = cartApiHttpResponse.getBody();
 
         return
                 apiRoot
@@ -164,8 +175,9 @@ public class CartService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final Cart cart) {
+    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
+        final Cart cart = cartApiHttpResponse.getBody();
 
         final ShippingMethod shippingMethod =
                 apiRoot

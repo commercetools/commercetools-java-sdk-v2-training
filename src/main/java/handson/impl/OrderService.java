@@ -23,7 +23,9 @@ public class OrderService {
         this.projectKey = projectKey;
     }
 
-    public CompletableFuture<ApiHttpResponse<Order>> createOrder(final Cart cart) {
+    public CompletableFuture<ApiHttpResponse<Order>> createOrder(final ApiHttpResponse<Cart> cartApiHttpResponse) {
+
+        final Cart cart = cartApiHttpResponse.getBody();
 
         return
                 apiRoot
@@ -40,7 +42,11 @@ public class OrderService {
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Order>> changeState(final Order order, final OrderState state) {
+    public CompletableFuture<ApiHttpResponse<Order>> changeState(
+            final ApiHttpResponse<Order> orderApiHttpResponse,
+            final OrderState state) {
+
+        Order order = orderApiHttpResponse.getBody();
 
         return
                 apiRoot
@@ -63,7 +69,11 @@ public class OrderService {
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(final Order order, final State workflowState) {
+    public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
+            final ApiHttpResponse<Order> orderApiHttpResponse,
+            final State workflowState) {
+
+        Order order = orderApiHttpResponse.getBody();
 
         return
                 apiRoot

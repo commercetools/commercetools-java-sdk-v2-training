@@ -1,4 +1,4 @@
-// package handson;
+package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.state.State;
@@ -23,9 +23,11 @@ public class Task04a_STATEMACHINE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
+        final String apiClientPrefix = "mh-dev-admin.";
+
         Logger logger = LoggerFactory.getLogger(Task04a_STATEMACHINE.class.getName());
-        final ApiRoot client = createApiClient("mh-dev-admin.");
-        final StateMachineService stateMachineService = new StateMachineService(client, getProjectKey("mh-dev-admin."));
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        final StateMachineService stateMachineService = new StateMachineService(client, getProjectKey(apiClientPrefix));
 
             // TODO
             // Use StateMachineService.java to create your designed order state machine

@@ -27,8 +27,13 @@ public class Task04b_CHECKOUT {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        // TODO:
+        //  Check your prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
 
         CustomerService customerService = new CustomerService(client, projectKey);
         CartService cartService = new CartService(client, projectKey);
@@ -52,7 +57,7 @@ public class Task04b_CHECKOUT {
                 .withProjectKey(projectKey)
                 .states()
                 .get()
-                .withWhere("key=" + "\"" + "OrderPackedNewThird" + "\"")
+                .withWhere("key=" + "\"" + "OrderPacked" + "\"")
                 .execute()
                 .toCompletableFuture().get()
                 .getBody().getResults().get(0);
@@ -69,30 +74,30 @@ public class Task04b_CHECKOUT {
             // TODO additionally: add custom line items, add shipping method
             //
             logger.info("Created cart/order ID: " +
-                    customerService.getCustomerByKey("customer-michele")
-                            .thenComposeAsync(customerApiHttpResponse -> cartService.createCart(customerApiHttpResponse.getBody()))
+                    customerService.getCustomerByKey("customer-michael15")
+                            .thenComposeAsync(cartService::createCart)
 
                             .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
-                                    cartApiHttpResponse.getBody(),
+                                    cartApiHttpResponse,
                                     channel,
-                                    "uzt1286", "uzt1286", "uzt1286")
+                                    "til83272", "til83272", "til83272")
                             )
 
-                            .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse.getBody(),"AVENSIA"))
-                            .thenComposeAsync(cartApiHttpResponse -> cartService.recalculate(cartApiHttpResponse.getBody()))
-                            .thenComposeAsync(cartApiHttpResponse -> cartService.setShipping(cartApiHttpResponse.getBody()))
+                            .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse,"MIXED"))
+                            .thenComposeAsync(cartService::recalculate)
+                            .thenComposeAsync(cartService::setShipping)
 
                             .thenComposeAsync(cartApiHttpResponse -> paymentService.createPaymentAndAddToCart(
-                                    cartApiHttpResponse.getBody(),
+                                    cartApiHttpResponse,
                                     "We_Do_Payments",
                                     "CREDIT_CARD",
                                     "we_pay_73636" + Math.random(),                // Must be unique.
-                                    "pay82626"+ Math.random())                // Must be unique.
+                                    "pay82626"+ Math.random())                    // Must be unique.
                             )
 
-                            .thenComposeAsync(cartApiHttpResponse -> orderService.createOrder(cartApiHttpResponse.getBody()))
-                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse.getBody(), OrderState.COMPLETE))
-                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse.getBody(), state))
+                            .thenComposeAsync(orderService::createOrder)
+                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.COMPLETE))
+                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, state))
 
                             .toCompletableFuture().get()
                             .getBody().getId()

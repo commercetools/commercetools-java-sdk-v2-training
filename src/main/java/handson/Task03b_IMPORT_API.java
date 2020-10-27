@@ -27,7 +27,7 @@ public class Task03b_IMPORT_API {
         //
         String apiImportClientPrefix = "mh-dev-import.";
         final String sinkKey = "berlin-store-prices";
-        final String projectKey = getProjectKey("mh-import-admin.");
+        final String projectKey = getProjectKey(apiImportClientPrefix);
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         final ApiRoot client = createImportApiClient(apiImportClientPrefix);
@@ -47,11 +47,11 @@ public class Task03b_IMPORT_API {
 
             Money amount = MoneyBuilder.of()
                     .currencyCode("EUR")
-                    .centAmount(12365L)
+                    .centAmount(3412L)
                     .build();
 
             logger.info("Created price resource {} " +
-                    importService.createPriceImportRequest(sinkKey,"testforpdf","0812", amount)
+                    importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)
                     .toCompletableFuture().get()
             );
 
