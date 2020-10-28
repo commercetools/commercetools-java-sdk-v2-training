@@ -7,6 +7,7 @@ import com.commercetools.api.models.graph_ql.GraphQLResponse;
 import com.commercetools.api.models.graph_ql.GraphQLResponseBuilder;
 import handson.Task04b_CHECKOUT;
 import handson.graphql.ProductCustomerQuery;
+import handson.impl.ClientService;
 import handson.impl.ThirdPartyClientService;
 import io.aexp.nodes.graphql.*;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import static handson.impl.ClientService.getProjectKey;
 public class Task06c_GRAPHQL_Nodes {
 
 
+    public static final String MH_DEV_ADMIN = "mh-dev-admin.";
+
     public void fetchProductTotalsViaGraphQLandNodes(String token, String projectKey) {
 
         try {
@@ -38,7 +41,7 @@ public class Task06c_GRAPHQL_Nodes {
                    new GraphQLTemplate()
                            .query(
                                    GraphQLRequestEntity.Builder()
-                                        .url(ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl() + "/" + projectKey + "/graphql")
+                                        .url(ServiceRegion.GCP_EUROPE_WEST1.getApiUrl() + "/" + projectKey + "/graphql")
                                         .headers(headers)
                                         .request(ProductCustomerQuery.class)
                                            .arguments(new Arguments("products",
@@ -63,8 +66,8 @@ public class Task06c_GRAPHQL_Nodes {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        final String projectKey = getProjectKey(MH_DEV_ADMIN);
+        final ApiRoot client = createApiClient(MH_DEV_ADMIN);
 
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
@@ -95,8 +98,15 @@ public class Task06c_GRAPHQL_Nodes {
         // Solution using Nodes
         //
         Task06c_GRAPHQL_Nodes task06C_graphqlNodes = new Task06c_GRAPHQL_Nodes();
+
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        String clientId = prop.getProperty(MH_DEV_ADMIN + "clientId");
+        String clientSecret = prop.getProperty(MH_DEV_ADMIN + "clientSecret");
+
         ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
-        String token = thirdPartyClientService.createClientAndFetchToken("UC6k6y0EFoloW6bizT5PskhW", "wj3tWTnXY1Y4I__DKeoaKpeUBujm27mI", projectKey);
+        String token = thirdPartyClientService.createClientAndFetchToken(clientId, clientSecret);
         task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
         System.exit(0);
     }
