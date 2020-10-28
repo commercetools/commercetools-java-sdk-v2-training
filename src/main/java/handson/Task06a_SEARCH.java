@@ -6,6 +6,8 @@ import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.category.CategoryReferenceBuilder;
 import com.commercetools.api.models.product.*;
 import com.commercetools.api.product.FacetResultsAccessor;
+import handson.impl.ClientService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,8 @@ public class Task06a_SEARCH {
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task06a_SEARCH.class.getName());
+
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
         Category plantSeedCategory = client
                 .withProjectKey(projectKey)
@@ -98,6 +102,6 @@ public class Task06a_SEARCH {
         System.out.println("products searched: ");
         result.forEach((r) -> System.out.println(r.getKey()));
 
-        System.exit(0);
+        }
     }
 }

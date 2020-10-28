@@ -1,27 +1,24 @@
 package handson.impl;
 
-//// import com.commercetools.importer.client.ApiRoot;
-
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.importapi.defaultconfig.ImportApiFactory;
 import com.commercetools.ml.defaultconfig.MLApiRootFactory;
 import io.vrap.rmf.base.client.ApiHttpClient;
-import io.vrap.rmf.base.client.AuthenticationToken;
+
 import io.vrap.rmf.base.client.ClientFactory;
 import io.vrap.rmf.base.client.VrapHttpClient;
-import io.vrap.rmf.base.client.http.*;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
 import io.vrap.rmf.base.client.oauth2.GlobalCustomerPasswordTokenSupplier;
-import io.vrap.rmf.base.client.oauth2.TokenSupplier;
 import io.vrap.rmf.impl.okhttp.VrapOkhttpClient;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class ClientService {
 
+    public static ApiHttpClient apiHttpClient;
 
     // TODO: Add the Constant-Token Client
 
@@ -36,11 +33,13 @@ public class ClientService {
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
 
-        return ApiFactory.create(
+        apiHttpClient = ApiFactory.defaultClient(
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
+                new ArrayList<>()
         );
+        return ApiFactory.create(() -> apiHttpClient);
     }
 
     public static String getProjectKey(final String prefix) throws IOException {
