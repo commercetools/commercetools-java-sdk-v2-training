@@ -19,10 +19,12 @@ public class Task06b_PAGEDQUERY {
     //
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        final String apiClientPrefix = "mh-dev-admin.";
 
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
+
+        Logger logger = LoggerFactory.getLogger(Task06b_PAGEDQUERY.class.getName());
 
         // UseCases
             // Fetching ALL products
@@ -39,8 +41,8 @@ public class Task06b_PAGEDQUERY {
             // Give last id, start with slightly modified first id OR: do not use id when fetching first page
             // Give product type id
             //
-            String lastId = "642b9b40-5dae-4051-8647-d22e9ca98044";
-            String productTypeId = "7f30329c-bfaa-4c75-97bf-58caf1103900";
+            String lastId = "84cc7775-0ad5-4cf1-93dd-a2ec745a3c40";
+            String productTypeId = "058a3465-6b40-4168-b2ab-3770d3964f98";
 
            //  link to give to our customers https://docs.commercetools.com/api/predicates/query
 
