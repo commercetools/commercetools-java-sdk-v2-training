@@ -12,14 +12,11 @@ import java.util.concurrent.ExecutionException;
 
 public class ThirdPartyClientService {
 
-
-    public static final VrapOkHttpClient CLIENT = new VrapOkHttpClient();
-
     public String createClientAndFetchToken(String clientId, String clientSecret) {
 
-        TokenSupplier clientCredentialsTokenSupplier =
-                new ClientCredentialsTokenSupplier(clientId, clientSecret, null, ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(), CLIENT);
-        try {
+        try (ClientCredentialsTokenSupplier clientCredentialsTokenSupplier = new ClientCredentialsTokenSupplier(
+                clientId, clientSecret, null, ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(), new VrapOkHttpClient())
+        ) {
             return clientCredentialsTokenSupplier.getToken().get().getAccessToken();
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Exception" + e.toString());
@@ -30,9 +27,8 @@ public class ThirdPartyClientService {
 
     public String createClientAndFetchAnonMeToken(String clientId, String clientSecret, String projectKey)
     {
-        TokenSupplier passwordTokenSupplier =
-                new AnonymousSessionTokenSupplier(clientId, clientSecret, null,ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth" + projectKey + "/anonymous/token", CLIENT);
-        try {
+        try (AnonymousSessionTokenSupplier passwordTokenSupplier =
+                     new AnonymousSessionTokenSupplier(clientId, clientSecret, null,ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth" + projectKey + "/anonymous/token", new VrapOkHttpClient())){
             return passwordTokenSupplier.getToken().get().getAccessToken();
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Exception" + e.toString());
@@ -42,9 +38,8 @@ public class ThirdPartyClientService {
 
     public String createClientAndFetchMeToken(String clientId, String clientSecret, String projectKey, String customerEmail, String customerLogon)
     {
-        TokenSupplier passwordTokenSupplier =
-                new GlobalCustomerPasswordTokenSupplier(clientId, clientSecret, customerEmail, customerLogon,  null,ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth" + projectKey + "/customers/token", CLIENT);
-        try {
+        try (GlobalCustomerPasswordTokenSupplier passwordTokenSupplier =
+                     new GlobalCustomerPasswordTokenSupplier(clientId, clientSecret, customerEmail, customerLogon,  null,ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth" + projectKey + "/customers/token", new VrapOkHttpClient())){
             return passwordTokenSupplier.getToken().get().getAccessToken();
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Exception" + e.toString());

@@ -10,6 +10,7 @@ import handson.graphql.ProductCustomerQuery;
 import handson.impl.ClientService;
 import handson.impl.ThirdPartyClientService;
 import io.aexp.nodes.graphql.*;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,43 +72,44 @@ public class Task06c_GRAPHQL_Nodes {
 
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
-        JsonObject simpleGraphQLQuery = Json.createObjectBuilder()
-                .add("ProductQuery",
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+            JsonObject simpleGraphQLQuery = Json.createObjectBuilder()
+                    .add("ProductQuery",
                             Json.createObjectBuilder()
                                     .add("products", "{ total }")
                                     .build()
-                )
-                .build();
+                    )
+                    .build();
 
-        final GraphQLResponse graphQLResponse = client.withProjectKey(projectKey)
-                .graphql()
-                .post(
-                        GraphQLRequestBuilder.of()
-                                .query(
-                                        "{ products { total } }"
-                                )
-                                .build()
-                )
-                .execute()
-                .toCompletableFuture().get()
-                .getBody();
+            final GraphQLResponse graphQLResponse = client.withProjectKey(projectKey)
+                    .graphql()
+                    .post(
+                            GraphQLRequestBuilder.of()
+                                    .query(
+                                            "{ products { total } }"
+                                    )
+                                    .build()
+                    )
+                    .execute()
+                    .toCompletableFuture().get()
+                    .getBody();
 
-        logger.info("GraphQl : " + graphQLResponse.getData().toString());
+            logger.info("GraphQl : " + graphQLResponse.getData().toString());
 
 
-        // Solution using Nodes
-        //
-        Task06c_GRAPHQL_Nodes task06C_graphqlNodes = new Task06c_GRAPHQL_Nodes();
+            // Solution using Nodes
+            //
+            Task06c_GRAPHQL_Nodes task06C_graphqlNodes = new Task06c_GRAPHQL_Nodes();
 
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+            final Properties prop = new Properties();
+            prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
-        String clientId = prop.getProperty(MH_DEV_ADMIN + "clientId");
-        String clientSecret = prop.getProperty(MH_DEV_ADMIN + "clientSecret");
+            String clientId = prop.getProperty(MH_DEV_ADMIN + "clientId");
+            String clientSecret = prop.getProperty(MH_DEV_ADMIN + "clientSecret");
 
-        ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
-        String token = thirdPartyClientService.createClientAndFetchToken(clientId, clientSecret);
-        task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
-        System.exit(0);
+            ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
+            String token = thirdPartyClientService.createClientAndFetchToken(clientId, clientSecret);
+            task06C_graphqlNodes.fetchProductTotalsViaGraphQLandNodes(token, projectKey);
+        }
     }
 }

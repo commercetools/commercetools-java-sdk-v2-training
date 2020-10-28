@@ -6,6 +6,7 @@ import com.commercetools.api.models.me.MyCartDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.*;
 //import okhttp3.*;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,27 +36,29 @@ public class Task05_INSTORE_ME {
         final String projectKey = getProjectKey(globalApiClientPrefix);
         final ApiRoot client = createApiClient(globalApiClientPrefix);
 
-        logger.info("Created in-store cart with a global api client: " +
-                client
-                        .withProjectKey(projectKey)
-                        .inStoreKeyWithStoreKeyValue("berlin-store")
-                        .carts()
-                        .post(
-                                CartDraftBuilder.of()
-                                        .currency("EUR")
-                                        .deleteDaysAfterLastModification(90l)
-                                        .customerId("a59d3061-3f3e-41db-88df-0f9c0e24deae")
-                                        .customerEmail("michael13@example.com")
-                                        .build()
-                        )
-                        .execute()
-                        .exceptionally(throwable -> {
-                            logger.info(throwable.getLocalizedMessage().toString());
-                            return null;
-                        })
-                        .toCompletableFuture().get()
-                        .getBody().getId()
-        );
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+            logger.info("Created in-store cart with a global api client: " +
+                    client
+                            .withProjectKey(projectKey)
+                            .inStoreKeyWithStoreKeyValue("berlin-store")
+                            .carts()
+                            .post(
+                                    CartDraftBuilder.of()
+                                            .currency("EUR")
+                                            .deleteDaysAfterLastModification(90l)
+                                            .customerId("a59d3061-3f3e-41db-88df-0f9c0e24deae")
+                                            .customerEmail("michael13@example.com")
+                                            .build()
+                            )
+                            .execute()
+                            .exceptionally(throwable -> {
+                                logger.info(throwable.getLocalizedMessage().toString());
+                                return null;
+                            })
+                            .toCompletableFuture().get()
+                            .getBody().getId()
+            );
+        }
 
 
         // TODO: Create in-store Cart with in-store-client

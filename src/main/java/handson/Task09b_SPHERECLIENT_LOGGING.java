@@ -2,25 +2,21 @@ package handson;
 
 
 import com.commercetools.api.client.ApiRoot;
-import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.project.Project;
 import handson.impl.ClientService;
 import io.vrap.rmf.base.client.*;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
-import io.vrap.rmf.base.client.oauth2.AnonymousSessionTokenSupplier;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
-import io.vrap.rmf.base.client.oauth2.GlobalCustomerPasswordTokenSupplier;
-import io.vrap.rmf.base.client.oauth2.StaticTokenSupplier;
 import io.vrap.rmf.okhttp.VrapOkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static com.commercetools.api.defaultconfig.ApiFactory.*;
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
 
@@ -53,7 +49,8 @@ public class Task09b_SPHERECLIENT_LOGGING {
         String clientId = prop.getProperty(MH_DEV_ADMIN + "clientId");
         String clientSecret = prop.getProperty(MH_DEV_ADMIN + "clientSecret");
 
-        final ApiRoot correlationIdClient = ApiFactory.create(
+        try (ApiHttpClient correlationIdApiHttpClient = defaultClient(
+                new VrapOkHttpClient(),
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
@@ -70,88 +67,34 @@ public class Task09b_SPHERECLIENT_LOGGING {
                             }
                         })
                 ))
-        );
+        )) {
+            final ApiRoot correlationIdClient = create(() -> correlationIdApiHttpClient);
+        }
 
         // or per request
-        final ApiHttpResponse<Project> projectApiHttpResponse = client
-                .withProjectKey(projectKey)
-                .get()
-                .withHeader(ApiHttpHeaders.X_CORRELATION_ID, UUID.randomUUID().toString())
-                .execute()
-                .get();
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+            final ApiHttpResponse<Project> projectApiHttpResponse = client
+                    .withProjectKey(projectKey)
+                    .get()
+                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, UUID.randomUUID().toString())
+                    .execute()
+                    .get();
+        }
 
         // 5
             // Simulate failover, 5xx errors
 
 
-        final ApiRoot retryClient = ApiFactory.create(
+        try (ApiHttpClient retryHttpClient = defaultClient(
+                new VrapOkHttpClient(),
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
                 new ArrayList<>(Collections.singletonList(
                         new RetryMiddleware(3, Arrays.asList(500, 503))
                 ))
-        );
-    }
-
-    static class ClientFactory {
-        public static ApiRoot createStatic(
-                final String token,
-                final String apiEndpoint
-        ) {
-            AuthenticationToken t = new AuthenticationToken();
-            t.setAccessToken(token);
-            return ApiRoot.fromClient(
-                    io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            new VrapOkHttpClient(),
-                            new StaticTokenSupplier(t)
-                    )
-            );
-        }
-
-        public static ApiRoot createAnonFlow(
-                final ClientCredentials credentials,
-                final String tokenEndpoint,
-                final String apiEndpoint
-        ) {
-            return ApiRoot.fromClient(
-                    io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            new VrapOkHttpClient(),
-                            new AnonymousSessionTokenSupplier(
-                                    credentials.getClientId(),
-                                    credentials.getClientSecret(),
-                                    credentials.getScopes(),
-                                    tokenEndpoint,
-                                    new VrapOkHttpClient()
-                            )
-                    )
-            );
-        }
-
-        public static ApiRoot createPasswordFlow(
-                final String userEmail,
-                final String userPassword,
-                final ClientCredentials credentials,
-                final String tokenEndpoint,
-                final String apiEndpoint
-        ) {
-            return ApiRoot.fromClient(
-                    io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            new VrapOkHttpClient(),
-                            new GlobalCustomerPasswordTokenSupplier(
-                                    credentials.getClientId(),
-                                    credentials.getClientSecret(),
-                                    userEmail,
-                                    userPassword,
-                                    credentials.getScopes(),
-                                    tokenEndpoint,
-                                    new VrapOkHttpClient()
-                            )
-                    )
-            );
+        )) {
+            final ApiRoot retryClient = create(() -> retryHttpClient);
         }
     }
 }

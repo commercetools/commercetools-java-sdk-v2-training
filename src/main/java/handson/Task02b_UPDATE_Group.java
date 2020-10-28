@@ -3,6 +3,7 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,25 +34,27 @@ public class Task02b_UPDATE_Group {
         final ApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client, getProjectKey(apiClientPrefix));
 
-        // TODO:
-        //  GET a customer
-        //  GET a customer group
-        //  ASSIGN the customer to the customer group
-        //
-        logger.info("Customer assigned to group: " +
-                customerService
-                    .getCustomerByKey("customer-michael15")
-                    .thenCombineAsync(
-                            customerService.getCustomerGroupByKey("outdoor-customer-group"),
-                            (customer, customerGroup) ->
-                                    customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+            // TODO:
+            //  GET a customer
+            //  GET a customer group
+            //  ASSIGN the customer to the customer group
+            //
+            logger.info("Customer assigned to group: " +
+                    customerService
+                            .getCustomerByKey("customer-michael15")
+                            .thenCombineAsync(
+                                    customerService.getCustomerGroupByKey("outdoor-customer-group"),
+                                    (customer, customerGroup) ->
+                                            customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
                                     // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
-                    )
-                    .thenComposeAsync(CompletableFuture::toCompletableFuture)
-                    .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
-                    .toCompletableFuture().get()
-                    .getBody().getEmail()
-        );
+                            )
+                            .thenComposeAsync(CompletableFuture::toCompletableFuture)
+                            .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
+                            .toCompletableFuture().get()
+                            .getBody().getEmail()
+            );
+        }
     }
 
 }

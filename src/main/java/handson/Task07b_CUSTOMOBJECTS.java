@@ -3,6 +3,8 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import handson.impl.ClientService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ public class Task07b_CUSTOMOBJECTS {
         final ApiRoot client = createApiClient("mh-dev-admin.");
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
             // TODO:
             // Store custom objects
@@ -49,17 +52,18 @@ public class Task07b_CUSTOMOBJECTS {
                             // .withContainerAndKey("plantCheck", "tulip6736")
                             .post(
                                     CustomObjectDraftBuilder.of()
-                                        .container("plantCheck")
-                                        .key("tulip6736")
-                                        .value(
-                                                new ObjectMapper()
-                                                    .readTree(tulipObject.toString()))
-                                        .build()
+                                            .container("plantCheck")
+                                            .key("tulip6736")
+                                            .value(
+                                                    new ObjectMapper()
+                                                            .readTree(tulipObject.toString()))
+                                            .build()
                             )
                             .execute()
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        }
 
     }
 }

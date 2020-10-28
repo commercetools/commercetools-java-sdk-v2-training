@@ -2,6 +2,8 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.product.ProductPagedQueryResponse;
+import handson.impl.ClientService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -26,7 +28,9 @@ public class Task06b_PAGEDQUERY {
 
         Logger logger = LoggerFactory.getLogger(Task06b_PAGEDQUERY.class.getName());
 
-        // UseCases
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+
+            // UseCases
             // Fetching ALL products
             // Fetching ALL products of a certain type
             // Fetching ALL orders
@@ -44,40 +48,39 @@ public class Task06b_PAGEDQUERY {
             String lastId = "84cc7775-0ad5-4cf1-93dd-a2ec745a3c40";
             String productTypeId = "058a3465-6b40-4168-b2ab-3770d3964f98";
 
-           //  link to give to our customers https://docs.commercetools.com/api/predicates/query
+            //  link to give to our customers https://docs.commercetools.com/api/predicates/query
 
-        ProductPagedQueryResponse productPagedQueryResponse =
-                client.withProjectKey(projectKey)
-                        .products()
-                        .get()
+            ProductPagedQueryResponse productPagedQueryResponse =
+                    client.withProjectKey(projectKey)
+                            .products()
+                            .get()
 
-                        .withWhere("productType(id = :productTypeId)")
-                        .addQueryParam("var.productTypeId", productTypeId)
+                            .withWhere("productType(id = :productTypeId)")
+                            .addQueryParam("var.productTypeId", productTypeId)
 
-                        // Important, internally we use id > $lastId, it will not work without this line
-                        .withSort("id asc")
+                            // Important, internally we use id > $lastId, it will not work without this line
+                            .withSort("id asc")
 
-                        // Limit the size per page
-                        .withLimit(PAGE_SIZE)
+                            // Limit the size per page
+                            .withLimit(PAGE_SIZE)
 
-                        // use this for following pages
-                        .withWhere("id > :lastId")
-                        .addQueryParam("var.lastId", lastId)
+                            // use this for following pages
+                            .withWhere("id > :lastId")
+                            .addQueryParam("var.lastId", lastId)
 
-                        // always use this
-                        .withWithTotal(false)
+                            // always use this
+                            .withWithTotal(false)
 
-                        .execute()
-                        .toCompletableFuture().get()
-                        .getBody();
+                            .execute()
+                            .toCompletableFuture().get()
+                            .getBody();
 
-        // Print results
+            // Print results
             logger.info("Found product size: " + productPagedQueryResponse.getResults().size());
             productPagedQueryResponse.getResults().forEach(
                     product -> logger.info("Product: " + product.getId())
             );
-        System.exit(0);
-
+        }
     }
 }
 

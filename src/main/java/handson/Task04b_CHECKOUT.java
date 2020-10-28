@@ -4,10 +4,8 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.channel.Channel;
 import com.commercetools.api.models.order.OrderState;
 import com.commercetools.api.models.state.State;
-import handson.impl.CartService;
-import handson.impl.CustomerService;
-import handson.impl.OrderService;
-import handson.impl.PaymentService;
+import handson.impl.*;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,32 +33,34 @@ public class Task04b_CHECKOUT {
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
 
-        CustomerService customerService = new CustomerService(client, projectKey);
-        CartService cartService = new CartService(client, projectKey);
-        OrderService orderService = new OrderService(client, projectKey);
-        PaymentService paymentService = new PaymentService(client, projectKey);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+
+            CustomerService customerService = new CustomerService(client, projectKey);
+            CartService cartService = new CartService(client, projectKey);
+            OrderService orderService = new OrderService(client, projectKey);
+            PaymentService paymentService = new PaymentService(client, projectKey);
+            Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
 
             // TODO: Fetch a channel if your inventory mode will not be NONE
             //
             Channel channel = client
-                        .withProjectKey(projectKey)
-                        .channels()
-                        .get()
-                        .withWhere("key=" + "\"" + "berlin-warehouse" + "\"")                          // See also: .addWhere
-                        .execute()
-                        .toCompletableFuture().get()
-                        .getBody().getResults().get(0);
+                    .withProjectKey(projectKey)
+                    .channels()
+                    .get()
+                    .withWhere("key=" + "\"" + "berlin-warehouse" + "\"")                          // See also: .addWhere
+                    .execute()
+                    .toCompletableFuture().get()
+                    .getBody().getResults().get(0);
 
-        final State state = client
-                .withProjectKey(projectKey)
-                .states()
-                .get()
-                .withWhere("key=" + "\"" + "OrderPacked" + "\"")
-                .execute()
-                .toCompletableFuture().get()
-                .getBody().getResults().get(0);
+            final State state = client
+                    .withProjectKey(projectKey)
+                    .states()
+                    .get()
+                    .withWhere("key=" + "\"" + "OrderPacked" + "\"")
+                    .execute()
+                    .toCompletableFuture().get()
+                    .getBody().getResults().get(0);
 
 
             // TODO: Perform cart operations:
@@ -102,6 +102,7 @@ public class Task04b_CHECKOUT {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        }
 
     }
 }

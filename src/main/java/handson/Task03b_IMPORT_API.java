@@ -5,7 +5,9 @@ import com.commercetools.importapi.client.ApiRoot;
 import com.commercetools.importapi.models.common.Money;
 import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import handson.impl.ClientService;
 import handson.impl.ImportService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +41,10 @@ public class Task03b_IMPORT_API {
         //  CREATE a price import request
         //  CHECK the status of your import requests
         //
-
-            logger.info("Created import price sink {} " +
+        try (ApiHttpClient apiHttpClient = ClientService.importHttpClient) {
+            logger.info("Created import price sink {} ",
                     importService.createImportPriceSink(sinkKey)
-                    .toCompletableFuture().get()
+                            .toCompletableFuture().get()
             );
 
             Money amount = MoneyBuilder.of()
@@ -50,30 +52,31 @@ public class Task03b_IMPORT_API {
                     .centAmount(3412L)
                     .build();
 
-            logger.info("Created price resource {} " +
+            logger.info("Created price resource {} ",
                     importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)
-                    .toCompletableFuture().get()
+                            .toCompletableFuture().get()
             );
 
-            logger.info("Summary report on all sinks on our project: " +
-                            client
-                                .withProjectKeyValue(projectKey)
-                                .importSinks()
-                                .get()
-                                .execute()
-                                .toCompletableFuture().get()
-                                .getBody().getResults().get(0).getResourceType()
-                        );
-            logger.info("Report on all queued import operations on our price import sink {} " +
-                            client
-                                .withProjectKeyValue(projectKey)
-                                .importSummaries()
-                                .importSinkKeyWithImportSinkKeyValue(sinkKey)
-                                .get()
-                                .execute()
-                                .toCompletableFuture().get()
-                                .getBody().getStates().getImported()
-                    );
+            logger.info("Summary report on all sinks on our project: {}",
+                    client
+                            .withProjectKeyValue(projectKey)
+                            .importSinks()
+                            .get()
+                            .execute()
+                            .toCompletableFuture().get()
+                            .getBody().getResults().get(0).getResourceType()
+            );
+            logger.info("Report on all queued import operations on our price import sink {} ",
+                    client
+                            .withProjectKeyValue(projectKey)
+                            .importSummaries()
+                            .importSinkKeyWithImportSinkKeyValue(sinkKey)
+                            .get()
+                            .execute()
+                            .toCompletableFuture().get()
+                            .getBody().getStates().getImported()
+            );
+        }
 
     }
 }

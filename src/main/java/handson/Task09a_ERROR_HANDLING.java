@@ -3,7 +3,9 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerBuilder;
+import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import io.vrap.rmf.base.client.error.NotFoundException;
 import org.slf4j.Logger;
@@ -28,54 +30,55 @@ public class Task09a_ERROR_HANDLING {
         final String projectKey = getProjectKey("mh-dev-admin.");
         final ApiRoot client = createApiClient("mh-dev-admin.");
         Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());
-        CustomerService customerService = new CustomerService(client, projectKey);
+
+        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+            CustomerService customerService = new CustomerService(client, projectKey);
 
 
-        // Handle 4XX errors
+            // Handle 4XX errors
 
 
-        // TODO: Handle exceptions, CompletionStage
-        //
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey("customer-michele-WRONG-KEY")
-                        .thenApply(ApiHttpResponse::getBody) // unpack response body
-                        .exceptionally(throwable -> {
-                            logger.info("I am not existing");
-                            // handle it
-                            return CustomerBuilder.of().email("anonymous@example.org").build(); // e.g. return anon customer
-                        })
-                        .toCompletableFuture().get().getEmail()
-        );
+            // TODO: Handle exceptions, CompletionStage
+            //
+            logger.info("Customer fetch: " +
+                    customerService
+                            .getCustomerByKey("customer-michele-WRONG-KEY")
+                            .thenApply(ApiHttpResponse::getBody) // unpack response body
+                            .exceptionally(throwable -> {
+                                logger.info("I am not existing");
+                                // handle it
+                                return CustomerBuilder.of().email("anonymous@example.org").build(); // e.g. return anon customer
+                            })
+                            .toCompletableFuture().get().getEmail()
+            );
 
 
-        // TODO: Handle exceptions, Optionals, Either (Java 9+)
-        //
-        Optional<Customer> optionalCustomer = Optional.ofNullable(
-                customerService
-                        .getCustomerByKey("customer-michele-WRONG-KEY")
-                        .thenApply(ApiHttpResponse::getBody)
-                        .exceptionally(throwable -> null)
-                        .toCompletableFuture().get()
-        );
+            // TODO: Handle exceptions, Optionals, Either (Java 9+)
+            //
+            Optional<Customer> optionalCustomer = Optional.ofNullable(
+                    customerService
+                            .getCustomerByKey("customer-michele-WRONG-KEY")
+                            .thenApply(ApiHttpResponse::getBody)
+                            .exceptionally(throwable -> null)
+                            .toCompletableFuture().get()
+            );
 
-        if (!optionalCustomer.isPresent()) {
-            logger.info("I am not existing");
-            // handle it
-        }
+            if (!optionalCustomer.isPresent()) {
+                logger.info("I am not existing");
+                // handle it
+            }
 
-        optionalCustomer.ifPresent(customer -> {
+            optionalCustomer.ifPresent(customer -> {
                 logger.info("I know that I exist.");
                 try {
-                        customerService.createEmailVerificationToken(customer, 5)
-                        .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
-                                customerTokenApiHttpResponse.getBody()
-                        ))
-                        .toCompletableFuture().get();
+                    customerService.createEmailVerificationToken(customer, 5)
+                            .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
+                                    customerTokenApiHttpResponse.getBody()
+                            ))
+                            .toCompletableFuture().get();
                 }
                 catch (Exception e) { }
-        });
-
-        System.exit(0);
+            });
+        }
     }
 }
