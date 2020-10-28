@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'commercetools-sync-java'
+rootProject.name = 'commercetools-java-sdk-v2-training'
