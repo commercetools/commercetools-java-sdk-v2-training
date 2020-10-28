@@ -20,8 +20,13 @@ public class Task06a_SEARCH {
 
     public static void main(String[] args) throws Exception {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        // TODO:
+        //  Check your prefix
+        //
+        final String apiClientPrefix = "mh-dev-admin.";
+
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task06a_SEARCH.class.getName());
 
         Category plantSeedCategory = client
@@ -46,7 +51,7 @@ public class Task06a_SEARCH {
                 .productProjections()
                 .search()
                 .get()
-                .withStaged(true)
+                .withStaged(false)
 
                 // TODO Restrict on category plant-seeds
                 .withMarkMatchingVariants(true)
@@ -62,7 +67,7 @@ public class Task06a_SEARCH {
                 // .withFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
                 // TODO: Simulate click on facet box from attribute size
-                .withFilterFacets("variants.attributes.size.label:\"box\"")
+                // .withFilterFacets("variants.attributes.size.label:\"box\"")
                 .executeBlocking()
                 .getBody();
 

@@ -23,96 +23,103 @@ import static handson.impl.ClientService.*;
  */
 public class Task05_INSTORE_ME {
 
-    // TODO
-    // see below, me-carts
-
-
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final String storeKey = "berlin-store";
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        Logger logger = LoggerFactory.getLogger(Task05_INSTORE_ME.class.getName());
 
-        CustomerService customerService = new CustomerService(client, projectKey);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
-
-        // TODO: Create an instore cart
-        // Use CartDrafts
+        // TODO: Create in-store cart with global api client
+        //  Provide an api client with global permissions
+        //  Provide a customer with only store permissions
         //
-        logger.info("Created instore cart: " +
-            customerService.getCustomerByKey("customer-michele")
-                .thenComposeAsync(customerApiHttpResponse ->
-                        client
-                            .withProjectKey(projectKey)
-                            .inStoreKeyWithStoreKeyValue(storeKey)
-                            .carts()
-                            .post(
-                                    CartDraftBuilder.of()
-                                            .currency("EUR")
-                                            .deleteDaysAfterLastModification(90l)
-                                            .customerEmail(customerApiHttpResponse.getBody().getEmail())
-                                            .build()
-                            )
-                            .execute()
-                )
-                .toCompletableFuture().get()
-                .getBody().getId()
+        final String globalApiClientPrefix = "mh-dev-admin.";
+        final String projectKey = getProjectKey(globalApiClientPrefix);
+        final ApiRoot client = createApiClient(globalApiClientPrefix);
+
+        logger.info("Created in-store cart with a global api client: " +
+                client
+                        .withProjectKey(projectKey)
+                        .inStoreKeyWithStoreKeyValue("berlin-store")
+                        .carts()
+                        .post(
+                                CartDraftBuilder.of()
+                                        .currency("EUR")
+                                        .deleteDaysAfterLastModification(90l)
+                                        .customerId("a59d3061-3f3e-41db-88df-0f9c0e24deae")
+                                        .customerEmail("michael13@example.com")
+                                        .build()
+                        )
+                        .execute()
+                        .exceptionally(throwable -> {
+                            logger.info(throwable.getLocalizedMessage().toString());
+                            return null;
+                        })
+                        .toCompletableFuture().get()
+                        .getBody().getId()
         );
 
 
+        // TODO: Create in-store Cart with in-store-client
+        //  Provide api client for customer with only store permissions
+        //
+        final String storeApiClientPrefix = "berlin-store.";
+        final ApiRoot storeClient = createStoreApiClient(storeApiClientPrefix);
+        final String storeKey = getStoreKey(storeApiClientPrefix);
+        final String storeCustomerEmail = getCustomerEmail(storeApiClientPrefix);
 
+        logger.info("Created in-store cart with a store api client: "+
+                storeClient
+                        .withProjectKey(projectKey)
+                        .inStoreKeyWithStoreKeyValue(storeKey)
+                        .me()
+                        .carts()
+                        .post(
+                                MyCartDraftBuilder.of()
+                                        .currency("EUR")
+                                        .deleteDaysAfterLastModification(90l)
+                                        .customerEmail(storeCustomerEmail)
+                                        .build()
+                        )
+                        .execute()
+                        .exceptionally(throwable -> {
+                            logger.info(throwable.getLocalizedMessage().toString());
+                            return null;
+                        })
+                        .toCompletableFuture().get()
+                        .getBody().getId()
+        );
 
-        // TODO: Create an Cart using a ME-endpoint
-        // Use correct auth-url
-        // Use MyCartDraft
+        // TODO
+        //  Verify on impex that the carts are holding the same information
         //
 
-        String clientID = "UC6k6y0EFoloW6bizT5PskhW";                   // TODO Parse from dev.properties
-        String clientSecret = "wj3tWTnXY1Y4I__DKeoaKpeUBujm27mI";
 
-        // CustomerEmail & Password
-        // Encode Base64 by Hand !!
-        String customerEmail = "michael.hartwig%40test.com";
-        String customerLogon = "password";
+        // TODO: Create a cart via me-endpoint
+        //  Provide me api client for customer with global permissions
+        //
+        final String meApiClientPrefix = "me-customer-michael14.";
+        final ApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
+        final String customerEmail = getCustomerEmail(storeApiClientPrefix);
 
-        ThirdPartyClientService thirdPartyClientService = new ThirdPartyClientService();
-//        String metoken = thirdPartyClientService.createClientAndFetchMeToken(clientID, clientSecret, projectKey, customerEmail, customerLogon);
-
-//        logger.info("Fetched me-token: " + metoken);
-//
-//        // TODO: Solution using ThirdParty
-//        //
-//        OkHttpClient myAPIClient = new OkHttpClient();
-//        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-//        Response response = null;
-
-        JSONObject simpleCart = new JSONObject();
-        simpleCart.put("currency", "EUR");
-        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//
-//            Request oAuthRequest = new Request.Builder()
-//                    .url("https://api.europe-west1.gcp.commercetools.com/" + projectKey + "/me/carts")
-//                    .post(
-//                           RequestBody.create(MediaType.parse("application/json; charset=utf-8"), simpleCart.toString())
-//                    )
-//                    .addHeader("Authorization", "Bearer " + metoken)
-//                    .addHeader("cache-control", "no-cache")
-//                    .build();
-//
-//            response = myAPIClient.newCall(oAuthRequest).execute();
-//
-//            String bodyString = new String(response.body().bytes(), "UTF-8");
-//            logger.info("Create a simple me-cart: " + bodyString);
-//
-//        } catch (IOException e) {
-//            logger.info("Execption" + e.toString());
-//        }
-//        response.body().close();
-
-        // TODO: Solution using ConstantToken-apiRoot (then move this to Session 09, performance)
-        // TODO: Solution using MeEndpoint-apiRoot
-
+        logger.info("Get cart for customer via me endpoint: " +
+                meClient
+                        .withProjectKey(projectKey)
+                        .me()
+                        .carts()
+                        .post(
+                                MyCartDraftBuilder.of()
+                                        .currency("EUR")
+                                        .deleteDaysAfterLastModification(90l)
+                                        .customerEmail(customerEmail)
+                                        .build()
+                        )
+                        .execute()
+                        .exceptionally(throwable -> {
+                            logger.info(throwable.getLocalizedMessage().toString());
+                            return null;
+                        })
+                        .toCompletableFuture().get()
+                        .getBody().getId()
+        );
 
     }
 }

@@ -9,9 +9,13 @@ import com.commercetools.importapi.defaultconfig.ImportApiFactory;
 import com.commercetools.ml.defaultconfig.MLApiRootFactory;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.AuthenticationToken;
+import io.vrap.rmf.base.client.ClientFactory;
+import io.vrap.rmf.base.client.VrapHttpClient;
 import io.vrap.rmf.base.client.http.*;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
+import io.vrap.rmf.base.client.oauth2.GlobalCustomerPasswordTokenSupplier;
 import io.vrap.rmf.base.client.oauth2.TokenSupplier;
+import io.vrap.rmf.impl.okhttp.VrapOkhttpClient;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -45,6 +49,28 @@ public class ClientService {
 
         return prop.getProperty(prefix + "projectKey");
     }
+
+    public static String getStoreKey(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "storeKey");
+    }
+
+    public static String getCustomerEmail(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "customerEmail");
+    }
+
+    public static String getCustomerPassword(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "customerPassword");
+    }
+
     /**
      * @return
      * @throws IOException
@@ -62,6 +88,79 @@ public class ClientService {
                 com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
         );
     }
+
+    public static ApiRoot createStoreApiClient(final String prefix) throws IOException {
+
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String projectKey = prop.getProperty(prefix + "projectKey");
+        String storeKey = prop.getProperty(prefix + "storeKey");
+        String storeCustomerEmail = prop.getProperty(prefix + "customerEmail");
+        String storeCustomerPassword = prop.getProperty(prefix + "customerPassword");
+
+        VrapHttpClient vrapHttpClient = new VrapOkhttpClient();
+
+        final ApiHttpClient apiHttpClient = ClientFactory.create(
+                "https://api.europe-west1.gcp.commercetools.com/",
+                vrapHttpClient,
+                new GlobalCustomerPasswordTokenSupplier(
+                        prop.getProperty(prefix + "clientId"),
+                        prop.getProperty(prefix + "clientSecret"),
+                        storeCustomerEmail,
+                        storeCustomerPassword,
+                        prop.getProperty(prefix + "scopes"),
+                        "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token"
+                        , vrapHttpClient
+                ));
+        return
+                ApiRoot.fromClient(apiHttpClient);
+
+    }
+
+    public static ApiRoot createMeTokenApiClient(final String prefix) throws IOException {
+
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String projectKey = prop.getProperty(prefix + "projectKey");
+        String customerEmail = prop.getProperty(prefix + "customerEmail");
+        String customerPassword = prop.getProperty(prefix + "customerPassword");
+
+        VrapHttpClient vrapHttpClient = new VrapOkhttpClient();
+
+        final ApiHttpClient apiHttpClient = ClientFactory.create(
+                "https://api.europe-west1.gcp.commercetools.com/",
+                vrapHttpClient,
+                new GlobalCustomerPasswordTokenSupplier(
+                        prop.getProperty(prefix + "clientId"),
+                        prop.getProperty(prefix + "clientSecret"),
+                        customerEmail,
+                        customerPassword,
+                        prop.getProperty(prefix + "scopes"),
+                        "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/customers/token"
+                        , vrapHttpClient
+                ));
+        return
+                ApiRoot.fromClient(apiHttpClient);
+
+    }
+
+
+
+
+
+    public static Object createConstantTokenApiClient(final String prefix, String token) throws IOException {
+
+        // checkout out comments from Jens
+
+
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return
+                null;
+    }
+
+
 
     /**
      * @return
@@ -81,30 +180,5 @@ public class ClientService {
                         com.commercetools.ml.defaultconfig.ServiceRegion.GCP_EUROPE.getApiUrl()
                 );
     }
-
-    public static Object createConstantTokenApiClient(final String prefix, String token) throws IOException {
-
-        // checkout out comments from Jens
-
-
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return
-                null;
-    }
-
-
-    public static Object createMeTokenApiClient(final String prefix, String token) throws IOException {
-
-        // checkout out comments from Jens
-
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return
-                null;
-    }
-
 
 }
