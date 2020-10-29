@@ -23,10 +23,14 @@ public class Task07a_CUSTOMTYPES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
+        // TODO:
+        //  Check your prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
 
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        Logger logger = LoggerFactory.getLogger(Task07a_CUSTOMTYPES.class.getName());
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 

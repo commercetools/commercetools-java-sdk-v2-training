@@ -22,7 +22,6 @@ public class ClientService {
 
     public static ApiHttpClient apiHttpClient;
     public static ApiHttpClient importHttpClient;
-    public static ApiHttpClient mlHttpClient;
 
     // TODO: Add the Constant-Token Client
 
@@ -151,25 +150,7 @@ public class ClientService {
 
 
 
-    /**
-     * @return
-     * @throws IOException
-     */
-    public static com.commercetools.ml.client.ApiRoot createMLApiClient(final String prefix) throws IOException {
 
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-        String clientId = prop.getProperty(prefix + "clientId");
-        String clientSecret = prop.getProperty(prefix + "clientSecret");
-
-        mlHttpClient = MLApiRootFactory.defaultClient(
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
-                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-        );
-
-        return MLApiRootFactory.create(() -> mlHttpClient);
-    }
 
     static class ClientFactory {
         public static ApiHttpClient createStatic(

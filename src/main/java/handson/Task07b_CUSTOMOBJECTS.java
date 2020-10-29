@@ -20,9 +20,14 @@ public class Task07b_CUSTOMOBJECTS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        // TODO:
+        //  Check your prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        Logger logger = LoggerFactory.getLogger(Task07b_CUSTOMOBJECTS.class.getName());
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 

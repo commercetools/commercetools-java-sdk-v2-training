@@ -28,9 +28,14 @@ public class Task08a_SUBSCRIPTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey("mh-dev-admin.");
-        final ApiRoot client = createApiClient("mh-dev-admin.");
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        // TODO:
+        //  Check your prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        Logger logger = LoggerFactory.getLogger(Task08a_SUBSCRIPTION.class.getName());
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
             logger.info("Created subscription: " +

@@ -101,7 +101,7 @@ public class Task05_INSTORE_ME {
         //
         final String meApiClientPrefix = "me-customer-michael14.";
         final ApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
-        final String customerEmail = getCustomerEmail(storeApiClientPrefix);
+        final String customerEmail = getCustomerEmail(meApiClientPrefix);
 
         logger.info("Get cart for customer via me endpoint: " +
                 meClient
