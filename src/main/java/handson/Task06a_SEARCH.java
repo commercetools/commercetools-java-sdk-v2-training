@@ -43,7 +43,10 @@ public class Task06a_SEARCH {
                     .getBody();
 
             // to get categoryReference
-            CategoryReference plantSeedCategoryReference = CategoryReferenceBuilder.of().id(plantSeedCategory.getId()).build();
+            CategoryReference plantSeedCategoryReference =
+                    CategoryReferenceBuilder.of()
+                            .id(plantSeedCategory.getId())
+                            .build();
 
             // filter from product projection query response
 
