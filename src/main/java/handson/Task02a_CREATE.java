@@ -1,6 +1,8 @@
 package handson;
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.models.customer.CustomerUpdate;
+import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
 import io.vrap.rmf.base.client.ApiHttpClient;
@@ -62,6 +64,8 @@ public class Task02a_CREATE {
                             .toCompletableFuture().get()
                             .getBody().toPrettyString()
             );
+
+
         }
 
     }

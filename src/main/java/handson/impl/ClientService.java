@@ -49,6 +49,20 @@ public class ClientService {
         return prop.getProperty(prefix + "projectKey");
     }
 
+    public static String getClientId(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "clientId");
+    }
+
+    public static String getClientSecret(final String prefix) throws IOException {
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "clientSecret");
+    }
+
     public static String getStoreKey(final String prefix) throws IOException {
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));

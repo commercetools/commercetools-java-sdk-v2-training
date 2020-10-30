@@ -3,6 +3,9 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ServiceRegion;
+import com.commercetools.api.models.customer.CustomerSetFirstNameActionBuilder;
+import com.commercetools.api.models.customer.CustomerSetLastNameActionBuilder;
+import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import com.commercetools.api.models.project.Project;
 import handson.impl.ClientService;
 import io.vrap.rmf.base.client.*;
@@ -17,41 +20,101 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static com.commercetools.api.defaultconfig.ApiFactory.*;
-import static handson.impl.ClientService.createApiClient;
-import static handson.impl.ClientService.getProjectKey;
+import static handson.impl.ClientService.*;
 
 public class Task09b_SPHERECLIENT_LOGGING {
 
-
-    public static final String MH_DEV_ADMIN = "mh-dev-admin.";
-
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String projectKey = getProjectKey(MH_DEV_ADMIN);
-        final ApiRoot client = createApiClient(MH_DEV_ADMIN);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        // TODO:
+        //  Provide your Api client prefix
+        //
+        String apiClientPrefix = "mh-dev-admin.";
+        final String projectKey = getProjectKey(apiClientPrefix);
+        final ApiRoot client = createApiClient(apiClientPrefix);
+        final String clientId = getClientId(apiClientPrefix);
+        final String clientSecret = getClientSecret(apiClientPrefix);
+        Logger logger = LoggerFactory.getLogger(Task09b_SPHERECLIENT_LOGGING.class.getName());
 
-        // TODO
+        // TODO 1..5
+        //  Execute, inspect individually
+        //
 
-            // 1
-            // Intensive logging, inspect returning headers, log all calls
+            // 1: Logging
+            //      Modify logback.xml
+            //      Inspect log output, header information, etc.
 
-            // 2
-            // ReUse tokens
 
-            // 3
-            // Arrays-asList for UpdateActions
+            // 2: ReUse tokens
+            //      See Task06c_GRAPHQL_Nodes.java for an example token fetch
+            //      Use ClientService.createConstantTokenApiClient and fetch customers
 
-            // 4
-            // Decorate client for X-Correlation-ID
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-        String clientId = prop.getProperty(MH_DEV_ADMIN + "clientId");
-        String clientSecret = prop.getProperty(MH_DEV_ADMIN + "clientSecret");
 
-        try (ApiHttpClient correlationIdApiHttpClient = defaultClient(
+            // 3: List of UpdateActions
+            //      Compare the following three code snippets for updating a customer
+            client
+                .withProjectKey(projectKey)
+                .customers()
+                .withKey("myCustomerKey")
+                .post(CustomerUpdateBuilder.of()
+                        .version(1l)
+                        .actions(
+                                Arrays.asList(
+                                        CustomerSetFirstNameActionBuilder.of()
+                                            .firstName("his new first name ")
+                                            .build()
+                                )
+                        )
+                        .build())
+                .execute();
+            client
+                .withProjectKey(projectKey)
+                .customers()
+                .withKey("myCustomerKey")
+                .post(CustomerUpdateBuilder.of()
+                        .version(1l)
+                        .actions(
+                                Arrays.asList(
+                                        CustomerSetLastNameActionBuilder.of()
+                                                .lastName("his new last name")
+                                                .build()
+                                )
+                        )
+                        .build())
+                .execute();
+
+
+            client
+                .withProjectKey(projectKey)
+                .customers()
+                .withKey("myCustomerKey")
+                .post(CustomerUpdateBuilder.of()
+                        .version(1l)
+                        .actions(
+                                Arrays.asList(
+                                        CustomerSetFirstNameActionBuilder.of()
+                                                .firstName("his new first name ")
+                                                .build(),
+                                        CustomerSetLastNameActionBuilder.of()
+                                                .lastName("his new last name")
+                                                .build()
+                                )
+                        )
+                        .build())
+                .execute();
+
+
+            // 4: X-Correlation_ID
+            //      Decorate client
+            //      Be careful!!
+            //      Run GET Project and inspect x-correlation-id in the headers
+
+            try (ApiHttpClient correlationIdApiHttpClient = defaultClient(
                 new VrapOkHttpClient(),
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                ClientCredentials.of()
+                        .withClientId(clientId)
+                        .withClientSecret(clientSecret)
+                        .build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
                 new ArrayList<>(Arrays.asList(
@@ -71,30 +134,47 @@ public class Task09b_SPHERECLIENT_LOGGING {
             final ApiRoot correlationIdClient = create(() -> correlationIdApiHttpClient);
         }
 
-        // or per request
+
+        // Or, per request
+
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
-            final ApiHttpResponse<Project> projectApiHttpResponse = client
-                    .withProjectKey(projectKey)
-                    .get()
-                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, UUID.randomUUID().toString())
-                    .execute()
-                    .get();
+            logger.info("Get project information with pre-set correlation id: " +
+                    client
+                        .withProjectKey(projectKey)
+                        .get()
+                        .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID().toString())
+                        .execute()
+                        .toCompletableFuture().get()
+                        .getBody().getKey()
+            );
         }
 
         // 5
-            // Simulate failover, 5xx errors
-
+        //      Simulate failover, 5xx errors
 
         try (ApiHttpClient retryHttpClient = defaultClient(
                 new VrapOkHttpClient(),
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                ClientCredentials.of()
+                        .withClientId(clientId)
+                        .withClientSecret(clientSecret)
+                        .build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
                 new ArrayList<>(Collections.singletonList(
                         new RetryMiddleware(3, Arrays.asList(500, 503))
                 ))
         )) {
-            final ApiRoot retryClient = create(() -> retryHttpClient);
+            ApiRoot retryClient = create(() -> retryHttpClient);
+            logger.info("Get project information via retryClient " +
+                    retryClient
+                            .withProjectKey(projectKey)
+                            .get()
+                            .execute()
+                            .toCompletableFuture().get()
+                            .getBody().getKey()
+            );
         }
+
+
     }
 }
