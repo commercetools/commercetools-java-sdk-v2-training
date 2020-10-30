@@ -15,6 +15,7 @@ import io.vrap.rmf.okhttp.VrapOkHttpClient;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ClientService {
 
@@ -156,26 +157,27 @@ public class ClientService {
         return ApiFactory.create(() -> apiHttpClient);
     }
 
-    public static CompletableFuture<AuthenticationToken> getTokenForClientCredentialsFlow(final String prefix) throws IOException {
+    public static AuthenticationToken getTokenForClientCredentialsFlow(final String prefix) throws IOException {
 
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
         String projectKey = prop.getProperty(prefix + "projectKey");
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
-
-        final ClientCredentialsTokenSupplier clientCredentialsTokenSupplier = new ClientCredentialsTokenSupplier(
+        AuthenticationToken token = null;
+        try (final ClientCredentialsTokenSupplier clientCredentialsTokenSupplier = new ClientCredentialsTokenSupplier(
                 clientId,
                 clientSecret,
                 null,
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 new VrapOkHttpClient()
-        );
-
-        return
-                clientCredentialsTokenSupplier.getToken();
+        )) {
+            token = clientCredentialsTokenSupplier.getToken().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return token;
     }
-
 
 
 

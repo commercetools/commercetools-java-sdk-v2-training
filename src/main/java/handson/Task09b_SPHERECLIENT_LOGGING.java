@@ -151,6 +151,9 @@ public class Task09b_SPHERECLIENT_LOGGING {
 
         // 5
         //      Simulate failover, 5xx errors
+        //      Nice test: Replace with
+        //                  new RetryMiddleware(20, Arrays.asList(404, 500, 503))
+        //                  and query for wrong customer, inspect then logging about the re-tries
 
         try (ApiHttpClient retryHttpClient = defaultClient(
                 new VrapOkHttpClient(),

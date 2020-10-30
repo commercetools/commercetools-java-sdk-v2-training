@@ -59,8 +59,7 @@ public class Task06c_GRAPHQL_Nodes {
         // TODO:
         //  Fetch a token, then inspect the following code
         //
-        final AuthenticationToken authenticationToken = getTokenForClientCredentialsFlow(apiClientPrefix)
-                                                            .toCompletableFuture().get();
+        final AuthenticationToken authenticationToken = getTokenForClientCredentialsFlow(apiClientPrefix);
         logger.info("\nToken fetched : " + authenticationToken.getAccessToken());
 
         Map<String, String> headers = new HashMap<>();
