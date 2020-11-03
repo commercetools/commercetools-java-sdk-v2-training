@@ -3,6 +3,7 @@ package handson.impl;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
+import com.commercetools.api.models.cart.CartUpdateAction;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
 import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.MoneyBuilder;
@@ -10,7 +11,9 @@ import com.commercetools.api.models.payment.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -43,6 +46,12 @@ public class PaymentService {
             String interactionId) {
 
         final Cart cart = cartApiHttpResponse.getBody();
+
+        List<CartUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                CartAddPaymentActionBuilder.of()
+                .build()
+        );
 
         return
                 apiRoot

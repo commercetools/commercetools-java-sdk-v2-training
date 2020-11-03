@@ -9,6 +9,7 @@ import com.commercetools.api.models.shipping_method.ShippingMethod;
 import com.commercetools.api.models.shipping_method.ShippingMethodResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -130,6 +131,13 @@ public class CartService {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
+        List<CartUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                CartAddDiscountCodeActionBuilder.of()
+                        .code(code)
+                        .build()
+        );
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -138,13 +146,7 @@ public class CartService {
                         .post(
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
-                                        .actions(
-                                                Arrays.asList(
-                                                        CartAddDiscountCodeActionBuilder.of()
-                                                            .code(code)
-                                                            .build()
-                                                )
-                                        )
+                                        .actions(updateActions)
                                         .build()
 
                         )
@@ -155,6 +157,12 @@ public class CartService {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
+        List<CartUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                CartRecalculateActionBuilder.of()
+                        .build()
+        );
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -163,12 +171,7 @@ public class CartService {
                         .post(
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
-                                        .actions(
-                                                Arrays.asList(
-                                                        CartRecalculateActionBuilder.of()
-                                                                .build()
-                                                )
-                                        )
+                                        .actions(updateActions)
                                         .build()
 
                         )
@@ -189,6 +192,17 @@ public class CartService {
                     .executeBlocking()
                     .getBody().getResults().get(0);
 
+        List<CartUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                CartSetShippingMethodActionBuilder.of()
+                        .shippingMethod(
+                                ShippingMethodResourceIdentifierBuilder.of()
+                                        .id(shippingMethod.getId())
+                                        .build()
+                        )
+                        .build()
+        );
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -197,17 +211,7 @@ public class CartService {
                         .post(
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
-                                        .actions(
-                                                Arrays.asList(
-                                                        CartSetShippingMethodActionBuilder.of()
-                                                                .shippingMethod(
-                                                                        ShippingMethodResourceIdentifierBuilder.of()
-                                                                            .id(shippingMethod.getId())
-                                                                            .build()
-                                                                )
-                                                                .build()
-                                                )
-                                        )
+                                        .actions(updateActions)
                                         .build()
                         )
                         .execute();

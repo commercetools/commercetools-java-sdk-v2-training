@@ -10,13 +10,16 @@ import com.commercetools.importapi.models.importrequests.PriceImportRequest;
 import com.commercetools.importapi.models.importrequests.PriceImportRequestBuilder;
 import com.commercetools.importapi.models.importsinks.ImportSink;
 import com.commercetools.importapi.models.importsinks.ImportSinkDraftBuilder;
+import com.commercetools.importapi.models.prices.PriceImport;
 import com.commercetools.importapi.models.prices.PriceImportBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -53,25 +56,25 @@ public class ImportService {
             final String productKey,
             final String productVariantKey,
             final Money amount) throws JsonProcessingException {
+        List<PriceImport> priceImports = new ArrayList<>();
+        priceImports.add(
+                PriceImportBuilder.of()
+                        .key(sinkKey + "837367")                    // key for ResourceImport, not the Sink
+                        .country("DE")                              // TODO: adjust
+                        .product(ProductKeyReferenceBuilder.of()
+                                .key(productKey)
+                                .build()
+                        )
+                        .productVariant(ProductVariantKeyReferenceBuilder.of()
+                                .key(productVariantKey)             // TODO: check the key!!!
+                                .build()
+                        )
+                        .value(amount)
+                        .build()
+        );
 
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
-                .resources(
-                        Arrays.asList(
-                                PriceImportBuilder.of()
-                                        .key(sinkKey + "837367")                    // key for ResourceImport, not the Sink
-                                        .country("DE")                              // TODO: adjust
-                                        .product(ProductKeyReferenceBuilder.of()
-                                                .key(productKey)
-                                                .build()
-                                        )
-                                        .productVariant(ProductVariantKeyReferenceBuilder.of()
-                                                .key(productVariantKey)             // TODO: check the key!!!
-                                                .build()
-                                        )
-                                        .value(amount)
-                                        .build()
-                        )
-                )
+                .resources(priceImports)
                 .build();
 
             return
@@ -79,9 +82,7 @@ public class ImportService {
                         .withProjectKeyValue(projectKey)
                         .prices()
                         .importSinkKeyWithImportSinkKeyValue(sinkKey)
-                        .post(
-                                resources
-                        )
+                        .post(resources)
                         .execute();
     }
 

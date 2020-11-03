@@ -5,6 +5,7 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.customer.CustomerSetFirstNameActionBuilder;
 import com.commercetools.api.models.customer.CustomerSetLastNameActionBuilder;
+import com.commercetools.api.models.customer.CustomerUpdateAction;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import com.commercetools.api.models.project.Project;
 import handson.impl.ClientService;
@@ -36,6 +37,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         final String clientSecret = getClientSecret(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task09b_SPHERECLIENT_LOGGING.class.getName());
 
+
         // TODO 1..5
         //  Execute, inspect individually
         //
@@ -52,37 +54,29 @@ public class Task09b_SPHERECLIENT_LOGGING {
 
             // 3: List of UpdateActions
             //      Compare the following three code snippets for updating a customer
+
+        List<CustomerUpdateAction> customerUpdateActionsFirstName = new ArrayList<>();
+        customerUpdateActionsFirstName.add(
+                CustomerSetFirstNameActionBuilder.of()
+                        .firstName("his new first name ")
+                        .build()
+        );
             client
                 .withProjectKey(projectKey)
                 .customers()
                 .withKey("myCustomerKey")
                 .post(CustomerUpdateBuilder.of()
                         .version(1l)
-                        .actions(
-                                Arrays.asList(
-                                        CustomerSetFirstNameActionBuilder.of()
-                                            .firstName("his new first name ")
-                                            .build()
-                                )
-                        )
-                        .build())
-                .execute();
-            client
-                .withProjectKey(projectKey)
-                .customers()
-                .withKey("myCustomerKey")
-                .post(CustomerUpdateBuilder.of()
-                        .version(1l)
-                        .actions(
-                                Arrays.asList(
-                                        CustomerSetLastNameActionBuilder.of()
-                                                .lastName("his new last name")
-                                                .build()
-                                )
-                        )
+                        .actions(customerUpdateActionsFirstName)
                         .build())
                 .execute();
 
+        List<CustomerUpdateAction> customerUpdateActionsLastName = new ArrayList<>();
+        customerUpdateActionsLastName.add(
+                CustomerSetFirstNameActionBuilder.of()
+                        .firstName("his new first name ")
+                        .build()
+        );
 
             client
                 .withProjectKey(projectKey)
@@ -90,16 +84,28 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .withKey("myCustomerKey")
                 .post(CustomerUpdateBuilder.of()
                         .version(1l)
-                        .actions(
-                                Arrays.asList(
-                                        CustomerSetFirstNameActionBuilder.of()
-                                                .firstName("his new first name ")
-                                                .build(),
-                                        CustomerSetLastNameActionBuilder.of()
-                                                .lastName("his new last name")
-                                                .build()
-                                )
-                        )
+                        .actions(customerUpdateActionsLastName)
+                        .build())
+                .execute();
+
+        List<CustomerUpdateAction> customerUpdateActions = new ArrayList<>();
+        customerUpdateActions.add(
+                CustomerSetFirstNameActionBuilder.of()
+                        .firstName("his new first name ")
+                        .build()
+        );
+        customerUpdateActions.add(
+                CustomerSetLastNameActionBuilder.of()
+                        .lastName("his new last name")
+                        .build()
+        );
+            client
+                .withProjectKey(projectKey)
+                .customers()
+                .withKey("myCustomerKey")
+                .post(CustomerUpdateBuilder.of()
+                        .version(1l)
+                        .actions(customerUpdateActions)
                         .build())
                 .execute();
 

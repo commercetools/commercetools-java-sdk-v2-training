@@ -50,6 +50,12 @@ public class StateMachineService {
 
     public CompletableFuture<ApiHttpResponse<State>> setStateTransitions(final State stateToBeUpdated, final List<StateResourceIdentifier> states) {
 
+        List<StateUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                StateSetTransitionsActionBuilder.of()
+                        .transitions(states)
+                        .build()
+        );
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -57,13 +63,7 @@ public class StateMachineService {
                         .withId(stateToBeUpdated.getId())
                         .post(
                                 StateUpdateBuilder.of()
-                                    .actions(
-                                            Arrays.asList(
-                                                StateSetTransitionsActionBuilder.of()
-                                                    .transitions(states)
-                                                    .build()
-                                            )
-                                    )
+                                    .actions(updateActions)
                                     .version(stateToBeUpdated.getVersion())
                                     .build()
                         )

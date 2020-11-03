@@ -7,7 +7,9 @@ import com.commercetools.api.models.state.State;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -48,6 +50,14 @@ public class OrderService {
 
         Order order = orderApiHttpResponse.getBody();
 
+        List<OrderUpdateAction> orderUpdateActions = new ArrayList<>();
+
+        orderUpdateActions.add(
+                OrderChangeOrderStateActionBuilder.of()
+                        .orderState(state)
+                        .build()
+        );
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -56,13 +66,7 @@ public class OrderService {
                         .post(
                                 OrderUpdateBuilder.of()
                                     .version(order.getVersion())
-                                    .actions(
-                                            Arrays.asList(
-                                                OrderChangeOrderStateActionBuilder.of()
-                                                    .orderState(state)
-                                                    .build()
-                                            )
-                                    )
+                                    .actions(orderUpdateActions)
                                     .build()
                         )
                         .execute();
@@ -75,6 +79,17 @@ public class OrderService {
 
         Order order = orderApiHttpResponse.getBody();
 
+        List<OrderUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(
+                OrderTransitionStateActionBuilder.of()
+                        .state(
+                                StateResourceIdentifierBuilder.of()
+                                        .id(workflowState.getId())
+                                        .build()
+                        )
+                        .build()
+        );
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -83,17 +98,7 @@ public class OrderService {
                         .post(
                                 OrderUpdateBuilder.of()
                                         .version(order.getVersion())
-                                        .actions(
-                                                Arrays.asList(
-                                                        OrderTransitionStateActionBuilder.of()
-                                                            .state(
-                                                                    StateResourceIdentifierBuilder.of()
-                                                                        .id(workflowState.getId())
-                                                                    .build()
-                                                            )
-                                                            .build()
-                                                )
-                                        )
+                                        .actions(updateActions)
                                         .build()
                         )
                         .execute();

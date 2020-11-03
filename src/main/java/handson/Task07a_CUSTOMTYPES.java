@@ -46,9 +46,9 @@ public class Task07a_CUSTOMTYPES {
                     put("EN", "Bemerkungen");
                 }
             };
-
             // Which fields will be used?
-            List<FieldDefinition> definitions = Arrays.asList(
+            List<FieldDefinition> definitions = new ArrayList<>();
+            definitions.add(
                     FieldDefinitionBuilder.of()
                             .name("plantCheck")
                             .required(false)
@@ -58,7 +58,8 @@ public class Task07a_CUSTOMTYPES {
                             )
                             .type(CustomFieldBooleanType.of())
                             .build()
-                    ,
+            );
+            definitions.add(
                     FieldDefinitionBuilder.of()
                             .name("comments")
                             .required(false)

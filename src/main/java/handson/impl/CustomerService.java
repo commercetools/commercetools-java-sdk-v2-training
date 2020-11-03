@@ -1,6 +1,7 @@
 package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
 
@@ -45,6 +46,14 @@ public class CustomerService {
             final String lastName,
             final String country) {
 
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(
+                AddressBuilder.of()
+                .country(country)
+                        .build()
+        );
+
+
         return apiRoot
                         .withProjectKey(projectKey)
                         .customers()
@@ -54,12 +63,7 @@ public class CustomerService {
                                 .firstName(firstName)
                                 .lastName(lastName)
                                 .key(customerKey)
-                                .addresses(
-                                        Arrays.asList(
-                                                AddressBuilder.of()
-                                                        .country(country)
-                                                        .build())
-                                )
+                                .addresses(addresses)
                                 .defaultShippingAddress(0L)
                                 .build())
                         .execute();
@@ -147,23 +151,23 @@ public class CustomerService {
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(Customer customer, CustomerGroup customerGroup) {
+        List<CustomerUpdateAction> updateActions = new ArrayList<>();
+        updateActions.add(CustomerSetCustomerGroupActionBuilder.of()
+                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                        .key(customerGroup.getKey())
+                        .build())
+                .build());
+        CustomerUpdate customerUpdate = CustomerUpdateBuilder.of()
+                .version(customer.getVersion())
+                .actions(updateActions)
+                .build();
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
-                        .post(CustomerUpdateBuilder.of()
-                                .version(customer.getVersion())
-                                .actions(
-                                        Arrays.asList(
-                                            CustomerSetCustomerGroupActionBuilder.of()
-                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                        .key(customerGroup.getKey())
-                                                        .build())
-                                                .build()
-                                        )
-                                )
-                                .build())
+                        .post(customerUpdate)
                         .execute();
     }
 
