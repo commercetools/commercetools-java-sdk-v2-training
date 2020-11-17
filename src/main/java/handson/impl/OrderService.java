@@ -7,9 +7,7 @@ import com.commercetools.api.models.state.State;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -27,20 +25,7 @@ public class OrderService {
 
     public CompletableFuture<ApiHttpResponse<Order>> createOrder(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .orders()
-                        .post(
-                                OrderFromCartDraftBuilder.of()
-                                    .id(cart.getId())
-                                    .version(cart.getVersion())
-                                    .build()
-
-                        )
-                        .execute();
+        return null;
     }
 
 
@@ -48,28 +33,7 @@ public class OrderService {
             final ApiHttpResponse<Order> orderApiHttpResponse,
             final OrderState state) {
 
-        Order order = orderApiHttpResponse.getBody();
-
-        List<OrderUpdateAction> orderUpdateActions = new ArrayList<>();
-
-        orderUpdateActions.add(
-                OrderChangeOrderStateActionBuilder.of()
-                        .orderState(state)
-                        .build()
-        );
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .orders()
-                        .withId(order.getId())
-                        .post(
-                                OrderUpdateBuilder.of()
-                                    .version(order.getVersion())
-                                    .actions(orderUpdateActions)
-                                    .build()
-                        )
-                        .execute();
+       return null;
     }
 
 
@@ -77,31 +41,7 @@ public class OrderService {
             final ApiHttpResponse<Order> orderApiHttpResponse,
             final State workflowState) {
 
-        Order order = orderApiHttpResponse.getBody();
-
-        List<OrderUpdateAction> updateActions = new ArrayList<>();
-        updateActions.add(
-                OrderTransitionStateActionBuilder.of()
-                        .state(
-                                StateResourceIdentifierBuilder.of()
-                                        .id(workflowState.getId())
-                                        .build()
-                        )
-                        .build()
-        );
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .orders()
-                        .withId(order.getId())
-                        .post(
-                                OrderUpdateBuilder.of()
-                                        .version(order.getVersion())
-                                        .actions(updateActions)
-                                        .build()
-                        )
-                        .execute();
+        return null;
     }
 
 }

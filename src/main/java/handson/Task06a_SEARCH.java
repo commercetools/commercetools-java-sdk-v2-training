@@ -52,31 +52,12 @@ public class Task06a_SEARCH {
 
             // the effective filter from the search response
             // params found in the product projection search https://docs.commercetools.com/api/projects/products-search#search-productprojections
-            ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = client
-                    .withProjectKey(projectKey)
-                    // TODO Get all products
-                    .productProjections()
-                    .search()
-                    .get()
-                    .withStaged(false)
+            ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = null;
 
-                    // TODO Restrict on category plant-seeds
-                    .withMarkMatchingVariants(true)
-                    .withFilterQuery("categories.id:\"" + plantSeedCategoryReference.getId() + "\"")
 
-                    // TODO Get all Facets for Enum size and Number weight_in_kg
-                    .withFacet("variants.attributes.size")
-                    .withFacet("variants.attributes.weight_in_kg")
 
-                    // TODO Give price range on products with no effect on facets
-                    // .withFilter("variants.price.centAmount:range (100 to 100000)")
-                    // TODO: with effect on facets
-                    // .withFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
-                    // TODO: Simulate click on facet box from attribute size
-                    // .withFilterFacets("variants.attributes.size.label:\"box\"")
-                    .executeBlocking()
-                    .getBody();
+
 
             int size = productProjectionPagedSearchResponse.getResults().size();
             logger.info("Nr. of products: " + size);

@@ -9,7 +9,6 @@ import com.commercetools.api.models.shipping_method.ShippingMethod;
 import com.commercetools.api.models.shipping_method.ShippingMethodResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,34 +37,8 @@ public class CartService {
      */
     public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
 
-        final Customer customer = customerApiHttpResponse.getBody();
-
         return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .carts()
-                        .post(
-                                CartDraftBuilder.of()
-                                        .currency("EUR")
-                                        .deleteDaysAfterLastModification(90L)
-                                        .customerEmail(customer.getEmail())
-                                        .customerId(customer.getId())
-                                        .country(
-                                                customer.getAddresses().stream()
-                                                    .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
-                                                    .findFirst()
-                                                    .get()
-                                                    .getCountry()
-                                        )
-                                        .shippingAddress(customer.getAddresses().stream()
-                                                .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
-                                                .findFirst()
-                                                .get()
-                                        )
-                                        .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
-                                        .build()
-                        )
-                        .execute();
+                null;
     }
 
 
@@ -92,129 +65,23 @@ public class CartService {
             final Channel channel,
             final String ... skus) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
-        List<CartUpdateAction> cartAddLineItemActions =                         // Cast
-                Stream.of(skus)
-                    .map(s ->
-                            CartAddLineItemActionBuilder.of()
-                            .sku(s)
-                            .quantity(1L)
-                            .supplyChannel(
-                                    ChannelResourceIdentifierBuilder.of()
-                                            .id(channel.getId())
-                                            .build()
-                            )
-                            .build()
-                    )
-                    .collect(Collectors.toList());
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                CartUpdateBuilder.of()
-                                    .version(cart.getVersion())
-                                    .actions(
-                                            cartAddLineItemActions
-                                    )
-                                    .build()
-
-                        )
-                        .execute();
+        return null;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(
             final ApiHttpResponse<Cart> cartApiHttpResponse, final String code) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
-        List<CartUpdateAction> updateActions = new ArrayList<>();
-        updateActions.add(
-                CartAddDiscountCodeActionBuilder.of()
-                        .code(code)
-                        .build()
-        );
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                CartUpdateBuilder.of()
-                                        .version(cart.getVersion())
-                                        .actions(updateActions)
-                                        .build()
-
-                        )
-                        .execute();
+        return null;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
-        List<CartUpdateAction> updateActions = new ArrayList<>();
-        updateActions.add(
-                CartRecalculateActionBuilder.of()
-                        .build()
-        );
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                CartUpdateBuilder.of()
-                                        .version(cart.getVersion())
-                                        .actions(updateActions)
-                                        .build()
-
-                        )
-                        .execute();
+        return null;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
-        final ShippingMethod shippingMethod =
-                apiRoot
-                    .withProjectKey(projectKey)
-                    .shippingMethods()
-                    .matchingCart()
-                    .get()
-                    .withCartId(cart.getId())
-                    .executeBlocking()
-                    .getBody().getResults().get(0);
-
-        List<CartUpdateAction> updateActions = new ArrayList<>();
-        updateActions.add(
-                CartSetShippingMethodActionBuilder.of()
-                        .shippingMethod(
-                                ShippingMethodResourceIdentifierBuilder.of()
-                                        .id(shippingMethod.getId())
-                                        .build()
-                        )
-                        .build()
-        );
-
-        return
-                apiRoot
-                        .withProjectKey(projectKey)
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                CartUpdateBuilder.of()
-                                        .version(cart.getVersion())
-                                        .actions(updateActions)
-                                        .build()
-                        )
-                        .execute();
+        return null;
     }
 
 

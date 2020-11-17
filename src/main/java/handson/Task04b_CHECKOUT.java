@@ -44,23 +44,9 @@ public class Task04b_CHECKOUT {
 
             // TODO: Fetch a channel if your inventory mode will not be NONE
             //
-            Channel channel = client
-                    .withProjectKey(projectKey)
-                    .channels()
-                    .get()
-                    .withWhere("key=" + "\"" + "berlin-warehouse" + "\"")                          // See also: .addWhere
-                    .execute()
-                    .toCompletableFuture().get()
-                    .getBody().getResults().get(0);
+            Channel channel = null;
 
-            final State state = client
-                    .withProjectKey(projectKey)
-                    .states()
-                    .get()
-                    .withWhere("key=" + "\"" + "OrderPacked" + "\"")
-                    .execute()
-                    .toCompletableFuture().get()
-                    .getBody().getResults().get(0);
+            final State state = null;
 
 
             // TODO: Perform cart operations:
@@ -74,33 +60,7 @@ public class Task04b_CHECKOUT {
             // TODO additionally: add custom line items, add shipping method
             //
             logger.info("Created cart/order ID: " +
-                    customerService.getCustomerByKey("customer-michael15")
-                            .thenComposeAsync(cartService::createCart)
-
-                            .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
-                                    cartApiHttpResponse,
-                                    channel,
-                                    "til83272", "til83272", "til83272")
-                            )
-
-                            .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse,"MIXED"))
-                            .thenComposeAsync(cartService::recalculate)
-                            .thenComposeAsync(cartService::setShipping)
-
-                            .thenComposeAsync(cartApiHttpResponse -> paymentService.createPaymentAndAddToCart(
-                                    cartApiHttpResponse,
-                                    "We_Do_Payments",
-                                    "CREDIT_CARD",
-                                    "we_pay_73636" + Math.random(),                // Must be unique.
-                                    "pay82626"+ Math.random())                    // Must be unique.
-                            )
-
-                            .thenComposeAsync(orderService::createOrder)
-                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.COMPLETE))
-                            .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, state))
-
-                            .toCompletableFuture().get()
-                            .getBody().getId()
+                    ""
             );
         }
 

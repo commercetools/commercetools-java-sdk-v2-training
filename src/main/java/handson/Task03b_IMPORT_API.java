@@ -47,10 +47,8 @@ public class Task03b_IMPORT_API {
                             .toCompletableFuture().get()
             );
 
-            Money amount = MoneyBuilder.of()
-                    .currencyCode("EUR")
-                    .centAmount(3412L)
-                    .build();
+            // TODO
+            Money amount = null;
 
             logger.info("Created price resource {} ",
                     importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)

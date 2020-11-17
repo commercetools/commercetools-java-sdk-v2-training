@@ -46,9 +46,9 @@ public class Task07a_CUSTOMTYPES {
                     put("EN", "Bemerkungen");
                 }
             };
+
             // Which fields will be used?
-            List<FieldDefinition> definitions = new ArrayList<>();
-            definitions.add(
+            List<FieldDefinition> definitions = Arrays.asList(
                     FieldDefinitionBuilder.of()
                             .name("plantCheck")
                             .required(false)
@@ -58,8 +58,7 @@ public class Task07a_CUSTOMTYPES {
                             )
                             .type(CustomFieldBooleanType.of())
                             .build()
-            );
-            definitions.add(
+                    ,
                     FieldDefinitionBuilder.of()
                             .name("comments")
                             .required(false)
@@ -80,28 +79,7 @@ public class Task07a_CUSTOMTYPES {
             };
 
             logger.info("Custom Type info: " +
-                    client
-                            .withProjectKey(projectKey)
-                            .types()
-                            .post(
-                                    TypeDraftBuilder.of()
-                                            .key("customerPlantChecker")
-                                            .name(
-                                                    LocalizedStringBuilder.of()
-                                                            .values(namesForType)
-                                                            .build()
-                                            )
-                                            .resourceTypeIds(
-                                                    Arrays.asList(
-                                                            ResourceTypeId.CUSTOMER
-                                                    )
-                                            )
-                                            .fieldDefinitions(definitions)
-                                            .build()
-                            )
-                            .execute()
-                            .toCompletableFuture().get()
-                            .getBody().getId()
+                    " "
             );
         }
 

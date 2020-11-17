@@ -29,39 +29,21 @@ public class ClientService {
      */
     public static ApiRoot createApiClient(final String prefix) throws IOException {
 
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        apiHttpClient = null;
 
-        String clientId = prop.getProperty(prefix + "clientId");
-        String clientSecret = prop.getProperty(prefix + "clientSecret");
-
-        apiHttpClient = ApiFactory.defaultClient(
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
-                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-        );
         return ApiFactory.create(() -> apiHttpClient);
     }
 
     public static String getProjectKey(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "projectKey");
+        return "";
     }
 
     public static String getClientId(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "clientId");
+        return "";
     }
 
     public static String getClientSecret(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "clientSecret");
+        return "";
     }
 
     public static String getStoreKey(final String prefix) throws IOException {
