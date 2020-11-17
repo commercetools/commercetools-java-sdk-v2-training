@@ -1,0 +1,66 @@
+Static Token:
+    public static ApiRoot create(
+            final String token,
+            final String apiEndpoint,
+            final LoggerMiddleware.LogLevel logLevel
+    ) {
+        AuthenticationToken t = new AuthenticationToken();
+        t.setAccessToken(token);
+        return ApiRoot.fromMiddlewares(new HttpMiddleware(
+                apiEndpoint,
+                vrapHttpClient,
+                new StaticTokenSupplier(t)
+        ), new LoggerMiddleware(logLevel));
+    }
+9:04
+Anon Flow:
+    public static ApiRoot createAnon(
+            final ClientCredentials credentials,
+            final String tokenEndpoint,
+            final String apiEndpoint,
+            final LoggerMiddleware.LogLevel logLevel
+    ) {
+        return ApiRoot.fromMiddlewares(new HttpMiddleware(
+                apiEndpoint,
+                vrapHttpClient,
+                new AnonymousSessionTokenSupplier(
+                        credentials.getClientId(),
+                        credentials.getClientSecret(),
+                        credentials.getScopes(),
+                        tokenEndpoint
+                        , vrapHttpClient
+                )
+        ), new LoggerMiddleware(logLevel));
+    }
+9:05
+PasswordFlow:
+   public static ApiRoot createPasswordFlow(
+            final String userEmail,
+            final String userPassword,
+            final ClientCredentials credentials,
+            final String tokenEndpoint,
+            final String apiEndpoint,
+            final LoggerMiddleware.LogLevel logLevel
+    ) {
+        return ApiRoot.fromMiddlewares(new HttpMiddleware(
+                apiEndpoint,
+                vrapHttpClient,
+                new GlobalCustomerPasswordTokenSupplier(
+                        credentials.getClientId(),
+                        credentials.getClientSecret(),
+                        userEmail,
+                        userPassword,
+                        credentials.getScopes(),
+                        tokenEndpoint
+                        , vrapHttpClient
+                )
+        ), new LoggerMiddleware(logLevel));
+    }
+9:06
+answers this your questions? :wink:
+
+Michael Hartwig  9:07 AM
+wonderful, thanks
+
+jens.schulze  9:08 AM
+but as i see it, this would only work e.g. on a mobile. this is not meant for server side usage as you can't distinguish different users etc
