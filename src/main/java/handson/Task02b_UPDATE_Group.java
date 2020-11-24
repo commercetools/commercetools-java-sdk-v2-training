@@ -41,18 +41,7 @@ public class Task02b_UPDATE_Group {
             //  ASSIGN the customer to the customer group
             //
             logger.info("Customer assigned to group: " +
-                    customerService
-                            .getCustomerByKey("customer-michael15")
-                            .thenCombineAsync(
-                                    customerService.getCustomerGroupByKey("outdoor-customer-group"),
-                                    (customer, customerGroup) ->
-                                            customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
-                                    // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
-                            )
-                            .thenComposeAsync(CompletableFuture::toCompletableFuture)
-                            .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
-                            .toCompletableFuture().get()
-                            .getBody().getEmail()
+                    ""
             );
         }
     }
