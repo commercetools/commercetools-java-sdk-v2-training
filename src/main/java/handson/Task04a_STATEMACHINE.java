@@ -6,6 +6,7 @@ import com.commercetools.api.models.state.StateReferenceBuilder;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import com.commercetools.api.models.state.StateTypeEnum;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import handson.impl.StateMachineService;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class Task04a_STATEMACHINE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task04a_STATEMACHINE.class.getName());
         final ApiRoot client = createApiClient(apiClientPrefix);

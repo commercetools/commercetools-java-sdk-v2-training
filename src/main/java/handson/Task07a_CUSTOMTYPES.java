@@ -6,6 +6,7 @@ import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.product_type.TextInputHint;
 import com.commercetools.api.models.type.*;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,8 @@ public class Task07a_CUSTOMTYPES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

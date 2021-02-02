@@ -3,6 +3,7 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.extension.*;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,7 @@ public class Task07c_APIEXTENSION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

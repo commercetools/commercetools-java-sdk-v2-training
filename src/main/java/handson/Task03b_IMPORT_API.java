@@ -7,6 +7,7 @@ import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.ClientService;
 import handson.impl.ImportService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,7 @@ public class Task03b_IMPORT_API {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO
-        //  Check your prefix for an Import Api Client
-        //  Provide a price sink key
-        //
-        String apiImportClientPrefix = "mh-dev-import.";
+        final String apiImportClientPrefix = PrefixHelper.getDevImportClientPrefix();
         final String sinkKey = "berlin-store-prices";
         final String projectKey = getProjectKey(apiImportClientPrefix);
 

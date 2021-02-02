@@ -1,6 +1,7 @@
 package handson;
 
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +22,8 @@ public class Task03c_SYNC_PROJECTS {
         //  Provide here source and target project prefixes in "dev.properties"
         //  Make sure, source and target project have proper setup (locales, countries, taxes...)
         //
-        String sourcePrefix = "mh-dev-admin.";     // Your source api client prefix
-        String targetPrefix = "mh-test-admin.";    // Your target api client prefix
+        final String sourcePrefix = PrefixHelper.getDevApiClientPrefix();     // Your source api client prefix
+        final String targetPrefix = PrefixHelper.getTestApiClientPrefix();    // Your target api client prefix
 
         Properties properties = new Properties();
         properties.load(ClientService.class.getResourceAsStream("/dev.properties"));

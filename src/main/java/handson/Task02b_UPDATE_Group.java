@@ -3,6 +3,7 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,7 @@ public class Task02b_UPDATE_Group {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Provide your Api client prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         final ApiRoot client = createApiClient(apiClientPrefix);

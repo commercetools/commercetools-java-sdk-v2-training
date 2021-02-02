@@ -5,6 +5,7 @@ import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import io.vrap.rmf.base.client.error.NotFoundException;
@@ -27,10 +28,9 @@ public class Task09a_ERROR_HANDLING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());

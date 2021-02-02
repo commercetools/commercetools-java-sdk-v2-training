@@ -3,6 +3,7 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.product.ProductPagedQueryResponse;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class Task06b_PAGEDQUERY {
     //
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
