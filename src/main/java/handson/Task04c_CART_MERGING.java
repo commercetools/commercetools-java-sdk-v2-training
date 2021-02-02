@@ -24,10 +24,7 @@ public class Task04c_CART_MERGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

@@ -7,6 +7,7 @@ import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.subscription.*;
 import com.commercetools.api.models.type.ResourceTypeId;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,7 @@ public class Task08a_SUBSCRIPTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

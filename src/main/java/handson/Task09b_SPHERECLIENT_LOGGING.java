@@ -8,6 +8,7 @@ import com.commercetools.api.models.customer.CustomerSetLastNameActionBuilder;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import com.commercetools.api.models.project.Project;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.*;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
@@ -26,10 +27,8 @@ public class Task09b_SPHERECLIENT_LOGGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Provide your Api client prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
         final String clientId = getClientId(apiClientPrefix);

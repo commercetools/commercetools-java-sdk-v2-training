@@ -5,6 +5,7 @@ import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.graph_ql.GraphQLRequestBuilder;
 import handson.graphql.ProductCustomerQuery;
 import handson.impl.ClientService;
+import handson.impl.PrefixHelper;
 import io.aexp.nodes.graphql.*;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.AuthenticationToken;
@@ -23,10 +24,7 @@ public class Task06c_GRAPHQL_Nodes {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        // TODO:
-        //  Check your prefix
-        //
-        String apiClientPrefix = "mh-dev-admin.";
+        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
