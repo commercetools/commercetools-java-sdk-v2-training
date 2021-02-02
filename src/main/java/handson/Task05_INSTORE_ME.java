@@ -46,7 +46,8 @@ public class Task05_INSTORE_ME {
         // TODO: Create in-store Cart with in-store-client
         //  Provide api client for customer with only store permissions
         //
-        final String storeApiClientPrefix = "berlin-store.";
+        final String storeApiClientPrefix = PrefixHelper.getStoreApiClientPrefix();
+
         final ApiRoot storeClient = createStoreApiClient(storeApiClientPrefix);
         final String storeKey = getStoreKey(storeApiClientPrefix);
         final String storeCustomerEmail = getCustomerEmail(storeApiClientPrefix);
