@@ -6,7 +6,7 @@ public class PrefixHelper {
     //  Provide your Api client prefixes as you create them. For example "mh-dev-admin." and "mh-test-admin."
 
     // Dev Admin Client
-    private static String apiDevClientPrefix = "mh-dev-admin.";
+    private static String apiDevClientPrefix = "DEV_PREFIX";
 
     // Test Admin Client
     private static String apiTestClientPrefix = "TEST_PREFIX";
