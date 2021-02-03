@@ -64,6 +64,8 @@ public class Task02a_CREATE {
             );
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

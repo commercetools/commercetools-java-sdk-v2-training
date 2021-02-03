@@ -55,10 +55,9 @@ public class CustomerService {
                                 .lastName(lastName)
                                 .key(customerKey)
                                 .addresses(
-                                        Arrays.asList(
-                                                AddressBuilder.of()
-                                                        .country(country)
-                                                        .build())
+                                    AddressBuilder.of()
+                                            .country(country)
+                                            .build()
                                 )
                                 .defaultShippingAddress(0L)
                                 .build())
@@ -155,13 +154,11 @@ public class CustomerService {
                         .post(CustomerUpdateBuilder.of()
                                 .version(customer.getVersion())
                                 .actions(
-                                        Arrays.asList(
-                                            CustomerSetCustomerGroupActionBuilder.of()
-                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                        .key(customerGroup.getKey())
-                                                        .build())
-                                                .build()
-                                        )
+                                    CustomerSetCustomerGroupActionBuilder.of()
+                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                .key(customerGroup.getKey())
+                                                .build())
+                                        .build()
                                 )
                                 .build())
                         .execute();

@@ -139,11 +139,9 @@ public class CartService {
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
                                         .actions(
-                                                Arrays.asList(
-                                                        CartAddDiscountCodeActionBuilder.of()
-                                                            .code(code)
-                                                            .build()
-                                                )
+                                            CartAddDiscountCodeActionBuilder.of()
+                                                .code(code)
+                                                .build()
                                         )
                                         .build()
 
@@ -164,10 +162,8 @@ public class CartService {
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
                                         .actions(
-                                                Arrays.asList(
-                                                        CartRecalculateActionBuilder.of()
-                                                                .build()
-                                                )
+                                                CartRecalculateActionBuilder.of()
+                                                        .build()
                                         )
                                         .build()
 
@@ -198,15 +194,13 @@ public class CartService {
                                 CartUpdateBuilder.of()
                                         .version(cart.getVersion())
                                         .actions(
-                                                Arrays.asList(
-                                                        CartSetShippingMethodActionBuilder.of()
-                                                                .shippingMethod(
-                                                                        ShippingMethodResourceIdentifierBuilder.of()
-                                                                            .id(shippingMethod.getId())
-                                                                            .build()
-                                                                )
+                                            CartSetShippingMethodActionBuilder.of()
+                                                    .shippingMethod(
+                                                            ShippingMethodResourceIdentifierBuilder.of()
+                                                                .id(shippingMethod.getId())
                                                                 .build()
-                                                )
+                                                    )
+                                                    .build()
                                         )
                                         .build()
                         )

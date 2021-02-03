@@ -88,6 +88,8 @@ public class Task09a_ERROR_HANDLING {
                 }
                 catch (Exception e) { }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

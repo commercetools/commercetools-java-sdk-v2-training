@@ -52,13 +52,11 @@ public class Task08a_SUBSCRIPTION {
                                                             .build()
                                             )
                                             .changes(
-                                                    Arrays.asList(
-                                                            ChangeSubscriptionBuilder.of()
-                                                                    .resourceTypeId(
-                                                                            ResourceTypeId.CUSTOMER.toString().toLowerCase()                      // really toString??
-                                                                    )
-                                                                    .build()
-                                                    )
+                                                    ChangeSubscriptionBuilder.of()
+                                                            .resourceTypeId(
+                                                                    ResourceTypeId.CUSTOMER.getJsonName()                      // really toString??
+                                                            )
+                                                            .build()
                                             )
                                             .build()
                             )
@@ -66,6 +64,8 @@ public class Task08a_SUBSCRIPTION {
                             .toCompletableFuture().get()
                             .getBody()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

@@ -71,7 +71,7 @@ public class Task04c_CART_MERGING {
                                     .build()
                     )
                     .execute()
-                    .toCompletableFuture().get().getBody().getCart().toPrettyString();
+                    .toCompletableFuture().get().getBody().getCart().getId();
             logger.info("cart-id-after_merge: " + cartString);
 
 
@@ -89,6 +89,8 @@ public class Task04c_CART_MERGING {
 
             // TODO: Inspect the customers carts here or via impex
             //
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

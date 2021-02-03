@@ -58,11 +58,9 @@ public class StateMachineService {
                         .post(
                                 StateUpdateBuilder.of()
                                     .actions(
-                                            Arrays.asList(
-                                                StateSetTransitionsActionBuilder.of()
-                                                    .transitions(states)
-                                                    .build()
-                                            )
+                                        StateSetTransitionsActionBuilder.of()
+                                            .transitions(states)
+                                            .build()
                                     )
                                     .version(stateToBeUpdated.getVersion())
                                     .build()
