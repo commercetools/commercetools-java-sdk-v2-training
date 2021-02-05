@@ -1,11 +1,11 @@
 package handson;
 
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
@@ -21,8 +21,8 @@ public class Task03c_SYNC_PROJECTS {
         //  Have docker installed
         //  Make sure, source and target project have proper setup (locales, countries, taxes...)
         //
-        String sourcePrefix = PrefixHelper.getDevApiClientPrefix();     // Your source api client prefix
-        String targetPrefix = PrefixHelper.getTestApiClientPrefix();    // Your target api client prefix
+        String sourcePrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();     // Your source api client prefix
+        String targetPrefix = ApiPrefixHelper.API_TEST_CLIENT_PREFIX.getPrefix();    // Your target api client prefix
 
         Properties properties = new Properties();
         properties.load(ClientService.class.getResourceAsStream("/dev.properties"));

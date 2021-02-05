@@ -4,8 +4,8 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.graph_ql.GraphQLRequestBuilder;
 import handson.graphql.ProductCustomerQuery;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
 import io.aexp.nodes.graphql.*;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.AuthenticationToken;
@@ -24,7 +24,7 @@ public class Task06c_GRAPHQL_Nodes {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

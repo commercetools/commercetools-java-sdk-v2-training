@@ -2,20 +2,16 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
-import com.commercetools.api.models.customer.*;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.commercetools.api.models.customer.CustomerSigninBuilder;
 import handson.impl.*;
 import io.vrap.rmf.base.client.ApiHttpClient;
-import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
-import static com.commercetools.api.models.customer.AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART;
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
 
@@ -24,7 +20,7 @@ public class Task04c_CART_MERGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

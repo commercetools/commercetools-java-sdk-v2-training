@@ -6,6 +6,7 @@ import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.category.CategoryReferenceBuilder;
 import com.commercetools.api.models.product.*;
 import com.commercetools.api.product.FacetResultsAccessor;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
@@ -23,7 +24,7 @@ public class Task06a_SEARCH {
 
     public static void main(String[] args) throws Exception {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

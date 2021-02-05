@@ -1,9 +1,9 @@
 package handson;
 
 import com.commercetools.api.client.ApiRoot;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
-import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class Task02b_UPDATE_Group {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
         final ApiRoot client = createApiClient(apiClientPrefix);

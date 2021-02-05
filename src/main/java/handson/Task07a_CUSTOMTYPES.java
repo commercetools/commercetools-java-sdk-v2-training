@@ -1,18 +1,19 @@
 package handson;
 
 import com.commercetools.api.client.ApiRoot;
-import com.commercetools.api.models.common.LocalizedString;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
-import com.commercetools.api.models.product_type.TextInputHint;
 import com.commercetools.api.models.type.*;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -24,7 +25,7 @@ public class Task07a_CUSTOMTYPES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

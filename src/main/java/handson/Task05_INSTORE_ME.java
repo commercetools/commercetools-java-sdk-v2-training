@@ -3,17 +3,13 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.me.MyCartDraftBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import handson.impl.*;
-//import okhttp3.*;
+import handson.impl.ApiPrefixHelper;
+import handson.impl.ClientService;
 import io.vrap.rmf.base.client.ApiHttpClient;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.*;
@@ -32,7 +28,7 @@ public class Task05_INSTORE_ME {
         //  Provide an api client with global permissions
         //  Provide a customer with only store permissions
         //
-        final String globalApiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         final String projectKey = getProjectKey(globalApiClientPrefix);
         final ApiRoot client = createApiClient(globalApiClientPrefix);
 
@@ -64,7 +60,7 @@ public class Task05_INSTORE_ME {
         // TODO: Create in-store Cart with in-store-client
         //  Provide api client for customer with only store permissions
         //
-        final String storeApiClientPrefix = PrefixHelper.getStoreApiClientPrefix();
+        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         final ApiRoot storeClient = createStoreApiClient(storeApiClientPrefix);
         final String storeKey = getStoreKey(storeApiClientPrefix);
         final String storeCustomerEmail = getCustomerEmail(storeApiClientPrefix);
@@ -99,7 +95,7 @@ public class Task05_INSTORE_ME {
         // TODO: Create a cart via me-endpoint
         //  Provide me api client for customer with global permissions
         //
-        final String meApiClientPrefix = PrefixHelper.getMeApiClientPrefix();
+        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
         final ApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
         final String customerEmail = getCustomerEmail(meApiClientPrefix);
 

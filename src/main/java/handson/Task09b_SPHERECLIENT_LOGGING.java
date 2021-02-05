@@ -6,10 +6,11 @@ import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.customer.CustomerSetFirstNameActionBuilder;
 import com.commercetools.api.models.customer.CustomerSetLastNameActionBuilder;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
-import com.commercetools.api.models.project.Project;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
-import io.vrap.rmf.base.client.*;
+import io.vrap.rmf.base.client.ApiHttpClient;
+import io.vrap.rmf.base.client.ApiHttpException;
+import io.vrap.rmf.base.client.ApiHttpHeaders;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
 import io.vrap.rmf.okhttp.VrapOkHttpClient;
@@ -17,17 +18,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import static com.commercetools.api.defaultconfig.ApiFactory.*;
+import static com.commercetools.api.defaultconfig.ApiFactory.create;
+import static com.commercetools.api.defaultconfig.ApiFactory.defaultClient;
 import static handson.impl.ClientService.*;
 
 public class Task09b_SPHERECLIENT_LOGGING {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);
