@@ -25,7 +25,7 @@ public class Task04c_CART_MERGING {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

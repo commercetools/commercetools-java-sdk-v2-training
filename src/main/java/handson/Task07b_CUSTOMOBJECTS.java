@@ -3,15 +3,16 @@ package handson;
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import javax.json.*;
 
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getProjectKey;
@@ -22,7 +23,7 @@ public class Task07b_CUSTOMOBJECTS {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
 
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
         final ApiRoot client = createApiClient(apiClientPrefix);

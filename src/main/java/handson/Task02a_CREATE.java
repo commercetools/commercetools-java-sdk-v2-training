@@ -1,20 +1,18 @@
 package handson;
 
 import com.commercetools.api.client.ApiRoot;
-import com.commercetools.api.models.customer.CustomerUpdate;
-import com.commercetools.api.models.customer.CustomerUpdateBuilder;
+import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
-import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 
-import static handson.impl.ClientService.*;
+import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 
 /**
@@ -27,8 +25,11 @@ import static handson.impl.ClientService.*;
 public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
-
-        final String apiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        /**
+         * TODO:
+         * UPDATE the ApiPrefixHelper with your prefix from dev.properties (e.g. "mh-dev-admin.")
+         */
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
         final ApiRoot client = createApiClient(apiClientPrefix);

@@ -32,7 +32,7 @@ public class Task05_INSTORE_ME {
         //  Provide an api client with global permissions
         //  Provide a customer with only store permissions
         //
-        final String globalApiClientPrefix = PrefixHelper.getDevApiClientPrefix();
+        final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         final String projectKey = getProjectKey(globalApiClientPrefix);
         final ApiRoot client = createApiClient(globalApiClientPrefix);
 
@@ -46,7 +46,7 @@ public class Task05_INSTORE_ME {
         // TODO: Create in-store Cart with in-store-client
         //  Provide api client for customer with only store permissions
         //
-        final String storeApiClientPrefix = PrefixHelper.getStoreApiClientPrefix();
+        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 
         final ApiRoot storeClient = createStoreApiClient(storeApiClientPrefix);
         final String storeKey = getStoreKey(storeApiClientPrefix);
@@ -67,7 +67,7 @@ public class Task05_INSTORE_ME {
         //  Provide me api client for customer with global permissions
         // Update the PrefixHelper with the prefix for your Me API Client
         //
-        final String meApiClientPrefix = PrefixHelper.getMeApiClientPrefix();
+        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
 
         final ApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
         final String customerEmail = getCustomerEmail(meApiClientPrefix);
