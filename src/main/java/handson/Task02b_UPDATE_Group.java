@@ -43,9 +43,7 @@ public class Task02b_UPDATE_Group {
                             .getCustomerByKey("customer-michael15")
                             .thenCombineAsync(
                                     customerService.getCustomerGroupByKey("outdoor-customer-group"),
-                                    (customer, customerGroup) ->
-                                            customerService.assignCustomerToCustomerGroup(customer.getBody(), customerGroup.getBody())
-                                    // .toCompletableFuture().get()             // nicer writing but then unhandled exception in lambda
+                                    customerService::assignCustomerToCustomerGroup
                             )
                             .thenComposeAsync(CompletableFuture::toCompletableFuture)
                             .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })

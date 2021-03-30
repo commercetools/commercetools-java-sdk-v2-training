@@ -145,7 +145,13 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(Customer customer, CustomerGroup customerGroup) {
+    public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
+            final ApiHttpResponse<Customer> customerApiHttpResponse,
+            final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse) {
+
+        final Customer customer = customerApiHttpResponse.getBody();
+        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
+
         return
                 apiRoot
                         .withProjectKey(projectKey)
@@ -163,33 +169,5 @@ public class CustomerService {
                                 .build())
                         .execute();
     }
-
-
-/*
-
-    public CompletionStage<CustomerSignInResult> createCustomerForStore(final String email,
-                                                                final String password,
-                                                                final String key,
-                                                                final String firstName,
-                                                                final String lastName,
-                                                                final CountryCode countryCode,
-                                                                final Store store) {
-
-        final CustomerDraft customerDraft =
-                CustomerDraftBuilder.of(email, password)
-                        .stores(Arrays.asList(ResourceIdentifier.ofKey(store.getKey())))
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .key(key)
-                        .addresses(Arrays.asList(Address.of(countryCode)))
-                        .defaultShippingAddress(0)
-                        .build();
-        return
-                client.execute(
-                        CustomerCreateCommand.of(customerDraft)
-                );
-    }
-*/
-
 
 }

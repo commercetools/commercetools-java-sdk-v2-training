@@ -2,6 +2,7 @@ package handson;
 
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.customer.CustomerSetFirstNameActionBuilder;
 import com.commercetools.api.models.customer.CustomerSetLastNameActionBuilder;
@@ -11,6 +12,7 @@ import handson.impl.ClientService;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.ApiHttpException;
 import io.vrap.rmf.base.client.ApiHttpHeaders;
+import io.vrap.rmf.base.client.HttpClientSupplier;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
 import org.slf4j.Logger;

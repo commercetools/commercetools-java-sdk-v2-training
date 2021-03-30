@@ -36,7 +36,10 @@ public class ClientService {
         String clientSecret = prop.getProperty(prefix + "clientSecret");
 
         apiHttpClient = ApiFactory.defaultClient(
-                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                ClientCredentials.of()
+                        .withClientId(clientId)
+                        .withClientSecret(clientSecret)
+                        .build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
         );
