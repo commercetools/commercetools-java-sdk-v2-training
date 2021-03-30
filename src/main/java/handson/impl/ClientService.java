@@ -8,9 +8,9 @@ import com.commercetools.ml.defaultconfig.MLApiRootFactory;
 import io.vrap.rmf.base.client.ApiHttpClient;
 
 import io.vrap.rmf.base.client.AuthenticationToken;
+import io.vrap.rmf.base.client.HttpClientSupplier;
 import io.vrap.rmf.base.client.VrapHttpClient;
 import io.vrap.rmf.base.client.oauth2.*;
-import io.vrap.rmf.okhttp.VrapOkHttpClient;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -121,7 +121,7 @@ public class ClientService {
                     storeCustomerPassword,
                     ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                     "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token",
-                    "https://api.europe-west1.gcp.commercetools.com/"
+                    ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 );
         return ApiFactory.create(() -> apiHttpClient);
     }
@@ -141,7 +141,7 @@ public class ClientService {
                 customerPassword,
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/customers/token",
-                "https://api.europe-west1.gcp.commercetools.com/"
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
         );
 
         return ApiFactory.create(() -> apiHttpClient);
@@ -151,7 +151,7 @@ public class ClientService {
 
         final ApiHttpClient apiHttpClient = ClientFactory.createStatic(
                 token,
-                "https://api.europe-west1.gcp.commercetools.com/"
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
             );
 
         return ApiFactory.create(() -> apiHttpClient);
@@ -170,7 +170,7 @@ public class ClientService {
                 clientSecret,
                 null,
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                new VrapOkHttpClient()
+                HttpClientSupplier.of().get()
         )) {
             token = clientCredentialsTokenSupplier.getToken().get();
         } catch (InterruptedException | ExecutionException e) {
@@ -190,7 +190,7 @@ public class ClientService {
             t.setAccessToken(token);
             return io.vrap.rmf.base.client.ClientFactory.create(
                             apiEndpoint,
-                            new VrapOkHttpClient(),
+                            HttpClientSupplier.of().get(),
                             new StaticTokenSupplier(t)
             );
         }
@@ -202,13 +202,13 @@ public class ClientService {
         ) {
             return io.vrap.rmf.base.client.ClientFactory.create(
                             apiEndpoint,
-                            new VrapOkHttpClient(),
+                            HttpClientSupplier.of().get(),
                             new AnonymousSessionTokenSupplier(
                                     credentials.getClientId(),
                                     credentials.getClientSecret(),
                                     credentials.getScopes(),
                                     tokenEndpoint,
-                                    new VrapOkHttpClient()
+                                    HttpClientSupplier.of().get()
                             )
             );
         }
@@ -222,7 +222,7 @@ public class ClientService {
         ) {
             return io.vrap.rmf.base.client.ClientFactory.create(
                             apiEndpoint,
-                            new VrapOkHttpClient(),
+                            HttpClientSupplier.of().get(),
                             new GlobalCustomerPasswordTokenSupplier(
                                     credentials.getClientId(),
                                     credentials.getClientSecret(),
@@ -230,7 +230,7 @@ public class ClientService {
                                     userPassword,
                                     credentials.getScopes(),
                                     tokenEndpoint,
-                                    new VrapOkHttpClient()
+                                    HttpClientSupplier.of().get()
                             )
             );
         }

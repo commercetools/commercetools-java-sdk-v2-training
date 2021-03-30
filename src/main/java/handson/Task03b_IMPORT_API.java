@@ -75,6 +75,8 @@ public class Task03b_IMPORT_API {
                             .toCompletableFuture().get()
                             .getBody().getStates().getImported()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

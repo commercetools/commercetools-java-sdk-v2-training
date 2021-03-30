@@ -67,6 +67,8 @@ public class Task07b_CUSTOMOBJECTS {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

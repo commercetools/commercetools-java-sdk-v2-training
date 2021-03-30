@@ -41,7 +41,7 @@ public class Task05_INSTORE_ME {
                             .post(
                                     CartDraftBuilder.of()
                                             .currency("EUR")
-                                            .deleteDaysAfterLastModification(90l)
+                                            .deleteDaysAfterLastModification(90L)
                                             .customerId("a59d3061-3f3e-41db-88df-0f9c0e24deae")
                                             .customerEmail("michael13@example.com")
                                             .build()
@@ -54,6 +54,8 @@ public class Task05_INSTORE_ME {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -74,7 +76,7 @@ public class Task05_INSTORE_ME {
                         .post(
                                 MyCartDraftBuilder.of()
                                         .currency("EUR")
-                                        .deleteDaysAfterLastModification(90l)
+                                        .deleteDaysAfterLastModification(90L)
                                         .customerEmail(storeCustomerEmail)
                                         .build()
                         )
@@ -107,13 +109,13 @@ public class Task05_INSTORE_ME {
                         .post(
                                 MyCartDraftBuilder.of()
                                         .currency("EUR")
-                                        .deleteDaysAfterLastModification(90l)
+                                        .deleteDaysAfterLastModification(90L)
                                         .customerEmail(customerEmail)
                                         .build()
                         )
                         .execute()
                         .exceptionally(throwable -> {
-                            logger.info(throwable.getLocalizedMessage().toString());
+                            logger.info(throwable.getLocalizedMessage());
                             return null;
                         })
                         .toCompletableFuture().get()

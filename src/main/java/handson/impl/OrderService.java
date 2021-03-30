@@ -57,11 +57,9 @@ public class OrderService {
                                 OrderUpdateBuilder.of()
                                     .version(order.getVersion())
                                     .actions(
-                                            Arrays.asList(
-                                                OrderChangeOrderStateActionBuilder.of()
-                                                    .orderState(state)
-                                                    .build()
-                                            )
+                                        OrderChangeOrderStateActionBuilder.of()
+                                            .orderState(state)
+                                            .build()
                                     )
                                     .build()
                         )
@@ -84,15 +82,13 @@ public class OrderService {
                                 OrderUpdateBuilder.of()
                                         .version(order.getVersion())
                                         .actions(
-                                                Arrays.asList(
-                                                        OrderTransitionStateActionBuilder.of()
-                                                            .state(
-                                                                    StateResourceIdentifierBuilder.of()
-                                                                        .id(workflowState.getId())
-                                                                    .build()
-                                                            )
-                                                            .build()
+                                            OrderTransitionStateActionBuilder.of()
+                                                .state(
+                                                        StateResourceIdentifierBuilder.of()
+                                                            .id(workflowState.getId())
+                                                        .build()
                                                 )
+                                                .build()
                                         )
                                         .build()
                         )

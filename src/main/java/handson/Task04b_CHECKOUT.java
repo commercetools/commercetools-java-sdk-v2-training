@@ -99,6 +99,8 @@ public class Task04b_CHECKOUT {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

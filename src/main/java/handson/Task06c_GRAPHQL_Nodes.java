@@ -49,10 +49,13 @@ public class Task06c_GRAPHQL_Nodes {
                             .execute()
                             .toCompletableFuture().get()
                             .getBody()
-                            .getData().toPrettyString()
+                            .getData()
             );
 
-        };
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ;
 
         // TODO:
         //  Fetch a token, then inspect the following code

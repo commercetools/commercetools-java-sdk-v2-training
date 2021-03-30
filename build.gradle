@@ -26,7 +26,7 @@ plugins {
 
 ext {
     versions = [
-        commercetools: "1.6.0",
+        commercetools: "3.1.1",
         slf4j: "1.7.21",
         logback: "1.1.7",
     ]
@@ -53,6 +53,7 @@ repositories {
 
 
 dependencies {
+    implementation "com.commercetools.sdk:commercetools-http-client:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-sdk-java-api:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-sdk-java-importapi:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-sdk-java-ml:${versions.commercetools}"

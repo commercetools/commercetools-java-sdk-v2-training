@@ -52,6 +52,8 @@ public class Task02b_UPDATE_Group {
                             .toCompletableFuture().get()
                             .getBody().getEmail()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -42,16 +42,12 @@ public class Task07c_APIEXTENSION {
                                                             .build()
                                             )
                                             .triggers(
-                                                    Arrays.asList(
-                                                            ExtensionTriggerBuilder.of()
-                                                                    .resourceTypeId(ExtensionResourceTypeId.ORDER)
-                                                                    .actions(
-                                                                            Arrays.asList(
-                                                                                    ExtensionAction.CREATE
-                                                                            )
-                                                                    )
-                                                                    .build()
-                                                    )
+                                                ExtensionTriggerBuilder.of()
+                                                        .resourceTypeId(ExtensionResourceTypeId.ORDER)
+                                                        .actions(
+                                                            ExtensionAction.CREATE
+                                                        )
+                                                        .build()
                                             )
                                             .build()
                             )
@@ -59,6 +55,8 @@ public class Task07c_APIEXTENSION {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

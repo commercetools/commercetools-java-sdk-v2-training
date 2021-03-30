@@ -57,7 +57,7 @@ public class Task06b_PAGEDQUERY {
                             .get()
 
                             .withWhere("productType(id = :productTypeId)")
-                            .addQueryParam("var.productTypeId", productTypeId)
+                            .withPredicateVar("productTypeId", productTypeId)
 
                             // Important, internally we use id > $lastId, it will not work without this line
                             .withSort("id asc")
@@ -67,7 +67,7 @@ public class Task06b_PAGEDQUERY {
 
                             // use this for following pages
                             .withWhere("id > :lastId")
-                            .addQueryParam("var.lastId", lastId)
+                            .withPredicateVar("lastId", lastId)
 
                             // always use this
                             .withWithTotal(false)
@@ -81,6 +81,8 @@ public class Task06b_PAGEDQUERY {
             productPagedQueryResponse.getResults().forEach(
                     product -> logger.info("Product: " + product.getId())
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

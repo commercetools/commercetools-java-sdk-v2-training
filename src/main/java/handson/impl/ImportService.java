@@ -56,21 +56,19 @@ public class ImportService {
 
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
                 .resources(
-                        Arrays.asList(
-                                PriceImportBuilder.of()
-                                        .key(sinkKey + "837367")                    // key for ResourceImport, not the Sink
-                                        .country("DE")                              // TODO: adjust
-                                        .product(ProductKeyReferenceBuilder.of()
-                                                .key(productKey)
-                                                .build()
-                                        )
-                                        .productVariant(ProductVariantKeyReferenceBuilder.of()
-                                                .key(productVariantKey)             // TODO: check the key!!!
-                                                .build()
-                                        )
-                                        .value(amount)
-                                        .build()
-                        )
+                    PriceImportBuilder.of()
+                            .key(sinkKey + "837367")                    // key for ResourceImport, not the Sink
+                            .country("DE")                              // TODO: adjust
+                            .product(ProductKeyReferenceBuilder.of()
+                                    .key(productKey)
+                                    .build()
+                            )
+                            .productVariant(ProductVariantKeyReferenceBuilder.of()
+                                    .key(productVariantKey)             // TODO: check the key!!!
+                                    .build()
+                            )
+                            .value(amount)
+                            .build()
                 )
                 .build();
 

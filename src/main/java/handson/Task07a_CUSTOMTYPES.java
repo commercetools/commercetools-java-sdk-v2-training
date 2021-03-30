@@ -33,26 +33,14 @@ public class Task07a_CUSTOMTYPES {
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
-            Map<String, String> namesForFieldCheck = new HashMap<String, String>() {
-                {
-                    put("DE", "plantCheck");
-                    put("EN", "plantCheck");
-                }
-            };
-            Map<String, String> namesForFieldComments = new HashMap<String, String>() {
-                {
-                    put("DE", "comments");
-                    put("EN", "Bemerkungen");
-                }
-            };
-
             // Which fields will be used?
             List<FieldDefinition> definitions = Arrays.asList(
                     FieldDefinitionBuilder.of()
                             .name("plantCheck")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
-                                    .values(namesForFieldCheck)
+                                    .addValue("de", "plantCheck")
+                                    .addValue("en", "plantCheck")
                                     .build()
                             )
                             .type(CustomFieldBooleanType.of())
@@ -62,20 +50,14 @@ public class Task07a_CUSTOMTYPES {
                             .name("comments")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
-                                    .values(namesForFieldComments)
+                                    .addValue("de", "Bemerkungen")
+                                    .addValue("en", "comments")
                                     .build()
                             )
                             .type(CustomFieldStringType.of())
                             .inputHint(TypeTextInputHint.MULTI_LINE)            // shown as single line????
                             .build()
             );
-
-            Map<String, String> namesForType = new HashMap<String, String>() {
-                {
-                    put("DE", "customerPlantChecker");
-                    put("EN", "customerPlantChecker");
-                }
-            };
 
             logger.info("Custom Type info: " +
                     client
@@ -86,13 +68,12 @@ public class Task07a_CUSTOMTYPES {
                                             .key("customerPlantChecker")
                                             .name(
                                                     LocalizedStringBuilder.of()
-                                                            .values(namesForType)
+                                                            .addValue("de", "customerPlantChecker")
+                                                            .addValue("en", "customerPlantChecker")
                                                             .build()
                                             )
                                             .resourceTypeIds(
-                                                    Arrays.asList(
-                                                            ResourceTypeId.CUSTOMER
-                                                    )
+                                                    ResourceTypeId.CUSTOMER
                                             )
                                             .fieldDefinitions(definitions)
                                             .build()
@@ -101,6 +82,8 @@ public class Task07a_CUSTOMTYPES {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

@@ -13,7 +13,6 @@ import io.vrap.rmf.base.client.ApiHttpException;
 import io.vrap.rmf.base.client.ApiHttpHeaders;
 import io.vrap.rmf.base.client.http.RetryMiddleware;
 import io.vrap.rmf.base.client.oauth2.ClientCredentials;
-import io.vrap.rmf.okhttp.VrapOkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,13 +60,11 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .customers()
                 .withKey("myCustomerKey")
                 .post(CustomerUpdateBuilder.of()
-                        .version(1l)
+                        .version(1L)
                         .actions(
-                                Arrays.asList(
-                                        CustomerSetFirstNameActionBuilder.of()
-                                            .firstName("his new first name ")
-                                            .build()
-                                )
+                            CustomerSetFirstNameActionBuilder.of()
+                                .firstName("his new first name ")
+                                .build()
                         )
                         .build())
                 .execute();
@@ -76,13 +73,11 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .customers()
                 .withKey("myCustomerKey")
                 .post(CustomerUpdateBuilder.of()
-                        .version(1l)
+                        .version(1L)
                         .actions(
-                                Arrays.asList(
-                                        CustomerSetLastNameActionBuilder.of()
-                                                .lastName("his new last name")
-                                                .build()
-                                )
+                            CustomerSetLastNameActionBuilder.of()
+                                    .lastName("his new last name")
+                                    .build()
                         )
                         .build())
                 .execute();
@@ -93,16 +88,14 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .customers()
                 .withKey("myCustomerKey")
                 .post(CustomerUpdateBuilder.of()
-                        .version(1l)
+                        .version(1L)
                         .actions(
-                                Arrays.asList(
-                                        CustomerSetFirstNameActionBuilder.of()
-                                                .firstName("his new first name ")
-                                                .build(),
-                                        CustomerSetLastNameActionBuilder.of()
-                                                .lastName("his new last name")
-                                                .build()
-                                )
+                            CustomerSetFirstNameActionBuilder.of()
+                                    .firstName("his new first name ")
+                                    .build(),
+                            CustomerSetLastNameActionBuilder.of()
+                                    .lastName("his new last name")
+                                    .build()
                         )
                         .build())
                 .execute();
@@ -114,29 +107,28 @@ public class Task09b_SPHERECLIENT_LOGGING {
             //      Run GET Project and inspect x-correlation-id in the headers
 
             try (ApiHttpClient correlationIdApiHttpClient = defaultClient(
-                new VrapOkHttpClient(),
+                HttpClientSupplier.of().get(),
                 ClientCredentials.of()
                         .withClientId(clientId)
                         .withClientSecret(clientSecret)
                         .build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl(),
-                new ArrayList<>(Arrays.asList(
-                        (request, next) -> {
-                            request.withHeader(ApiHttpHeaders.X_CORRELATION_ID, projectKey + "/" + UUID.randomUUID().toString());
-                            return next.apply(request);
-                        },
+                Collections.singletonList(
                         (request, next) -> next.apply(request).whenComplete((response, throwable) -> {
                             if (throwable.getCause() instanceof ApiHttpException) {
-                                logger.info(((ApiHttpException)throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                                logger.info(((ApiHttpException) throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
                             } else {
                                 logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
                             }
                         })
-                ))
+                ),
+                () -> projectKey + "/" + UUID.randomUUID().toString()
         )) {
             final ApiRoot correlationIdClient = create(() -> correlationIdApiHttpClient);
-        }
+        } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
         // Or, per request
@@ -151,6 +143,8 @@ public class Task09b_SPHERECLIENT_LOGGING {
                         .toCompletableFuture().get()
                         .getBody().getKey()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // 5
@@ -160,7 +154,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         //                  and query for wrong customer, inspect then logging about the re-tries
 
         try (ApiHttpClient retryHttpClient = defaultClient(
-                new VrapOkHttpClient(),
+                HttpClientSupplier.of().get(),
                 ClientCredentials.of()
                         .withClientId(clientId)
                         .withClientSecret(clientSecret)
@@ -180,6 +174,8 @@ public class Task09b_SPHERECLIENT_LOGGING {
                             .toCompletableFuture().get()
                             .getBody().getKey()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
