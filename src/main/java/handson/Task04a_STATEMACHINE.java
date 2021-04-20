@@ -56,6 +56,9 @@ public class Task04a_STATEMACHINE {
                             .toCompletableFuture().get()
             );
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

@@ -19,7 +19,7 @@ public class Task03c_SYNC_PROJECTS {
 
         // TODO
         //  Have docker installed
-        //  Provide here source and target project prefixes in "dev.properties"
+        //  Provide source and target project prefixes in "dev.properties" and ApiPrefixHelper
         //  Make sure, source and target project have proper setup (locales, countries, taxes...)
         //
 
@@ -33,21 +33,25 @@ public class Task03c_SYNC_PROJECTS {
         dockerRun.append(" -e SOURCE_PROJECT_KEY=" + properties.getProperty(sourcePrefix + "projectKey"));
         dockerRun.append(" -e SOURCE_CLIENT_ID=" + properties.getProperty(sourcePrefix + "clientId"));
         dockerRun.append(" -e SOURCE_CLIENT_SECRET=" + properties.getProperty(sourcePrefix + "clientSecret"));
+        dockerRun.append(" -e SOURCE_AUTH_URL=https://auth.europe-west1.gcp.commercetools.com");
+        dockerRun.append(" -e SOURCE_API_URL=https://api.europe-west1.gcp.commercetools.com");
         dockerRun.append(" -e TARGET_PROJECT_KEY=" + properties.getProperty(targetPrefix + "projectKey"));
         dockerRun.append(" -e TARGET_CLIENT_ID=" + properties.getProperty(targetPrefix + "clientId"));
         dockerRun.append(" -e TARGET_CLIENT_SECRET=" + properties.getProperty(targetPrefix + "clientSecret"));
+        dockerRun.append(" -e TARGET_AUTH_URL=https://auth.europe-west1.gcp.commercetools.com");
+        dockerRun.append(" -e TARGET_API_URL=https://api.europe-west1.gcp.commercetools.com");
 
 
         // TODO
         //  Modify as wished
         //  RUN the project sync
         //
-        dockerRun.append(" commercetools/commercetools-project-sync:3.8.0 -s all");
+        dockerRun.append(" commercetools/commercetools-project-sync:3.12.0 -s all -f");
         logger.info(dockerRun.toString());
 
-        Process process = Runtime.getRuntime().exec(dockerRun.toString());
-        process.waitFor();
-        logger.info(process.exitValue() + " ");
+//        Process process = Runtime.getRuntime().exec(dockerRun.toString());
+//        process.waitFor();
+//        logger.info(process.exitValue() + " ");
 
     }
 }

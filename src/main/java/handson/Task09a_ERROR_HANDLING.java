@@ -60,5 +60,8 @@ public class Task09a_ERROR_HANDLING {
 
 
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

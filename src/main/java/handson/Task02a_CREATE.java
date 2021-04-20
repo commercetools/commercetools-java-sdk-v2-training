@@ -25,10 +25,13 @@ import static handson.impl.ClientService.getProjectKey;
 public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
-        /**
-         * TODO:
-         * UPDATE the ApiPrefixHelper with your prefix from dev.properties (e.g. "mh-dev-admin.")
-         */
+
+        // TODO:
+        //  UPDATE dev.properties with an API client
+
+        // TODO: {@link ClientService#createApiClient(String prefix)}
+        //  UPDATE the ApiPrefixHelper with your prefix from dev.properties (e.g. "mh-dev-admin.")
+
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
@@ -49,8 +52,9 @@ public class Task02a_CREATE {
             logger.info("Customer created: " +
                     ""
             );
-
-
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

@@ -43,11 +43,11 @@ public class Task06b_PAGEDQUERY {
             // Instead of asking for next page, ask for elements being greater than this id
 
             // TODO in class:
-            // Give last id, start with slightly modified first id OR: do not use id when fetching first page
-            // Give product type id
-            //
-            String lastId = "84cc7775-0ad5-4cf1-93dd-a2ec745a3c40";
-            String productTypeId = "058a3465-6b40-4168-b2ab-3770d3964f98";
+            //  Give last id, start with slightly modified first id OR: do not use id when fetching first page
+            //  Give product type id
+
+            String lastId = "60cf0a97-aa40-497e-91e4-394f456d6e70";
+            String productTypeId = "8ddaebf2-3fa4-4d9d-a9ec-45757dfdd02c";
 
             //  link to give to our customers https://docs.commercetools.com/api/predicates/query
 
@@ -82,34 +82,10 @@ public class Task06b_PAGEDQUERY {
                     product -> logger.info("Product: " + product.getId())
             );
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
-
-
-
-/* Old generic solution for fetching all products
-//
-    public CompletionStage<List<Product>> findNext(final ProductQuery seedQuery, final ProductQuery query, final List<Product> products, final int PAGE_SIZE) {
-        final CompletionStage<PagedQueryResult<Product>> pageResult = client.execute(query);
-        return pageResult.thenCompose(page -> {
-            final List<Product> results = page.getResults();
-            products.addAll(results);
-            final boolean isLastQueryPage = results.size() < PAGE_SIZE;
-            if (isLastQueryPage) {
-                return CompletableFuture.completedFuture(products);
-            } else {
-                final String lastId = getIdForNextQuery(page);
-                return findNext(seedQuery, seedQuery
-                        .plusPredicates(m -> m.id().isGreaterThan(lastId)), products, PAGE_SIZE);
-            }
-        });
-    }
-
-    private <T extends Identifiable<T>> String getIdForNextQuery(final PagedResult<T> pagedResult) {
-        final List<T> results = pagedResult.getResults();
-        final int indexLastElement = results.size() - 1;
-        return results.get(indexLastElement).getId();
-    }
-*/
 

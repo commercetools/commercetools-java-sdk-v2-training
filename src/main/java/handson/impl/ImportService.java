@@ -3,20 +3,12 @@ package handson.impl;
 import com.commercetools.importapi.client.ApiRoot;
 import com.commercetools.importapi.models.common.ImportResourceType;
 import com.commercetools.importapi.models.common.Money;
-import com.commercetools.importapi.models.common.ProductKeyReferenceBuilder;
-import com.commercetools.importapi.models.common.ProductVariantKeyReferenceBuilder;
 import com.commercetools.importapi.models.importrequests.ImportResponse;
-import com.commercetools.importapi.models.importrequests.PriceImportRequest;
-import com.commercetools.importapi.models.importrequests.PriceImportRequestBuilder;
 import com.commercetools.importapi.models.importsinks.ImportSink;
 import com.commercetools.importapi.models.importsinks.ImportSinkDraftBuilder;
-import com.commercetools.importapi.models.prices.PriceImportBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -58,9 +50,5 @@ public class ImportService {
             return
                     null;
     }
-
-
-
-
 
 }

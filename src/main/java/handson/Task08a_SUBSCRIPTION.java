@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -41,23 +40,21 @@ public class Task08a_SUBSCRIPTION {
                             .subscriptions()
                             .post(
                                     SubscriptionDraftBuilder.of()
-                                            .key("mhCustomerChangeSubscription")
+                                            .key("mh_CustomerChangeSubscription")
                                             .destination(
                                                     SqsDestinationBuilder.of()
                                                             .queueUrl("")
-                                                            .region("eu-central-1")
+                                                            .region("")
                                                             .accessKey("")
                                                             .accessSecret("")
                                                             .build()
                                             )
                                             .changes(
-                                                    Arrays.asList(
-                                                            ChangeSubscriptionBuilder.of()
-                                                                    .resourceTypeId(
-                                                                            ResourceTypeId.CUSTOMER.toString().toLowerCase()                      // really toString??
-                                                                    )
-                                                                    .build()
-                                                    )
+                                                    ChangeSubscriptionBuilder.of()
+                                                            .resourceTypeId(
+                                                                    ResourceTypeId.CUSTOMER.toString().toLowerCase()                      // really toString??
+                                                            )
+                                                            .build()
                                             )
                                             .build()
                             )
@@ -65,6 +62,9 @@ public class Task08a_SUBSCRIPTION {
                             .toCompletableFuture().get()
                             .getBody()
             );
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

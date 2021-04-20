@@ -50,9 +50,11 @@ public class Task06c_GRAPHQL_Nodes {
                             .execute()
                             .toCompletableFuture().get()
                             .getBody()
-                            .getData().toPrettyString()
+                            .getData().toString()
             );
 
+        }catch (Exception e) {
+            e.printStackTrace();
         };
 
         // TODO:
@@ -74,14 +76,14 @@ public class Task06c_GRAPHQL_Nodes {
                                             .request(ProductCustomerQuery.class)
                                             .arguments(new Arguments("products",
                                                     new Argument("limit", 2),
-                                                    new Argument("sort", "masterData.current.name.en desc")
+                                                    new Argument("sort", "id desc")
                                             ))
                                             .build(),
                                     ProductCustomerQuery.class
                             );
         logger.info("Total products: " + responseEntity.getResponse().getProducts().getTotal());
         responseEntity.getResponse().getProducts().getResults().forEach(result ->
-                    logger.info("Id: " + result.getId() + "Name: " + result.getMasterData().getCurrent().getName()));
+                    logger.info("Id: " + result.getId() + " Name: " + result.getMasterData().getCurrent().getName()));
         logger.info("Total customers: " + responseEntity.getResponse().getCustomers().getTotal());
     }
 }

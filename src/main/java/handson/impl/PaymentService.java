@@ -4,13 +4,11 @@ import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
-import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.MoneyBuilder;
 import com.commercetools.api.models.payment.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -74,32 +72,28 @@ public class PaymentService {
                                                     PaymentUpdateBuilder.of()
                                                             .version(paymentApiHttpResponse.getBody().getVersion())
                                                             .actions(
-                                                                    Arrays.asList(
-                                                                            PaymentAddTransactionActionBuilder.of()
-                                                                                    .transaction(
-                                                                                            TransactionDraftBuilder.of()
-                                                                                                    .amount(
-                                                                                                            MoneyBuilder.of()
-                                                                                                                    .centAmount(cart.getTotalPrice().getCentAmount())
-                                                                                                                    .currencyCode(cart.getTotalPrice().getCurrencyCode())
-                                                                                                                    .build()
-                                                                                                    )
-                                                                                                .timestamp(ZonedDateTime.now())
-                                                                                                .type(TransactionType.CHARGE)
-                                                                                                .interactionId(interactionId)
+                                                                    PaymentAddTransactionActionBuilder.of()
+                                                                            .transaction(
+                                                                                    TransactionDraftBuilder.of()
+                                                                                        .amount(
+                                                                                            MoneyBuilder.of()
+                                                                                                .centAmount(cart.getTotalPrice().getCentAmount())
+                                                                                                .currencyCode(cart.getTotalPrice().getCurrencyCode())
                                                                                                 .build()
-                                                                                    )
-                                                                                    .build(),
-
-                                                                            // PaymentAddInterfaceInteractionActionBuilder.of()                 // Requires custom fields
-
-                                                                            PaymentSetStatusInterfaceCodeActionBuilder.of()
-                                                                                    .interfaceCode("SUCCESS")
-                                                                                    .build(),
-                                                                            PaymentSetStatusInterfaceTextActionBuilder.of()
-                                                                                    .interfaceText("We got the money.")
-                                                                                    .build()
-                                                                    )
+                                                                                        )
+                                                                                        .timestamp(ZonedDateTime.now())
+                                                                                        .type(TransactionType.CHARGE)
+                                                                                        .interactionId(interactionId)
+                                                                                        .build()
+                                                                            )
+                                                                            .build(),
+                                                                    // PaymentAddInterfaceInteractionActionBuilder.of()                 // Requires custom fields
+                                                                    PaymentSetStatusInterfaceCodeActionBuilder.of()
+                                                                            .interfaceCode("SUCCESS")
+                                                                            .build(),
+                                                                    PaymentSetStatusInterfaceTextActionBuilder.of()
+                                                                            .interfaceText("We got the money.")
+                                                                            .build()
                                                             )
                                                             .build()
                                             )
@@ -114,15 +108,13 @@ public class PaymentService {
                                                     CartUpdateBuilder.of()
                                                             .version(cart.getVersion())
                                                             .actions(
-                                                                    Arrays.asList(
-                                                                        CartAddPaymentActionBuilder.of()
-                                                                            .payment(
-                                                                                    PaymentResourceIdentifierBuilder.of()
-                                                                                        .id(paymentApiHttpResponse.getBody().getId())
-                                                                                        .build()
-                                                                            )
-                                                                            .build()
-                                                                    )
+                                                                    CartAddPaymentActionBuilder.of()
+                                                                        .payment(
+                                                                                PaymentResourceIdentifierBuilder.of()
+                                                                                    .id(paymentApiHttpResponse.getBody().getId())
+                                                                                    .build()
+                                                                        )
+                                                                        .build()
                                                             )
                                                             .build()
                                             )

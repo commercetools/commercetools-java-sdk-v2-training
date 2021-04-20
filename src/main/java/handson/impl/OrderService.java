@@ -2,12 +2,11 @@ package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
-import com.commercetools.api.models.order.*;
+import com.commercetools.api.models.order.Order;
+import com.commercetools.api.models.order.OrderState;
 import com.commercetools.api.models.state.State;
-import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -33,7 +32,7 @@ public class OrderService {
             final ApiHttpResponse<Order> orderApiHttpResponse,
             final OrderState state) {
 
-       return null;
+        return null;
     }
 
 

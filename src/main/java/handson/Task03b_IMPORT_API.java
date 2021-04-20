@@ -46,7 +46,7 @@ public class Task03b_IMPORT_API {
             Money amount = null;
 
             logger.info("Created price resource {} ",
-                    importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)
+                    importService.createPriceImportRequest(sinkKey,"tulip-seeds","TULIPSEED01", amount)
                             .toCompletableFuture().get()
             );
 
@@ -69,6 +69,9 @@ public class Task03b_IMPORT_API {
                             .toCompletableFuture().get()
                             .getBody().getStates().getImported()
             );
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

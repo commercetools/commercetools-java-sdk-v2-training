@@ -25,7 +25,6 @@ public class Task07a_CUSTOMTYPES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
@@ -36,21 +35,21 @@ public class Task07a_CUSTOMTYPES {
 
             Map<String, String> namesForFieldCheck = new HashMap<String, String>() {
                 {
-                    put("DE", "plantCheck");
-                    put("EN", "plantCheck");
+                    put("DE", "PlantCheck");
+                    put("EN", "PlantCheck");
                 }
             };
             Map<String, String> namesForFieldComments = new HashMap<String, String>() {
                 {
-                    put("DE", "comments");
-                    put("EN", "Bemerkungen");
+                    put("DE", "Bemerkungen");
+                    put("EN", "comments");
                 }
             };
 
             // Which fields will be used?
             List<FieldDefinition> definitions = Arrays.asList(
                     FieldDefinitionBuilder.of()
-                            .name("plantCheck")
+                            .name("PlantChecker")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
                                     .values(namesForFieldCheck)
@@ -60,7 +59,7 @@ public class Task07a_CUSTOMTYPES {
                             .build()
                     ,
                     FieldDefinitionBuilder.of()
-                            .name("comments")
+                            .name("Comments")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
                                     .values(namesForFieldComments)
@@ -73,14 +72,19 @@ public class Task07a_CUSTOMTYPES {
 
             Map<String, String> namesForType = new HashMap<String, String>() {
                 {
-                    put("DE", "customerPlantChecker");
-                    put("EN", "customerPlantChecker");
+                    put("DE", "mhCustomerPlantChecker");
+                    put("EN", "mhCustomerPlantChecker");
                 }
             };
 
-            logger.info("Custom Type info: " +
-                    " "
+            // TODO
+            //  Create custom type for Customer resource using the fields above
+
+            logger.info("Custom Type created: " +
+                    ""
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

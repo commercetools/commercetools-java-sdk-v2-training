@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -33,7 +32,7 @@ public class Task07c_APIEXTENSION {
                             .extensions()
                             .post(
                                     ExtensionDraftBuilder.of()
-                                            .key("mhPlantCheck777")
+                                            .key("mh_PlantCheck")
                                             .destination(
                                                     ExtensionAWSLambdaDestinationBuilder.of()
                                                             .arn("")
@@ -42,16 +41,12 @@ public class Task07c_APIEXTENSION {
                                                             .build()
                                             )
                                             .triggers(
-                                                    Arrays.asList(
-                                                            ExtensionTriggerBuilder.of()
-                                                                    .resourceTypeId(ExtensionResourceTypeId.ORDER)
-                                                                    .actions(
-                                                                            Arrays.asList(
-                                                                                    ExtensionAction.CREATE
-                                                                            )
-                                                                    )
-                                                                    .build()
-                                                    )
+                                                    ExtensionTriggerBuilder.of()
+                                                            .resourceTypeId(ExtensionResourceTypeId.ORDER)
+                                                            .actions(
+                                                                    ExtensionAction.CREATE
+                                                            )
+                                                            .build()
                                             )
                                             .build()
                             )
@@ -59,6 +54,9 @@ public class Task07c_APIEXTENSION {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

@@ -22,7 +22,6 @@ public class Task07b_CUSTOMOBJECTS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
@@ -38,7 +37,7 @@ public class Task07b_CUSTOMOBJECTS {
             // incompatibleSKUs: all the product variants above sku is incompatible with
 
             JsonObject tulipObject = Json.createObjectBuilder()
-                    .add("incompatibleSKUs", "tulip6125")
+                    .add("incompatibleSKUs", "BASILSEED01")
                     .add("leafletID", "leaflet_1234")
 
                     .add("instructions",
@@ -57,8 +56,8 @@ public class Task07b_CUSTOMOBJECTS {
                             // .withContainerAndKey("plantCheck", "tulip6736")
                             .post(
                                     CustomObjectDraftBuilder.of()
-                                            .container("plantCheck")
-                                            .key("tulip6736")
+                                            .container("mh_PlantCheck")
+                                            .key("TULIPSEED01")
                                             .value(
                                                     new ObjectMapper()
                                                             .readTree(tulipObject.toString()))
@@ -68,6 +67,8 @@ public class Task07b_CUSTOMOBJECTS {
                             .toCompletableFuture().get()
                             .getBody().getId()
             );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

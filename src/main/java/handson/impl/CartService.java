@@ -1,19 +1,13 @@
 package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
-import com.commercetools.api.models.cart.*;
+import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.channel.Channel;
-import com.commercetools.api.models.channel.ChannelResourceIdentifierBuilder;
 import com.commercetools.api.models.customer.Customer;
-import com.commercetools.api.models.shipping_method.ShippingMethod;
-import com.commercetools.api.models.shipping_method.ShippingMethodResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
 
@@ -83,7 +77,4 @@ public class CartService {
 
         return null;
     }
-
-
-
 }

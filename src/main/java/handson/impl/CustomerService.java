@@ -1,17 +1,12 @@
 package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
-import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
-
 import com.commercetools.api.models.customer_group.CustomerGroup;
 import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -110,13 +105,11 @@ public class CustomerService {
                         .post(CustomerUpdateBuilder.of()
                                 .version(customer.getVersion())
                                 .actions(
-                                        Arrays.asList(
-                                            CustomerSetCustomerGroupActionBuilder.of()
-                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                        .key(customerGroup.getKey())
-                                                        .build())
-                                                .build()
-                                        )
+                                        CustomerSetCustomerGroupActionBuilder.of()
+                                            .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                    .key(customerGroup.getKey())
+                                                    .build())
+                                            .build()
                                 )
                                 .build())
                         .execute();

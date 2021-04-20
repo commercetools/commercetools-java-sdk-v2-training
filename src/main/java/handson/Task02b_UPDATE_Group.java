@@ -40,6 +40,9 @@ public class Task02b_UPDATE_Group {
                     ""
             );
         }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -2,7 +2,6 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.channel.Channel;
-import com.commercetools.api.models.order.OrderState;
 import com.commercetools.api.models.state.State;
 import handson.impl.*;
 import io.vrap.rmf.base.client.ApiHttpClient;
@@ -58,8 +57,11 @@ public class Task04b_CHECKOUT {
             // TODO additionally: add custom line items, add shipping method
             //
             logger.info("Created cart/order ID: " +
-                    ""
+                ""
             );
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
