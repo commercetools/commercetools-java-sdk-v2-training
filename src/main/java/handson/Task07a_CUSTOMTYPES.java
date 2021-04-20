@@ -33,25 +33,36 @@ public class Task07a_CUSTOMTYPES {
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
+            Map<String, String> namesForFieldCheck = new HashMap<String, String>() {
+                {
+                    put("DE", "PlantCheck");
+                    put("EN", "PlantCheck");
+                }
+            };
+            Map<String, String> namesForFieldComments = new HashMap<String, String>() {
+                {
+                    put("DE", "Bemerkungen");
+                    put("EN", "comments");
+                }
+            };
+
             // Which fields will be used?
             List<FieldDefinition> definitions = Arrays.asList(
                     FieldDefinitionBuilder.of()
-                            .name("plantCheck")
+                            .name("PlantChecker")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
-                                    .addValue("de", "plantCheck")
-                                    .addValue("en", "plantCheck")
+                                    .values(namesForFieldCheck)
                                     .build()
                             )
                             .type(CustomFieldBooleanType.of())
                             .build()
                     ,
                     FieldDefinitionBuilder.of()
-                            .name("comments")
+                            .name("Comments")
                             .required(false)
                             .label(LocalizedStringBuilder.of()
-                                    .addValue("de", "Bemerkungen")
-                                    .addValue("en", "comments")
+                                    .values(namesForFieldComments)
                                     .build()
                             )
                             .type(CustomFieldStringType.of())
@@ -59,17 +70,23 @@ public class Task07a_CUSTOMTYPES {
                             .build()
             );
 
+            Map<String, String> namesForType = new HashMap<String, String>() {
+                {
+                    put("DE", "mhCustomerPlantChecker");
+                    put("EN", "mhCustomerPlantChecker");
+                }
+            };
+
             logger.info("Custom Type info: " +
                     client
                             .withProjectKey(projectKey)
                             .types()
                             .post(
                                     TypeDraftBuilder.of()
-                                            .key("customerPlantChecker")
+                                            .key("mhCustomerPlantChecker")
                                             .name(
                                                     LocalizedStringBuilder.of()
-                                                            .addValue("de", "customerPlantChecker")
-                                                            .addValue("en", "customerPlantChecker")
+                                                            .values(namesForType)
                                                             .build()
                                             )
                                             .resourceTypeIds(

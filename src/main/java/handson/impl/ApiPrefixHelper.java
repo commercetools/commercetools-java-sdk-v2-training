@@ -5,11 +5,12 @@ public enum ApiPrefixHelper {
     API_TEST_CLIENT_PREFIX("TEST_PREFIX"),
     API_DEV_IMPORT_PREFIX("DEV_IMPORT_PREFIX"),
     API_STORE_CLIENT_PREFIX("DEV_STORE_PREFIX"),
-    API_ME_CLIENT_PREFIX("DEV_ME_PREFIX");
+    API_ME_CLIENT_PREFIX("DEV_ME_PREFIX"),
+    API_STORE_ME_CLIENT_PREFIX("DEV_STORE_ME_PREFIX");
 
     private final String prefix;
 
-    private ApiPrefixHelper(String prefix) {
+    ApiPrefixHelper(String prefix) {
         this.prefix = prefix;
     }
 

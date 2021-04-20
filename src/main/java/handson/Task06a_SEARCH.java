@@ -8,7 +8,6 @@ import com.commercetools.api.models.product.*;
 import com.commercetools.api.product.FacetResultsAccessor;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.PrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ public class Task06a_SEARCH {
 
     public static void main(String[] args) throws Exception {
 
+
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
@@ -32,7 +32,7 @@ public class Task06a_SEARCH {
 
         try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
-            Category plantSeedCategory = client
+            Category seedCategory = client
                     .withProjectKey(projectKey)
                     .categories()
                     .withKey("plant-seeds")
@@ -42,9 +42,9 @@ public class Task06a_SEARCH {
                     .getBody();
 
             // to get categoryReference
-            CategoryReference plantSeedCategoryReference =
+            CategoryReference seedCategoryReference =
                     CategoryReferenceBuilder.of()
-                            .id(plantSeedCategory.getId())
+                            .id(seedCategory.getId())
                             .build();
 
             // filter from product projection query response
@@ -61,11 +61,13 @@ public class Task06a_SEARCH {
 
                     // TODO Restrict on category plant-seeds
                     .withMarkMatchingVariants(true)
-                    .withFilterQuery("categories.id:\"" + plantSeedCategoryReference.getId() + "\"")
+                    .withFilterQuery("categories.id:\"" + seedCategoryReference.getId() + "\"")
 
                     // TODO Get all Facets for Enum size and Number weight_in_kg
+
                     .withFacet("variants.attributes.size")
-                    .withFacet("variants.attributes.weight_in_kg")
+                    .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
+
 
                     // TODO Give price range on products with no effect on facets
                     // .withFilter("variants.price.centAmount:range (100 to 100000)")
@@ -73,36 +75,37 @@ public class Task06a_SEARCH {
                     // .withFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
                     // TODO: Simulate click on facet box from attribute size
-                    // .withFilterFacets("variants.attributes.size.label:\"box\"")
+                    //.withFilterFacets("variants.attributes.size:\"box\"")
                     .executeBlocking()
                     .getBody();
 
+
+
             int size = productProjectionPagedSearchResponse.getResults().size();
-            logger.info("Nr. of products: " + size);
-
+            logger.info("No. of products: " + size);
             List<ProductProjection> result =  productProjectionPagedSearchResponse.getResults().subList(0, size);
-
+            System.out.println("products searched: ");
+            result.forEach((r) -> System.out.println(r.getKey()));
 
             logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
-            logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values());
+            logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values().toString());
             Map<String, FacetResult> facetResults= productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
             facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
             logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
 
+
             logger.info("Facet Weight: ");
-            FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get("variants.attributes.weight_in_kg");
+            FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg");
             if (weightRangeFacetResult instanceof RangeFacetResult) {
-                logger.info("Weight: Nr. of Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().size());
-                logger.info("Weight: Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().toString());
+                logger.info("No. of Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().size());
+                logger.info("Weight Terms: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFrom().intValue() + " to " + facetResultRange.getTo().intValue() + " - " + facetResultRange.getCount()).collect(Collectors.toList()));
             }
             logger.info("Facet Size: ");
-            FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get("variants.attributes.size");
+            FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.size");
             if (sizeBoxFacetResult instanceof TermFacetResult) {
-                logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString()).collect(Collectors.joining(",")));
+                logger.info("No. of Size Terms: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().size());
+                logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
             }
-
-            System.out.println("products searched: ");
-            result.forEach((r) -> System.out.println(r.getKey()));
 
         }
     }

@@ -12,6 +12,7 @@ import io.vrap.rmf.base.client.HttpClientSupplier;
 import io.vrap.rmf.base.client.VrapHttpClient;
 import io.vrap.rmf.base.client.oauth2.*;
 
+
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
@@ -25,18 +26,16 @@ public class ClientService {
     // TODO: Add the Constant-Token Client
 
     /**
-     * @throws IOException
+     * @throws IOException exception
      */
     public static ApiRoot createApiClient(final String prefix) throws IOException {
 
         final Properties prop = new Properties();
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
 
-        apiHttpClient = ApiFactory.defaultClient(
-                ClientCredentials.of()
+        apiHttpClient = ApiFactory.defaultClient(ClientCredentials.of()
                         .withClientId(clientId)
                         .withClientSecret(clientSecret)
                         .build(),
@@ -89,8 +88,8 @@ public class ClientService {
     }
 
     /**
-     * @return
-     * @throws IOException
+     * @return apiRoot
+     * @throws IOException exception
      */
     public static com.commercetools.importapi.client.ApiRoot createImportApiClient(final String prefix) throws IOException {
 
@@ -108,26 +107,6 @@ public class ClientService {
         return ImportApiFactory.create(() -> importHttpClient);
     }
 
-    public static ApiRoot createStoreApiClient(final String prefix) throws IOException {
-
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-        String projectKey = prop.getProperty(prefix + "projectKey");
-        String storeKey = prop.getProperty(prefix + "storeKey");
-        String storeCustomerEmail = prop.getProperty(prefix + "customerEmail");
-        String storeCustomerPassword = prop.getProperty(prefix + "customerPassword");
-        String clientId = prop.getProperty(prefix + "clientId");
-        String clientSecret = prop.getProperty(prefix + "clientSecret");
-
-        final ApiHttpClient apiHttpClient = ClientFactory.createPasswordFlow(
-                    storeCustomerEmail,
-                    storeCustomerPassword,
-                    ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
-                    "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token",
-                    ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                );
-        return ApiFactory.create(() -> apiHttpClient);
-    }
 
     public static ApiRoot createMeTokenApiClient(final String prefix) throws IOException {
 
@@ -144,9 +123,30 @@ public class ClientService {
                 customerPassword,
                 ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
                 "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/customers/token",
-                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                "https://api.europe-west1.gcp.commercetools.com/"
         );
 
+        return ApiFactory.create(() -> apiHttpClient);
+    }
+
+    public static ApiRoot createStoreMeApiClient(final String prefix) throws IOException {
+
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String projectKey = prop.getProperty(prefix + "projectKey");
+        String storeKey = prop.getProperty(prefix + "storeKey");
+        String storeCustomerEmail = prop.getProperty(prefix + "customerEmail");
+        String storeCustomerPassword = prop.getProperty(prefix + "customerPassword");
+        String clientId = prop.getProperty(prefix + "clientId");
+        String clientSecret = prop.getProperty(prefix + "clientSecret");
+
+        final ApiHttpClient apiHttpClient = ClientFactory.createPasswordFlow(
+                storeCustomerEmail,
+                storeCustomerPassword,
+                ClientCredentials.of().withClientId(clientId).withClientSecret(clientSecret).build(),
+                "https://auth.europe-west1.gcp.commercetools.com/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token",
+                "https://api.europe-west1.gcp.commercetools.com/"
+        );
         return ApiFactory.create(() -> apiHttpClient);
     }
 
@@ -154,8 +154,8 @@ public class ClientService {
 
         final ApiHttpClient apiHttpClient = ClientFactory.createStatic(
                 token,
-                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-            );
+                "https://api.europe-west1.gcp.commercetools.com/"
+        );
 
         return ApiFactory.create(() -> apiHttpClient);
     }
@@ -192,9 +192,9 @@ public class ClientService {
             AuthenticationToken t = new AuthenticationToken();
             t.setAccessToken(token);
             return io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            HttpClientSupplier.of().get(),
-                            new StaticTokenSupplier(t)
+                    apiEndpoint,
+                    HttpClientSupplier.of().get(),
+                    new StaticTokenSupplier(t)
             );
         }
 
@@ -204,15 +204,15 @@ public class ClientService {
                 final String apiEndpoint
         ) {
             return io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            HttpClientSupplier.of().get(),
-                            new AnonymousSessionTokenSupplier(
-                                    credentials.getClientId(),
-                                    credentials.getClientSecret(),
-                                    credentials.getScopes(),
-                                    tokenEndpoint,
-                                    HttpClientSupplier.of().get()
-                            )
+                    apiEndpoint,
+                    HttpClientSupplier.of().get(),
+                    new AnonymousSessionTokenSupplier(
+                            credentials.getClientId(),
+                            credentials.getClientSecret(),
+                            credentials.getScopes(),
+                            tokenEndpoint,
+                            HttpClientSupplier.of().get()
+                    )
             );
         }
 
@@ -224,17 +224,17 @@ public class ClientService {
                 final String apiEndpoint
         ) {
             return io.vrap.rmf.base.client.ClientFactory.create(
-                            apiEndpoint,
-                            HttpClientSupplier.of().get(),
-                            new GlobalCustomerPasswordTokenSupplier(
-                                    credentials.getClientId(),
-                                    credentials.getClientSecret(),
-                                    userEmail,
-                                    userPassword,
-                                    credentials.getScopes(),
-                                    tokenEndpoint,
-                                    HttpClientSupplier.of().get()
-                            )
+                    apiEndpoint,
+                    HttpClientSupplier.of().get(),
+                    new GlobalCustomerPasswordTokenSupplier(
+                            credentials.getClientId(),
+                            credentials.getClientSecret(),
+                            userEmail,
+                            userPassword,
+                            credentials.getScopes(),
+                            tokenEndpoint,
+                            HttpClientSupplier.of().get()
+                    )
             );
         }
     }

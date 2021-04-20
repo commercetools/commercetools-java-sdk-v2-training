@@ -2,6 +2,8 @@ package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartResourceIdentifier;
+import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
 import com.commercetools.api.models.order.*;
 import com.commercetools.api.models.state.State;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
@@ -33,7 +35,9 @@ public class OrderService {
                         .orders()
                         .post(
                                 OrderFromCartDraftBuilder.of()
-                                    .id(cart.getId())
+                                    .cart(CartResourceIdentifierBuilder.of()
+                                            .id(cart.getId())
+                                            .build())
                                     .version(cart.getVersion())
                                     .build()
 

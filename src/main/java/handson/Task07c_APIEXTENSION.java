@@ -33,10 +33,10 @@ public class Task07c_APIEXTENSION {
                             .extensions()
                             .post(
                                     ExtensionDraftBuilder.of()
-                                            .key("mhPlantCheck777")
+                                            .key("mhPlantCheck")
                                             .destination(
                                                     ExtensionAWSLambdaDestinationBuilder.of()
-                                                            .arn("arn:aws:lambda:eu-central-1:923270384842:function:training-002-happy-garden-dev-plant-check")
+                                                            .arn("arn:aws:lambda:eu-central-1:923270384842:function:training-plant-check")
                                                             .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
                                                             .accessSecret("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")
                                                             .build()

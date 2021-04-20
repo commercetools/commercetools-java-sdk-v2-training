@@ -43,7 +43,7 @@ public class Task08a_SUBSCRIPTION {
                                             .key("mhCustomerChangeSubscription")
                                             .destination(
                                                     SqsDestinationBuilder.of()
-                                                            .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-001-happy-garden-dev-customer_change")
+                                                            .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-customer_change_queue")
                                                             .region("eu-central-1")
                                                             .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
                                                             .accessSecret("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")

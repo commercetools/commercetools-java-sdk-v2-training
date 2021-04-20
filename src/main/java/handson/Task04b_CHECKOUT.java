@@ -77,7 +77,7 @@ public class Task04b_CHECKOUT {
                             .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
                                     cartApiHttpResponse,
                                     channel,
-                                    "til83272", "til83272", "til83272")
+                                    "TULIPSEED01", "TULIPSEED01", "TULIPSEED02")
                             )
 
                             .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse,"MIXED"))

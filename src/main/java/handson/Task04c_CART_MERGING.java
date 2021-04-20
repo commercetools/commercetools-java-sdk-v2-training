@@ -2,6 +2,7 @@ package handson;
 
 import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
 import com.commercetools.api.models.customer.CustomerSigninBuilder;
 import handson.impl.*;
 import io.vrap.rmf.base.client.ApiHttpClient;
@@ -60,28 +61,17 @@ public class Task04c_CART_MERGING {
                     .login()
                     .post(
                             CustomerSigninBuilder.of()
-                                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART)
+                                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART) // Switch to USE_AS_NEW_ACTIVE_CUSTOMER_CART and notice the difference
                                     .email("michael15@example.com")
                                     .password("password")
-                                    .anonymousCartId(anonymousCart.getId())
+                                    .anonymousCart(CartResourceIdentifierBuilder.of()
+                                            .id(anonymousCart.getId())
+                                            .build())
                                     .build()
                     )
                     .execute()
                     .toCompletableFuture().get().getBody().getCart().getId();
             logger.info("cart-id-after_merge: " + cartString);
-
-
-            /*
-            client
-                .withProjectKey(projectKey)
-                .login()
-                .post(
-                        CustomerSigninBuilder.of()
-                                .anonymousCartSignInMode(USE_AS_NEW_ACTIVE_CUSTOMER_CART)
-                                .build()
-                )
-                .execute();
-            */
 
             // TODO: Inspect the customers carts here or via impex
             //

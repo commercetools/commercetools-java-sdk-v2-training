@@ -6,23 +6,22 @@ mh-dev-admin.authUrl=
 mh-dev-admin.apiUrl=
 mh-dev-admin.scopes=
 
-## mh-ml-admin
-##
 
 ## mh-import-admin
-##
-
-## mh-sync-admin, take care: old sdk, authUrl, scopes are different
 ##
 
 ## mh-test-admin
 ##
 
-## mh-berlin-dev-admin
+## mh-berlin-store-admin
 ##
 
 ## aws-plantcheck-read
 ##
 
-## berlin-store
+## mh-me-client
+##
+
+
+## mh-store-me-client
 ##

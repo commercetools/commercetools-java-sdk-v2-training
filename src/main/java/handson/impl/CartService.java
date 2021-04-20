@@ -29,7 +29,6 @@ public class CartService {
     }
 
 
-
     /**
      * Creates a cart for the given customer.
      *
@@ -206,7 +205,5 @@ public class CartService {
                         )
                         .execute();
     }
-
-
 
 }

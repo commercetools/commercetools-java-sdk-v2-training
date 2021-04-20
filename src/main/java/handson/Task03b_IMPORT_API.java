@@ -52,7 +52,7 @@ public class Task03b_IMPORT_API {
                     .build();
 
             logger.info("Created price resource {} ",
-                    importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)
+                    importService.createPriceImportRequest(sinkKey,"tulip-seed-product","TULIPSEED01", amount)
                             .toCompletableFuture().get()
             );
 

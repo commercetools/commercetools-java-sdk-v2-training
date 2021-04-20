@@ -87,31 +87,3 @@ public class Task06b_PAGEDQUERY {
     }
 }
 
-
-
-
-/* Old generic solution for fetching all products
-//
-    public CompletionStage<List<Product>> findNext(final ProductQuery seedQuery, final ProductQuery query, final List<Product> products, final int PAGE_SIZE) {
-        final CompletionStage<PagedQueryResult<Product>> pageResult = client.execute(query);
-        return pageResult.thenCompose(page -> {
-            final List<Product> results = page.getResults();
-            products.addAll(results);
-            final boolean isLastQueryPage = results.size() < PAGE_SIZE;
-            if (isLastQueryPage) {
-                return CompletableFuture.completedFuture(products);
-            } else {
-                final String lastId = getIdForNextQuery(page);
-                return findNext(seedQuery, seedQuery
-                        .plusPredicates(m -> m.id().isGreaterThan(lastId)), products, PAGE_SIZE);
-            }
-        });
-    }
-
-    private <T extends Identifiable<T>> String getIdForNextQuery(final PagedResult<T> pagedResult) {
-        final List<T> results = pagedResult.getResults();
-        final int indexLastElement = results.size() - 1;
-        return results.get(indexLastElement).getId();
-    }
-*/
-
