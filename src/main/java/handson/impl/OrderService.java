@@ -1,6 +1,6 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartResourceIdentifier;
 import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
@@ -17,10 +17,10 @@ import java.util.concurrent.CompletableFuture;
  */
 public class OrderService {
 
-    ApiRoot apiRoot;
+    ProjectApiRoot apiRoot;
     String projectKey;
 
-    public OrderService(final ApiRoot client, String projectKey) {
+    public OrderService(final ProjectApiRoot client) {
         this.apiRoot = client;
         this.projectKey = projectKey;
     }
@@ -31,7 +31,6 @@ public class OrderService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .orders()
                         .post(
                                 OrderFromCartDraftBuilder.of()
@@ -54,7 +53,6 @@ public class OrderService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .orders()
                         .withId(order.getId())
                         .post(
@@ -79,7 +77,6 @@ public class OrderService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .orders()
                         .withId(order.getId())
                         .post(

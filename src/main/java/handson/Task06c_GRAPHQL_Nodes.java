@@ -1,13 +1,11 @@
 package handson;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.defaultconfig.ServiceRegion;
 import com.commercetools.api.models.graph_ql.GraphQLRequestBuilder;
 import handson.graphql.ProductCustomerQuery;
 import handson.impl.ApiPrefixHelper;
-import handson.impl.ClientService;
 import io.aexp.nodes.graphql.*;
-import io.vrap.rmf.base.client.ApiHttpClient;
 import io.vrap.rmf.base.client.AuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,35 +25,30 @@ public class Task06c_GRAPHQL_Nodes {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final String projectKey = getProjectKey(apiClientPrefix);
-        final ApiRoot client = createApiClient(apiClientPrefix);
+        final ProjectApiRoot client = createApiClient(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
 
 
         // TODO:
         //  Use the GraphQL playground to create a graphql query
         //
-        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
 
-            logger.info("GraphQl : " +
-                    client.withProjectKey(projectKey)
-                            .graphql()
-                            .post(
-                                    GraphQLRequestBuilder.of()
-                                            .query(
-                                                    "{ products { total } }"
-                                            )
-                                            .build()
-                            )
-                            .execute()
-                            .toCompletableFuture().get()
-                            .getBody()
-                            .getData()
-            );
+        logger.info("GraphQl : " +
+                client
+                        .graphql()
+                        .post(
+                                GraphQLRequestBuilder.of()
+                                        .query(
+                                                "{ products { total } }"
+                                        )
+                                        .build()
+                        )
+                        .execute()
+                        .toCompletableFuture().get()
+                        .getBody()
+                        .getData()
+        );
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ;
 
         // TODO:
         //  Fetch a token, then inspect the following code

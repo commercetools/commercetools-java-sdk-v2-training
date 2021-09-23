@@ -1,6 +1,6 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
@@ -27,12 +27,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class PaymentService {
 
-    ApiRoot apiRoot;
-    String projectKey;
+    ProjectApiRoot apiRoot;
 
-    public PaymentService(final ApiRoot client, String projectKey) {
+    public PaymentService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> createPaymentAndAddToCart(
@@ -46,7 +44,6 @@ public class PaymentService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .payments()
                         .post(
                                 PaymentDraftBuilder.of()
@@ -67,7 +64,6 @@ public class PaymentService {
                         .execute()
                         .thenComposeAsync(paymentApiHttpResponse ->
                                     apiRoot
-                                            .withProjectKey(projectKey)
                                             .payments()
                                             .withId(paymentApiHttpResponse.getBody().getId())
                                             .post(
@@ -105,7 +101,6 @@ public class PaymentService {
                                             )
                         .thenComposeAsync(paymentApiHttpResponse ->
                                     apiRoot
-                                            .withProjectKey(projectKey)
                                             .carts()
                                             .withId(cart.getId())
                                             .post(

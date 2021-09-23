@@ -1,19 +1,14 @@
 package handson;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.me.MyCartDraftBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.*;
 //import okhttp3.*;
-import io.vrap.rmf.base.client.ApiHttpClient;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.*;
@@ -35,30 +30,24 @@ public class Task05_INSTORE_ME {
         //
 
         final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-        final String projectKey = getProjectKey(globalApiClientPrefix);
-        final ApiRoot client = createApiClient(globalApiClientPrefix);
+        final ProjectApiRoot client = createApiClient(globalApiClientPrefix);
 
-        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
-            logger.info("Created in-store cart with a global api client: " +
-                    client.withProjectKey(projectKey)
-                    .inStoreKeyWithStoreKeyValue("berlin-store")
-                    .carts()
-                    .post(
-                            CartDraftBuilder.of()
-                                    .deleteDaysAfterLastModification(90L)
-                                    .customerId("7014afc5-210f-4be9-955f-c3707142f325")
-                                    .currency("EUR")
-                                    .customerEmail("nagesh@dtest.com")
-                                    .build()
-                    )
-                    .execute()
-                    .toCompletableFuture().get()
-                    .getBody().getId()
-            );
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        logger.info("Created in-store cart with a global api client: " +
+                client
+                .inStore("berlin-store")
+                .carts()
+                .post(
+                        CartDraftBuilder.of()
+                                .deleteDaysAfterLastModification(90L)
+                                .customerId("7014afc5-210f-4be9-955f-c3707142f325")
+                                .currency("EUR")
+                                .customerEmail("nagesh@dtest.com")
+                                .build()
+                )
+                .execute()
+                .toCompletableFuture().get()
+                .getBody().getId()
+        );
 
 
 
@@ -70,14 +59,13 @@ public class Task05_INSTORE_ME {
 
 
 //        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-//        final String projectKey = getProjectKey(storeApiClientPrefix);
 //        final String storeKey = getStoreKey(storeApiClientPrefix);
-//        final ApiRoot client = createApiClient(storeApiClientPrefix);
+//        final ProjectApiRoot client = createApiClient(storeApiClientPrefix);
 //
 //
 //        logger.info("Created in-store cart with a store api client: "+
-//                client.withProjectKey(projectKey)
-//                        .inStoreKeyWithStoreKeyValue(storeKey)
+//                client
+//                        .inStore(storeKey)
 //                        .carts()
 //                        .post(
 //                                CartDraftBuilder.of()
@@ -105,7 +93,7 @@ public class Task05_INSTORE_ME {
 
 //        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
 //        final String projectKey = getProjectKey(meApiClientPrefix);
-//        final ApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
+//        final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
 //        final String customerEmail = getCustomerEmail(meApiClientPrefix);
 //
 //        logger.info("Get cart for customer via me endpoint: " +
@@ -116,10 +104,10 @@ public class Task05_INSTORE_ME {
 //                        .carts()
 //                        .post(
 //                                MyCartDraftBuilder.of()
-//                                        .currency("EUR")
-//                                        .deleteDaysAfterLastModification(90l)
-//                                        .customerEmail(customerEmail)
-//                                        .build()
+//                                                  .currency("EUR")
+//                                                  .deleteDaysAfterLastModification(90l)
+//                                                  .customerEmail(customerEmail)
+//                                                  .build()
 //                        )
 //                        .execute()
 //                        .exceptionally(throwable -> {
@@ -137,14 +125,13 @@ public class Task05_INSTORE_ME {
         //  Visit impex to inspect the carts created
 
 //        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
-//        final String projectKey = getProjectKey(storeMeApiClientPrefix);
-//        final ApiRoot storeClient = createStoreMeApiClient(storeMeApiClientPrefix);
+//        final ProjectApiRoot storeClient = createStoreMeApiClient(storeMeApiClientPrefix);
 //        final String storeKey = getStoreKey(storeMeApiClientPrefix);
 //        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
 //
 //        logger.info("Created in-store cart with a store api client: "+
-//                storeClient.withProjectKey(projectKey)
-//                        .inStoreKeyWithStoreKeyValue(storeKey)
+//                storeClient
+//                        .inStore(storeKey)
 //                        .me()
 //                        .carts()
 //                        .post(
@@ -162,5 +149,7 @@ public class Task05_INSTORE_ME {
 //                        .toCompletableFuture().get()
 //                        .getBody().getId()
 //        );
+
+        client.close();
     }
 }
