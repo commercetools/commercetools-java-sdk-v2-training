@@ -3,7 +3,7 @@ package handson;
 
 import com.commercetools.importapi.client.ProjectApiRoot;
 import com.commercetools.importapi.models.common.Money;
-import com.commercetools.importapi.models.common.MoneyBuilder;
+import com.commercetools.importapi.models.importsummaries.OperationStates;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ImportService;
 import org.slf4j.Logger;
@@ -41,34 +41,34 @@ public class Task03b_IMPORT_API {
                         .toCompletableFuture().get()
         );
 
-            // TODO
-            Money amount = null;
+        // TODO
+        Money amount = null;
 
-            logger.info("Created price resource {} ",
-                    importService.createPriceImportRequest(containerKey,"tulip-seed-product","tulip-seed-box", amount)
-                            .toCompletableFuture().get()
-            );
+        logger.info("Created price resource {} ",
+                importService.createPriceImportRequest(containerKey,"tulip-seed-product","tulip-seed-box", amount)
+                        .toCompletableFuture().get()
+        );
 
-            logger.info("Summary report on all containers on our project: {}",
-                    client
-                            .importC
-                            .get()
-                            .execute()
-                            .toCompletableFuture().get()
-                            .getBody().getResults().get(0).getResourceType()
-            );
-            logger.info("Report on all queued import operations on our import container {} ",
-                    client
-                            .importContainers()
-                            .withImportContainerKeyValue(containerKey)
-                            .importSummaries()
-                            .get()
-                            .execute()
-                            .toCompletableFuture().get()
-                            .getBody().getStates().getImported()
-            );
-        }
+        logger.info("Total containers in our project: {}",
+                client
+                        .importContainers()
+                        .get()
+                        .execute()
+                        .toCompletableFuture().get()
+                        .getBody().getTotal()
+        );
+        OperationStates states = client
+                .importContainers()
+                .withImportContainerKeyValue(containerKey)
+                .importSummaries()
+                .get()
+                .execute()
+                .toCompletableFuture().get()
+                .getBody().getStates();
+        logger.info("Processing: {} Imported: {} Unresolved: {} ",states.getProcessing(),states.getImported(),states.getUnresolved());
 
+        client.close();
     }
+
 }
 

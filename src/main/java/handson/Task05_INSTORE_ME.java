@@ -1,16 +1,16 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.cart.CartDraftBuilder;
-import com.commercetools.api.models.me.MyCartDraftBuilder;
-import handson.impl.*;
+import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static handson.impl.ClientService.*;
+import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.createStoreMeApiClient;
+import static handson.impl.ClientService.createMeTokenApiClient;
 
 
 /**
@@ -43,7 +43,7 @@ public class Task05_INSTORE_ME {
 
 //        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 //        final String storeKey = getStoreKey(storeApiClientPrefix);
-//        final ProjectApiRoot client = createApiClient(storeApiClientPrefix);
+//        final ProjectApiRoot storeClient = createApiClient(storeApiClientPrefix);
 
         logger.info("Created in-store cart with a store api client: "+
                 " "
@@ -63,7 +63,6 @@ public class Task05_INSTORE_ME {
         //  Visit impex to inspect the carts created
 
 //        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
-//        final String projectKey = getProjectKey(meApiClientPrefix);
 //        final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
 //        final String customerEmail = getCustomerEmail(meApiClientPrefix);
 
@@ -86,6 +85,8 @@ public class Task05_INSTORE_ME {
 //                        .toCompletableFuture().get()
 //                        .getBody().getId()
 //        );
+//        meClient.close();
+
         // TODO: Create in-store customer-bound Cart with in-store-me API client
         //  Update the ApiPrefixHelper with the prefix for Me(SPA) API Client
         //  Provide in-store-me API client with scope for a store and me endpoint
@@ -116,7 +117,9 @@ public class Task05_INSTORE_ME {
 //                        .toCompletableFuture().get()
 //                        .getBody().getId()
 //        );
+//        storeClient.close();
 
         client.close();
+
     }
 }

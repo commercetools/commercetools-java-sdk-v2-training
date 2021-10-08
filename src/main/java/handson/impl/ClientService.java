@@ -5,14 +5,11 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.defaultconfig.ApiFactory;
 import com.commercetools.api.defaultconfig.ApiRootBuilder;
 import com.commercetools.api.defaultconfig.ServiceRegion;
-import com.commercetools.importapi.defaultconfig.ImportApiFactory;
 import com.commercetools.importapi.defaultconfig.ImportApiRootBuilder;
 import io.vrap.rmf.base.client.ApiHttpClient;
-
 import io.vrap.rmf.base.client.AuthenticationToken;
 import io.vrap.rmf.base.client.HttpClientSupplier;
 import io.vrap.rmf.base.client.oauth2.*;
-
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,21 +27,40 @@ public class ClientService {
      */
     public static ProjectApiRoot createApiClient(final String prefix) throws IOException {
 
-        projectApiRoot = null;
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+        String clientId = prop.getProperty(prefix + "clientId");
+        String clientSecret = prop.getProperty(prefix + "clientSecret");
 
+        projectApiRoot = ApiRootBuilder.of().defaultClient(ClientCredentials.of()
+                                                                            .withClientId(clientId)
+                                                                            .withClientSecret(clientSecret)
+                                                                            .build(),
+                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+        ).buildProjectRoot(getProjectKey(prefix));
         return projectApiRoot;
     }
 
     public static String getProjectKey(final String prefix) throws IOException {
-        return "";
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "projectKey");
     }
 
     public static String getClientId(final String prefix) throws IOException {
-        return "";
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "clientId");
     }
 
     public static String getClientSecret(final String prefix) throws IOException {
-        return "";
+        final Properties prop = new Properties();
+        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
+
+        return prop.getProperty(prefix + "clientSecret");
     }
 
     public static String getStoreKey(final String prefix) throws IOException {

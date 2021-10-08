@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -33,6 +34,7 @@ public class Task06b_PAGEDQUERY {
 
         // Pagination is down to max 10.000
         final int PAGE_SIZE = 2;
+        Boolean lastPage = false;
 
         // Instead of asking for next page, ask for elements being greater than this id
 
@@ -40,42 +42,51 @@ public class Task06b_PAGEDQUERY {
         // Give last id, start with slightly modified first id OR: do not use id when fetching first page
         // Give product type id
         //
-        String lastId = "84cc7775-0ad5-4cf1-93dd-a2ec745a3c40";
-        String productTypeId = "058a3465-6b40-4168-b2ab-3770d3964f98";
+        String lastId = "c2f136b4-dbd0-440f-ae43-7dc15ffeb990";
+        String productTypeId = "201a2ddb-64e2-48ea-92a0-b27865cc1daa";
 
         //  link to give to our customers https://docs.commercetools.com/api/predicates/query
+        while(!lastPage) {
+            ProductPagedQueryResponse productPagedQueryResponse =
+                    client
+                            .products()
+                            .get()
 
-        ProductPagedQueryResponse productPagedQueryResponse =
-                client
-                        .products()
-                        .get()
+                            // Important, internally we use id > $lastId, it will not work without this line
+                            .withSort("id asc")
 
-                        .withWhere("productType(id = :productTypeId)")
-                        .withPredicateVar("productTypeId", productTypeId)
+                            .withWhere(new ArrayList<String>() {
+                                {
+//                                    add("productType(id = :productTypeId)");
+                                    add("id > :lastId");
+                                }
+                            })
+                            .withPredicateVar("productTypeId", productTypeId)
+                            .withPredicateVar("lastId", lastId)
 
-                        // Important, internally we use id > $lastId, it will not work without this line
-                        .withSort("id asc")
+                            // Limit the size per page
+                            .withLimit(PAGE_SIZE)
 
-                        // Limit the size per page
-                        .withLimit(PAGE_SIZE)
+                            // always use this
+                            .withWithTotal(false)
 
-                        // use this for following pages
-                        .withWhere("id > :lastId")
-                        .withPredicateVar("lastId", lastId)
+                            .execute()
+                            .toCompletableFuture().get()
+                            .getBody();
 
-                        // always use this
-                        .withWithTotal(false)
+            // Print results
+            int size = productPagedQueryResponse.getResults().size();
 
-                        .execute()
-                        .toCompletableFuture().get()
-                        .getBody();
-
-        // Print results
-        logger.info("Found product size: " + productPagedQueryResponse.getResults().size());
-        productPagedQueryResponse.getResults().forEach(
-                product -> logger.info("Product: " + product.getId())
-        );
-
+            if ( size != 0) {
+                logger.info("////////////////////////////////");
+                logger.info("Found products: " + size);
+                productPagedQueryResponse.getResults().forEach(
+                        product -> logger.info("Product: " + product.getId())
+                );
+                lastId = productPagedQueryResponse.getResults().get(size - 1).getId();
+            }
+            else if (size < PAGE_SIZE) break;
+        }
         client.close();
     }
 }

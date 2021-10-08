@@ -29,8 +29,8 @@ public class Task07a_CUSTOMTYPES {
 
         Map<String, String> namesForFieldCheck = new HashMap<String, String>() {
             {
-                put("DE", "PlantCheck");
-                put("EN", "PlantCheck");
+                put("DE", "Allowed to place orders");
+                put("EN", "Allowed to place orders");
             }
         };
         Map<String, String> namesForFieldComments = new HashMap<String, String>() {
@@ -43,7 +43,7 @@ public class Task07a_CUSTOMTYPES {
         // Which fields will be used?
         List<FieldDefinition> definitions = Arrays.asList(
                 FieldDefinitionBuilder.of()
-                        .name("PlantChecker")
+                        .name("allowed-to-place-orders")
                         .required(false)
                         .label(LocalizedStringBuilder.of()
                                 .values(namesForFieldCheck)
@@ -66,8 +66,8 @@ public class Task07a_CUSTOMTYPES {
 
         Map<String, String> namesForType = new HashMap<String, String>() {
             {
-                put("DE", "mhCustomerPlantChecker");
-                put("EN", "mhCustomerPlantChecker");
+                put("DE", "mh-Block-Customer");
+                put("EN", "mh-Block-Customer");
             }
         };
 

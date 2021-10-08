@@ -31,7 +31,7 @@ public class Task07b_CUSTOMOBJECTS {
         // incompatibleSKUs: all the product variants above sku is incompatible with
 
         JsonObject tulipObject = Json.createObjectBuilder()
-                .add("incompatibleSKUs", "BASILSEED01")
+                .add("incompatibleProducts", "basil-seed-product")
                 .add("leafletID", "leaflet_1234")
 
                 .add("instructions",
@@ -46,11 +46,10 @@ public class Task07b_CUSTOMOBJECTS {
         logger.info("Custom Object info: " +
                 client
                         .customObjects()
-                        // .withContainerAndKey("plantCheck", "tulip6736")
                         .post(
                                 CustomObjectDraftBuilder.of()
-                                        .container("mhPlantCheck")
-                                        .key("TULIPSEED01")
+                                        .container("PlantsCompatibilityInfo")
+                                        .key("tulip-seed-product")
                                         .value(
                                                 new ObjectMapper()
                                                         .readTree(tulipObject.toString()))
