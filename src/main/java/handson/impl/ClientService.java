@@ -27,40 +27,20 @@ public class ClientService {
      */
     public static ProjectApiRoot createApiClient(final String prefix) throws IOException {
 
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-        String clientId = prop.getProperty(prefix + "clientId");
-        String clientSecret = prop.getProperty(prefix + "clientSecret");
-
-        projectApiRoot = ApiRootBuilder.of().defaultClient(ClientCredentials.of()
-                                                                            .withClientId(clientId)
-                                                                            .withClientSecret(clientSecret)
-                                                                            .build(),
-                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-        ).buildProjectRoot(getProjectKey(prefix));
+        projectApiRoot = null;
         return projectApiRoot;
     }
 
     public static String getProjectKey(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "projectKey");
+        return null;
     }
 
     public static String getClientId(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "clientId");
+        return null;
     }
 
     public static String getClientSecret(final String prefix) throws IOException {
-        final Properties prop = new Properties();
-        prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        return prop.getProperty(prefix + "clientSecret");
+        return null;
     }
 
     public static String getStoreKey(final String prefix) throws IOException {

@@ -48,7 +48,7 @@ public class Task07b_CUSTOMOBJECTS {
                         .customObjects()
                         .post(
                                 CustomObjectDraftBuilder.of()
-                                        .container("PlantsCompatibilityInfo")
+                                        .container("plants-compatibility-info")
                                         .key("tulip-seed-product")
                                         .value(
                                                 new ObjectMapper()
