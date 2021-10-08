@@ -1,6 +1,6 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.*;
 import com.commercetools.api.models.channel.Channel;
 import com.commercetools.api.models.channel.ChannelResourceIdentifierBuilder;
@@ -20,14 +20,11 @@ import java.util.stream.Stream;
  */
 public class CartService {
 
-    ApiRoot apiRoot;
-    String projectKey;
+    ProjectApiRoot apiRoot;
 
-    public CartService(final ApiRoot client, String projectKey) {
+    public CartService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
-
 
 
     /**
@@ -46,7 +43,6 @@ public class CartService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .carts()
                         .post(
                                 CartDraftBuilder.of()

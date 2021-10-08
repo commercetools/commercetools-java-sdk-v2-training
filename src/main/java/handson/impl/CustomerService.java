@@ -1,6 +1,6 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
 
@@ -19,12 +19,10 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CustomerService {
 
-    ApiRoot apiRoot;
-    String projectKey;
+    ProjectApiRoot apiRoot;
 
-    public CustomerService(final ApiRoot client, String projectKey) {
+    public CustomerService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(String customerKey) {
@@ -49,6 +47,8 @@ public class CustomerService {
             final long timeToLiveInMinutes
     ) {
 
+        final Customer customer = customerSignInResultApiHttpResponse.getBody().getCustomer();
+
         return
                 null;
     }
@@ -57,7 +57,6 @@ public class CustomerService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailToken()
                         .post(
@@ -69,18 +68,19 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<JsonNode>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
+    public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
+
+        final CustomerToken customerToken = customerTokenApiHttpResponse.getBody();
 
         return
                 null;
     }
 
-    public CompletableFuture<ApiHttpResponse<JsonNode>> verifyEmail(final CustomerToken customerToken) {
+    public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final CustomerToken customerToken) {
 
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailConfirm()
                         .post(
@@ -94,60 +94,34 @@ public class CustomerService {
     public CompletableFuture<ApiHttpResponse<CustomerGroup>> getCustomerGroupByKey(String customerGroupKey) {
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customerGroups()
                         .withKey(customerGroupKey)
                         .get()
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(Customer customer, CustomerGroup customerGroup) {
+    public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
+            final ApiHttpResponse<Customer> customerApiHttpResponse,
+            final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse) {
+
+        final Customer customer = customerApiHttpResponse.getBody();
+        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
+
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
                         .post(CustomerUpdateBuilder.of()
                                 .version(customer.getVersion())
                                 .actions(
-                                        Arrays.asList(
-                                            CustomerSetCustomerGroupActionBuilder.of()
-                                                .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                        .key(customerGroup.getKey())
-                                                        .build())
-                                                .build()
-                                        )
+                                    CustomerSetCustomerGroupActionBuilder.of()
+                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                .key(customerGroup.getKey())
+                                                .build())
+                                        .build()
                                 )
                                 .build())
                         .execute();
     }
-
-
-/*
-
-    public CompletionStage<CustomerSignInResult> createCustomerForStore(final String email,
-                                                                final String password,
-                                                                final String key,
-                                                                final String firstName,
-                                                                final String lastName,
-                                                                final CountryCode countryCode,
-                                                                final Store store) {
-
-        final CustomerDraft customerDraft =
-                CustomerDraftBuilder.of(email, password)
-                        .stores(Arrays.asList(ResourceIdentifier.ofKey(store.getKey())))
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .key(key)
-                        .addresses(Arrays.asList(Address.of(countryCode)))
-                        .defaultShippingAddress(0)
-                        .build();
-        return
-                client.execute(
-                        CustomerCreateCommand.of(customerDraft)
-                );
-    }
-*/
-
 
 }

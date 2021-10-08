@@ -1,12 +1,11 @@
 package handson;
 
 
-import com.commercetools.importapi.client.ApiRoot;
+import com.commercetools.importapi.client.ProjectApiRoot;
 import com.commercetools.importapi.models.common.Money;
+import com.commercetools.importapi.models.common.MoneyBuilder;
 import handson.impl.ApiPrefixHelper;
-import handson.impl.ClientService;
 import handson.impl.ImportService;
-import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,21 +13,22 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createImportApiClient;
-import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task03b_IMPORT_API {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
-
-        final String sinkKey = "berlin-store-prices";
-        final String projectKey = getProjectKey(apiImportClientPrefix);
+        // TODO
+        //  Update your prefix for an Import Api Client in the PrefixHelper
+        //  Provide a price sink key
+        //
+        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String containerKey = "berlin-store-prices";
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
-        final ApiRoot client = createImportApiClient(apiImportClientPrefix);
-        final ImportService importService = new ImportService(client, projectKey);
+        final ProjectApiRoot client = createImportApiClient(apiImportClientPrefix);
+        final ImportService importService = new ImportService(client);
 
 
         // TODO
@@ -36,34 +36,32 @@ public class Task03b_IMPORT_API {
         //  CREATE a price import request
         //  CHECK the status of your import requests
         //
-        try (ApiHttpClient apiHttpClient = ClientService.importHttpClient) {
-            logger.info("Created import price sink {} ",
-                    importService.createImportPriceSink(sinkKey)
-                            .toCompletableFuture().get()
-            );
+        logger.info("Created import container {} ",
+                importService.createImportContainer(containerKey)
+                        .toCompletableFuture().get()
+        );
 
             // TODO
             Money amount = null;
 
             logger.info("Created price resource {} ",
-                    importService.createPriceImportRequest(sinkKey,"tulip-seed-product","til83272", amount)
+                    importService.createPriceImportRequest(containerKey,"tulip-seed-product","tulip-seed-box", amount)
                             .toCompletableFuture().get()
             );
 
-            logger.info("Summary report on all sinks on our project: {}",
+            logger.info("Summary report on all containers on our project: {}",
                     client
-                            .withProjectKeyValue(projectKey)
-                            .importSinks()
+                            .importC
                             .get()
                             .execute()
                             .toCompletableFuture().get()
                             .getBody().getResults().get(0).getResourceType()
             );
-            logger.info("Report on all queued import operations on our price import sink {} ",
+            logger.info("Report on all queued import operations on our import container {} ",
                     client
-                            .withProjectKeyValue(projectKey)
+                            .importContainers()
+                            .withImportContainerKeyValue(containerKey)
                             .importSummaries()
-                            .importSinkKeyWithImportSinkKeyValue(sinkKey)
                             .get()
                             .execute()
                             .toCompletableFuture().get()

@@ -1,10 +1,9 @@
 package handson;
 
-import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
-import io.vrap.rmf.base.client.ApiHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
-import static handson.impl.ClientService.getProjectKey;
 
 
 /**
@@ -32,10 +30,8 @@ public class Task02a_CREATE {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
-        final ApiRoot client = createApiClient(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client, getProjectKey(apiClientPrefix));
-
-        try (ApiHttpClient apiHttpClient = ClientService.apiHttpClient) {
+        final ProjectApiRoot client = createApiClient(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client);
 
             logger.info("Customer fetch: " +
                     ""
@@ -51,7 +47,7 @@ public class Task02a_CREATE {
             );
 
 
-        }
+        client.close();
 
     }
 }

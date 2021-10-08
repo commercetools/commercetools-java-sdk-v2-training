@@ -1,15 +1,15 @@
 package handson.impl;
 
-import com.commercetools.importapi.client.ApiRoot;
-import com.commercetools.importapi.models.common.ImportResourceType;
+import com.commercetools.importapi.client.ProjectApiRoot;
 import com.commercetools.importapi.models.common.Money;
 import com.commercetools.importapi.models.common.ProductKeyReferenceBuilder;
 import com.commercetools.importapi.models.common.ProductVariantKeyReferenceBuilder;
+import com.commercetools.importapi.models.importcontainers.ImportContainer;
+import com.commercetools.importapi.models.importcontainers.ImportContainerDraft;
+import com.commercetools.importapi.models.importcontainers.ImportContainerDraftBuilder;
 import com.commercetools.importapi.models.importrequests.ImportResponse;
 import com.commercetools.importapi.models.importrequests.PriceImportRequest;
 import com.commercetools.importapi.models.importrequests.PriceImportRequestBuilder;
-import com.commercetools.importapi.models.importsinks.ImportSink;
-import com.commercetools.importapi.models.importsinks.ImportSinkDraftBuilder;
 import com.commercetools.importapi.models.prices.PriceImportBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,32 +24,28 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ImportService {
 
-    ApiRoot apiRoot;
-    String projectKey;
+    ProjectApiRoot apiRoot;
 
-    public ImportService(final ApiRoot client, String projectKey) {
+    public ImportService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
 
-    public CompletableFuture<ApiHttpResponse<ImportSink>> createImportPriceSink(final String sinkKey) throws JsonProcessingException {
+    public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportContainer(final String containerKey) throws JsonProcessingException {
 
             return
                 apiRoot
-                        .withProjectKeyValue(projectKey)
-                        .importSinks()
+                        .importContainers()
                         .post(
-                                ImportSinkDraftBuilder.of()
-                                        .key(sinkKey)
-                                        .resourceType(ImportResourceType.PRICE)
-                                        .build()
+                                ImportContainerDraftBuilder.of()
+                                       .key(containerKey)
+                                       .build()
                         )
                         .execute();
         }
 
 
     public CompletableFuture<ApiHttpResponse<ImportResponse>> createPriceImportRequest(
-            final String sinkKey,
+            final String containerKey,
             final String productKey,
             final String productVariantKey,
             final Money amount) throws JsonProcessingException {
