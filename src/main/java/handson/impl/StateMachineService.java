@@ -1,6 +1,7 @@
 package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.state.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -13,12 +14,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class StateMachineService {
 
-    ApiRoot apiRoot;
+    ProjectApiRoot apiRoot;
     String projectKey;
 
-    public StateMachineService(final ApiRoot client, String projectKey) {
+    public StateMachineService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
 
     public CompletableFuture<ApiHttpResponse<State>> createState(final String key, StateTypeEnum stateTypeEnum, final Boolean initial, final String name) {
@@ -31,7 +31,6 @@ public class StateMachineService {
         };
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .states()
                         .post(
                                 StateDraftBuilder.of()
@@ -52,7 +51,6 @@ public class StateMachineService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .states()
                         .withId(stateToBeUpdated.getId())
                         .post(

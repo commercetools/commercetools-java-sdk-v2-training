@@ -1,6 +1,7 @@
 package handson.impl;
 
 import com.commercetools.api.client.ApiRoot;
+import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
 
@@ -19,18 +20,15 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CustomerService {
 
-    ApiRoot apiRoot;
-    String projectKey;
+    ProjectApiRoot apiRoot;
 
-    public CustomerService(final ApiRoot client, String projectKey) {
+    public CustomerService(final ProjectApiRoot client) {
         this.apiRoot = client;
-        this.projectKey = projectKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(String customerKey) {
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .withKey(customerKey)
                         .get()
@@ -46,7 +44,6 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .post(CustomerDraftBuilder.of()
                                 .email(email)
@@ -74,7 +71,6 @@ public class CustomerService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailToken()
                         .post(
@@ -90,7 +86,6 @@ public class CustomerService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailToken()
                         .post(
@@ -102,13 +97,12 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<JsonNode>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
+    public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
 
         final CustomerToken customerToken = customerTokenApiHttpResponse.getBody();
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailConfirm()
                         .post(
@@ -119,12 +113,11 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<JsonNode>> verifyEmail(final CustomerToken customerToken) {
+    public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final CustomerToken customerToken) {
 
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .emailConfirm()
                         .post(
@@ -138,7 +131,6 @@ public class CustomerService {
     public CompletableFuture<ApiHttpResponse<CustomerGroup>> getCustomerGroupByKey(String customerGroupKey) {
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customerGroups()
                         .withKey(customerGroupKey)
                         .get()
@@ -154,7 +146,6 @@ public class CustomerService {
 
         return
                 apiRoot
-                        .withProjectKey(projectKey)
                         .customers()
                         .withKey(customer.getKey())
                         .post(CustomerUpdateBuilder.of()
