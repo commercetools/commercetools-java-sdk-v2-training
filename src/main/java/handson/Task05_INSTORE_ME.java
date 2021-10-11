@@ -3,15 +3,17 @@ package handson;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.me.MyCartDraftBuilder;
-import handson.impl.*;
-//import okhttp3.*;
+import handson.impl.ApiPrefixHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static handson.impl.ClientService.*;
+import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.createStoreMeApiClient;
+import static handson.impl.ClientService.createMeTokenApiClient;
 
 
 /**

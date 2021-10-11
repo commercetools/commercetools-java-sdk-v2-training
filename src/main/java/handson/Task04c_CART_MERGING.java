@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
 import static handson.impl.ClientService.createApiClient;
-import static handson.impl.ClientService.getProjectKey;
 
 
 public class Task04c_CART_MERGING {
@@ -22,7 +21,6 @@ public class Task04c_CART_MERGING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final String projectKey = getProjectKey(apiClientPrefix);
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         CustomerService customerService = new CustomerService(client);
