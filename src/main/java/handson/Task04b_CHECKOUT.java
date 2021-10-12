@@ -46,11 +46,12 @@ public class Task04b_CHECKOUT {
 
         final State state = client
                 .states()
+                .withKey("mhOrderPacked")
                 .get()
-                .withWhere("key=" + "\"" + "OrderPacked" + "\"")
                 .execute()
                 .toCompletableFuture().get()
-                .getBody().getResults().get(0);
+                .getBody();
+
 
 
         // TODO: Perform cart operations:

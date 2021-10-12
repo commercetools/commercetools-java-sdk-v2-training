@@ -31,11 +31,11 @@ public class Task04a_STATEMACHINE {
         // Use StateMachineService.java to create your designed order state machine
         //
         State orderPackedState =
-                stateMachineService.createState("OrderPacked", StateTypeEnum.ORDER_STATE, true, "Order Packed")
+                stateMachineService.createState("mhOrderPacked", StateTypeEnum.ORDER_STATE, true, "MH Order Packed")
                         .toCompletableFuture().get()
                         .getBody();
         State orderShippedState =
-                stateMachineService.createState("OrderShipped", StateTypeEnum.ORDER_STATE, false, "Order Shipped")
+                stateMachineService.createState("mhOrderShipped", StateTypeEnum.ORDER_STATE, false, "MH Order Shipped")
                         .toCompletableFuture().get()
                         .getBody();
 

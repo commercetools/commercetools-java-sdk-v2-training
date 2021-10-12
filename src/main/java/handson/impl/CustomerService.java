@@ -1,6 +1,5 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;

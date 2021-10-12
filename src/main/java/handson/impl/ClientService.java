@@ -34,14 +34,16 @@ public class ClientService {
         prop.load(ClientService.class.getResourceAsStream("/dev.properties"));
         String clientId = prop.getProperty(prefix + "clientId");
         String clientSecret = prop.getProperty(prefix + "clientSecret");
+        String projectKey = prop.getProperty(prefix + "projectKey");
 
         projectApiRoot = ApiRootBuilder.of().defaultClient(ClientCredentials.of()
-                                                                            .withClientId(clientId)
-                                                                            .withClientSecret(clientSecret)
-                                                                            .build(),
+                                        .withClientId(clientId)
+                                        .withClientSecret(clientSecret)
+                                        .build(),
                 ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-        ).buildProjectRoot(getProjectKey(prefix));
+        ).buildProjectRoot(projectKey);
+
         return projectApiRoot;
     }
 

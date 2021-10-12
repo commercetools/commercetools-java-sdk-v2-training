@@ -64,7 +64,7 @@ public class Task06a_SEARCH {
                 // TODO Give price range on products with no effect on facets
                 // .withFilter("variants.price.centAmount:range (100 to 100000)")
                 // TODO: with effect on facets
-                // .withFilterQuery("variants.price.centAmount:range (100 to 100000)")
+//                 .addFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
                 // TODO: Simulate click on facet box from attribute size
                 //.withFilterFacets("variants.attributes.size:\"box\"")

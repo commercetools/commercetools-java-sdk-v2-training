@@ -48,8 +48,8 @@ public class Task08a_SUBSCRIPTION {
                                         )
                                         .messages(
                                                 MessageSubscriptionBuilder.of()
-                                                        .resourceTypeId("order")
-                                                        .types("OrderCreated")
+                                                        .resourceTypeId("order") // https://docs.commercetools.com/api/types#referencetype
+                                                        .types("OrderCreated") // https://docs.commercetools.com/api/message-types
                                                         .build()
                                         )
                                         .build()

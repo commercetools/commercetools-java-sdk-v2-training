@@ -1,6 +1,5 @@
 package handson.impl;
 
-import com.commercetools.api.client.ApiRoot;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.state.*;
@@ -15,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
 public class StateMachineService {
 
     ProjectApiRoot apiRoot;
-    String projectKey;
 
     public StateMachineService(final ProjectApiRoot client) {
         this.apiRoot = client;
