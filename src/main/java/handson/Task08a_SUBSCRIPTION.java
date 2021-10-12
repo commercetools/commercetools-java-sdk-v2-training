@@ -2,9 +2,7 @@ package handson;
 
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.subscription.ChangeSubscriptionBuilder;
-import com.commercetools.api.models.subscription.SqsDestinationBuilder;
-import com.commercetools.api.models.subscription.SubscriptionDraftBuilder;
+import com.commercetools.api.models.subscription.*;
 import com.commercetools.api.models.type.ResourceTypeId;
 import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
@@ -33,20 +31,25 @@ public class Task08a_SUBSCRIPTION {
                         .subscriptions()
                         .post(
                                 SubscriptionDraftBuilder.of()
-                                        .key("mhCustomerChangeSubscription")
+                                        .key("mhOrderPlacedSubscription")
                                         .destination(
-                                                SqsDestinationBuilder.of()
-                                                        .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-customer_change_queue")
-                                                        .region("eu-central-1")
-                                                        .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
-                                                        .accessSecret("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")
+                                                //for GCP Pub/Sub topic
+                                                GoogleCloudPubSubDestinationBuilder.of()
+                                                        .projectId("ct-support")
+                                                        .topic("training-subscription-sample")
                                                         .build()
+                                                //for AWS SQS Queue
+//                                                SqsDestinationBuilder.of()
+//                                                        .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-customer_change_queue")
+//                                                        .region("eu-central-1")
+//                                                        .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
+//                                                        .accessSecret("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")
+//                                                        .build()
                                         )
-                                        .changes(
-                                                ChangeSubscriptionBuilder.of()
-                                                        .resourceTypeId(
-                                                                ResourceTypeId.CUSTOMER.getJsonName()                      // really toString??
-                                                        )
+                                        .messages(
+                                                MessageSubscriptionBuilder.of()
+                                                        .resourceTypeId("order")
+                                                        .types("OrderCreated")
                                                         .build()
                                         )
                                         .build()

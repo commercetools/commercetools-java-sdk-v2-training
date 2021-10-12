@@ -33,15 +33,14 @@ public class ImportService {
         this.apiRoot = client;
     }
 
-    public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportPriceSink(final String sinkKey) throws JsonProcessingException {
+    public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportContainer(final String containerKey) throws JsonProcessingException {
 
             return
                 apiRoot
                         .importContainers()
                         .post(
                                 ImportContainerDraftBuilder.of()
-                                       .key(sinkKey)
-                                       .resourceType(ImportResourceType.PRICE)
+                                       .key(containerKey)
                                        .build()
                         )
                         .execute();
@@ -49,7 +48,7 @@ public class ImportService {
 
 
     public CompletableFuture<ApiHttpResponse<ImportResponse>> createPriceImportRequest(
-            final String sinkKey,
+            final String containerKey,
             final String productKey,
             final String productVariantKey,
             final Money amount) throws JsonProcessingException {
@@ -57,7 +56,7 @@ public class ImportService {
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
                 .resources(
                     PriceImportBuilder.of()
-                            .key(sinkKey + "837367")                    // key for ResourceImport, not the Sink
+                            .key(containerKey + "837367")                    // key for ResourceImport, not the Sink
                             .country("DE")                              // TODO: adjust
                             .product(ProductKeyReferenceBuilder.of()
                                     .key(productKey)
@@ -76,7 +75,7 @@ public class ImportService {
                 apiRoot
                         .prices()
                         .importContainers()
-                        .withImportContainerKeyValue(sinkKey)
+                        .withImportContainerKeyValue(containerKey)
                         .post(
                                 resources
                         )
