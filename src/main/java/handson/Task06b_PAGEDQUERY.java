@@ -36,14 +36,27 @@ public class Task06b_PAGEDQUERY {
         final int PAGE_SIZE = 2;
         Boolean lastPage = false;
 
-        // Instead of asking for next page, ask for elements being greater than this id
+        // Instead of using offset to get a page, ask for elements being greater than the id of the first
+        // product in your project
 
-        // TODO in class:
-        // Give last id, start with slightly modified first id OR: do not use id when fetching first page
-        // Give product type id
-        //
-        String lastId = "c2f136b4-dbd0-440f-ae43-7dc15ffeb900";
-        String productTypeId = "921937c6-c8b1-4c6f-bd27-58397362b6cc";
+        String lastId = client
+                .products()
+                .get()
+                .withSort("id asc")
+                .withLimit(1)
+                .execute()
+                .toCompletableFuture().get()
+                .getBody().getResults().get(0).getId();
+
+        // Get the product type Id, to be used in where
+
+        String productTypeId = client
+                .productTypes()
+                .withKey("plant-seeds-product-type")
+                .get()
+                .execute()
+                .toCompletableFuture().get()
+                .getBody().getId();
 
         //  link to give to our customers https://docs.commercetools.com/api/predicates/query
 
@@ -83,7 +96,7 @@ public class Task06b_PAGEDQUERY {
                 );
                 lastId = productPagedQueryResponse.getResults().get(size - 1).getId();
             }
-            else if (size < PAGE_SIZE) break;
+            lastPage = !(size == PAGE_SIZE);
         }
         client.close();
     }
