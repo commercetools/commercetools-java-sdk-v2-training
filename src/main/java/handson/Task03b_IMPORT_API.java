@@ -3,6 +3,7 @@ package handson;
 
 import com.commercetools.importapi.client.ProjectApiRoot;
 import com.commercetools.importapi.models.common.Money;
+import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.commercetools.importapi.models.importsummaries.OperationStates;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ImportService;
@@ -21,9 +22,9 @@ public class Task03b_IMPORT_API {
 
         // TODO
         //  Update your prefix for an Import Api Client in the PrefixHelper
-        //  Provide a price sink key
+        //  Provide a container key
         //
-        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
         final String containerKey = "berlin-store-prices";
 
         Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
@@ -32,7 +33,7 @@ public class Task03b_IMPORT_API {
 
 
         // TODO
-        //  CREATE a price import sink
+        //  CREATE an import container
         //  CREATE a price import request
         //  CHECK the status of your import requests
         //
