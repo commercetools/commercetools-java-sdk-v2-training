@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static handson.impl.ClientService.createApiClient;
-import static handson.impl.ClientService.createStoreMeApiClient;
-import static handson.impl.ClientService.createMeTokenApiClient;
+import static handson.impl.ClientService.*;
 
 
 /**
@@ -61,28 +59,28 @@ public class Task05_INSTORE_ME {
         //  Try creating a global cart with a global customer and check the error message
 
 
-//        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-//        final String storeKey = getStoreKey(storeApiClientPrefix);
-//        final ProjectApiRoot storeClient = createApiClient(storeApiClientPrefix);
-//
-//
-//        logger.info("Created in-store cart with a store api client: "+
-//                storeClient
-//                        .inStore(storeKey)
-//                        .carts()
-//                        .post(
-//                                CartDraftBuilder.of()
-//                                        .deleteDaysAfterLastModification(90L)
-//                                        .customerId("82cf41b6-3030-4fb1-86ac-d8be40d34878")
-//                                        .currency("EUR")
-//                                        .customerEmail("nagesh@test.com")
-//                                        .build()
-//                        )
-//                        .execute()
-//                        .toCompletableFuture().get()
-//                        .getBody().getId()
-//        );
-//        storeClient.close();
+        final String storeApiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
+        final String storeKey = getStoreKey(storeApiClientPrefix);
+        final ProjectApiRoot storeClient = createApiClient(storeApiClientPrefix);
+
+
+        logger.info("Created in-store cart with a store api client: "+
+                storeClient
+                        .inStore(storeKey)
+                        .carts()
+                        .post(
+                                CartDraftBuilder.of()
+                                        .deleteDaysAfterLastModification(90L)
+                                        .customerId("82cf41b6-3030-4fb1-86ac-d8be40d34878")
+                                        .currency("EUR")
+                                        .customerEmail("nagesh@test.com")
+                                        .build()
+                        )
+                        .execute()
+                        .toCompletableFuture().get()
+                        .getBody().getId()
+        );
+        storeClient.close();
 
         // TODO
         //  Visit impex to verify that the carts are holding the same information
@@ -95,30 +93,30 @@ public class Task05_INSTORE_ME {
         //  You can also create in-store customer-bound cart
         //  Visit impex to inspect the carts created
 
-//        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
-//        final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
-//        final String customerEmail = getCustomerEmail(meApiClientPrefix);
-//
-//        logger.info("Get cart for customer via me endpoint: " +
-//                meClient
-//                        .me()
-//                        .carts()
-//                        .post(
-//                                MyCartDraftBuilder.of()
-//                                                  .currency("EUR")
-//                                                  .deleteDaysAfterLastModification(90l)
-//                                                  .customerEmail(customerEmail)
-//                                                  .build()
-//                        )
-//                        .execute()
-//                        .exceptionally(throwable -> {
-//                            logger.info(throwable.getLocalizedMessage().toString());
-//                            return null;
-//                        })
-//                        .toCompletableFuture().get()
-//                        .getBody().getId()
-//        );
-//        meClient.close();
+        final String meApiClientPrefix = ApiPrefixHelper.API_ME_CLIENT_PREFIX.getPrefix();
+        final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
+        final String customerEmail = getCustomerEmail(meApiClientPrefix);
+
+        logger.info("Get cart for customer via me endpoint: " +
+                meClient
+                        .me()
+                        .carts()
+                        .post(
+                                MyCartDraftBuilder.of()
+                                                  .currency("EUR")
+                                                  .deleteDaysAfterLastModification(90L)
+                                                  .customerEmail(customerEmail)
+                                                  .build()
+                        )
+                        .execute()
+                        .exceptionally(throwable -> {
+                            logger.info(throwable.getLocalizedMessage());
+                            return null;
+                        })
+                        .toCompletableFuture().get()
+                        .getBody().getId()
+        );
+        meClient.close();
 
         // TODO: Create in-store customer-bound Cart with in-store-me API client
         //  Update the ApiPrefixHelper with the prefix for Me(SPA) API Client
@@ -126,31 +124,31 @@ public class Task05_INSTORE_ME {
         //  Try creating a global cart without me and check the error message
         //  Visit impex to inspect the carts created
 
-//        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
-//        final ProjectApiRoot storeClient = createStoreMeApiClient(storeMeApiClientPrefix);
-//        final String storeKey = getStoreKey(storeMeApiClientPrefix);
-//        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
-//
-//        logger.info("Created in-store cart with a store api client: "+
-//                storeClient
-//                        .inStore(storeKey)
-//                        .me()
-//                        .carts()
-//                        .post(
-//                                MyCartDraftBuilder.of()
-//                                        .deleteDaysAfterLastModification(90L)
-//                                        .currency("EUR")
-//                                        .customerEmail(storeCustomerEmail)
-//                                        .build()
-//                        )
-//                        .execute()
-//                        .exceptionally(throwable -> {
-//                            logger.info(throwable.getLocalizedMessage().toString());
-//                            return null;
-//                        })
-//                        .toCompletableFuture().get()
-//                        .getBody().getId()
-//        );
-//        storeClient.close();
+        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
+        final ProjectApiRoot meStoreClient = createStoreMeApiClient(storeMeApiClientPrefix);
+        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
+        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
+
+        logger.info("Created in-store cart with a store api client: "+
+                meStoreClient
+                        .inStore(meStoreKey)
+                        .me()
+                        .carts()
+                        .post(
+                                MyCartDraftBuilder.of()
+                                        .deleteDaysAfterLastModification(90L)
+                                        .currency("EUR")
+                                        .customerEmail(storeCustomerEmail)
+                                        .build()
+                        )
+                        .execute()
+                        .exceptionally(throwable -> {
+                            logger.info(throwable.getLocalizedMessage());
+                            return null;
+                        })
+                        .toCompletableFuture().get()
+                        .getBody().getId()
+        );
+        meStoreClient.close();
     }
 }

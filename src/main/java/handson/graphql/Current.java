@@ -1,7 +1,6 @@
 package handson.graphql;
 
 import io.aexp.nodes.graphql.annotations.GraphQLArgument;
-import io.aexp.nodes.graphql.annotations.GraphQLArguments;
 import io.aexp.nodes.graphql.annotations.GraphQLProperty;
 
 public class Current {

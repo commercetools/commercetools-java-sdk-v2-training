@@ -2,8 +2,9 @@ package handson;
 
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.subscription.*;
-import com.commercetools.api.models.type.ResourceTypeId;
+import com.commercetools.api.models.subscription.GoogleCloudPubSubDestinationBuilder;
+import com.commercetools.api.models.subscription.MessageSubscriptionBuilder;
+import com.commercetools.api.models.subscription.SubscriptionDraftBuilder;
 import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

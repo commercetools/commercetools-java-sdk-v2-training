@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class OrderService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public OrderService(final ProjectApiRoot client) {
         this.apiRoot = client;

@@ -4,13 +4,11 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
-import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.MoneyBuilder;
 import com.commercetools.api.models.payment.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -27,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class PaymentService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public PaymentService(final ProjectApiRoot client) {
         this.apiRoot = client;

@@ -99,23 +99,23 @@ public class Task09b_SPHERECLIENT_LOGGING {
             //      Run GET Project and inspect x-correlation-id in the headers
 
         ProjectApiRoot correlationIdClient = ApiRootBuilder.of()
-                    .defaultClient(
-                          ClientCredentials.of()
-                                           .withClientId(clientId)
-                                           .withClientSecret(clientSecret)
-                                           .build(),
-                          ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                          ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                    )
-                    .withMiddleware((request, next) -> next.apply(request).whenComplete((response, throwable) -> {
-                        if (throwable.getCause() instanceof ApiHttpException) {
-                            logger.info(((ApiHttpException) throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
-                        } else {
-                            logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
-                        }
-                    }))
-                    .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID().toString())
-                    .buildProjectRoot(projectKey);
+                .defaultClient(
+                        ClientCredentials.of()
+                                .withClientId(clientId)
+                                .withClientSecret(clientSecret)
+                                .build(),
+                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                )
+                .withMiddleware((request, next) -> next.apply(request).whenComplete((response, throwable) -> {
+                    if (throwable.getCause() instanceof ApiHttpException) {
+                        logger.info(((ApiHttpException) throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                    } else {
+                        logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                    }
+                }))
+                .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
+                .build(projectKey);
 
 
 
@@ -124,7 +124,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         logger.info("Get project information with pre-set correlation id: " +
                 client
                     .get()
-                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID().toString())
+                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
                     .execute()
                     .toCompletableFuture().get()
                     .getBody().getKey()
@@ -146,7 +146,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 )
                 .withRetryMiddleware(3, Arrays.asList(500, 503))
-                .buildProjectRoot(projectKey);
+                .build(projectKey);
         logger.info("Get project information via retryClient " +
                 retryClient
                         .get()
