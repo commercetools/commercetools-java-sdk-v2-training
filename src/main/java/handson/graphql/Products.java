@@ -1,9 +1,5 @@
 package handson.graphql;
 
-import io.aexp.nodes.graphql.annotations.GraphQLArgument;
-import io.aexp.nodes.graphql.annotations.GraphQLProperty;
-
-
 import java.util.List;
 
 public class Products {

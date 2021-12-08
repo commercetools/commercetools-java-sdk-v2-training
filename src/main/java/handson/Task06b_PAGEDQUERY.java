@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -33,8 +32,8 @@ public class Task06b_PAGEDQUERY {
         // Pagination of some entities BUT only ordered via id
 
         // Pagination is down to max 10.000
-        final int PAGE_SIZE = 2;
-        Boolean lastPage = false;
+        final int PAGE_SIZE = 1;
+        boolean lastPage = false;
 
         // Instead of using offset to get a page, ask for elements being greater than the id of the first
         // product in your project
@@ -47,6 +46,7 @@ public class Task06b_PAGEDQUERY {
                 .execute()
                 .toCompletableFuture().get()
                 .getBody().getResults().get(0).getId();
+        lastId = lastId.substring(0,lastId.length() -1) + "0"; // Starting last id less than the first one
 
         // Get the product type Id, to be used in where
 
@@ -69,10 +69,10 @@ public class Task06b_PAGEDQUERY {
                             // Important, internally we use id > $lastId, it will not work without this line
                             .withSort("id asc")
 
-                            .withWhere("productType(id = :productTypeId)")
-                            .addWhere("id > :lastId")
-                            .withPredicateVar("productTypeId", productTypeId)
-                            .addPredicateVar("lastId", lastId)
+                            .withWhere("id > :lastId")
+                            .addWhere("productType(id = :productTypeId)")
+                            .withPredicateVar("lastId", lastId)
+                            .addPredicateVar("productTypeId", productTypeId)
 
 
                             // Limit the size per page

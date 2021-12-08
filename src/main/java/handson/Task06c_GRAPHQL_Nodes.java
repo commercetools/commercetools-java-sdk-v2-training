@@ -39,7 +39,7 @@ public class Task06c_GRAPHQL_Nodes {
                         .post(
                                 GraphQLRequestBuilder.of()
                                         .query(
-                                                "{ products { total } }"
+                                                "{ products { total }}"
                                         )
                                         .build()
                         )
@@ -48,6 +48,7 @@ public class Task06c_GRAPHQL_Nodes {
                         .getBody()
                         .getData()
         );
+        client.close();
 
 
         // TODO:
@@ -68,8 +69,8 @@ public class Task06c_GRAPHQL_Nodes {
                                             .headers(headers)
                                             .request(ProductCustomerQuery.class)
                                             .arguments(new Arguments("products",
-                                                    new Argument("limit", 2),
-                                                    new Argument("sort", "masterData.current.name.en desc")
+                                                    new Argument<>("limit", 3),
+                                                    new Argument<>("sort", "masterData.current.name.en desc")
                                             ))
                                             .build(),
                                     ProductCustomerQuery.class

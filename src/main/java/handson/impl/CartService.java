@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  */
 public class CartService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public CartService(final ProjectApiRoot client) {
         this.apiRoot = client;
@@ -48,13 +48,13 @@ public class CartService {
                                                 customer.getAddresses().stream()
                                                     .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
                                                     .findFirst()
-                                                    .get()
+                                                        .orElse(null)
                                                     .getCountry()
                                         )
                                         .shippingAddress(customer.getAddresses().stream()
                                                 .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
                                                 .findFirst()
-                                                .get()
+                                                .orElse(null)
                                         )
                                         .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
                                         .build()

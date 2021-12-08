@@ -76,7 +76,9 @@ public class Task09a_ERROR_HANDLING {
                         ))
                         .toCompletableFuture().get();
             }
-            catch (Exception e) { }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 }

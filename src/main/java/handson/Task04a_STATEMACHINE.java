@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,6 +52,15 @@ public class Task04a_STATEMACHINE {
                 )
                         .toCompletableFuture().get()
         );
+
+        logger.info("State info {}",
+                stateMachineService.setStateTransitions(
+                                orderShippedState,
+                                new ArrayList<>()
+                        )
+                        .toCompletableFuture().get()
+        );
+
         client.close();
     }
 }
