@@ -27,13 +27,13 @@ public class Task07a_CUSTOMTYPES {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         Logger logger = LoggerFactory.getLogger(Task07a_CUSTOMTYPES.class.getName());
 
-        Map<String, String> namesForFieldCheck = new HashMap<String, String>() {
+        Map<String, String> labelsForFieldCheck = new HashMap<String, String>() {
             {
                 put("DE", "Allowed to place orders");
                 put("EN", "Allowed to place orders");
             }
         };
-        Map<String, String> namesForFieldComments = new HashMap<String, String>() {
+        Map<String, String> labelsForFieldComments = new HashMap<String, String>() {
             {
                 put("DE", "Bemerkungen");
                 put("EN", "comments");
@@ -46,7 +46,7 @@ public class Task07a_CUSTOMTYPES {
                         .name("allowed-to-place-orders")
                         .required(false)
                         .label(LocalizedStringBuilder.of()
-                                .values(namesForFieldCheck)
+                                .values(labelsForFieldCheck)
                                 .build()
                         )
                         .type(CustomFieldBooleanType.of())
@@ -56,7 +56,7 @@ public class Task07a_CUSTOMTYPES {
                         .name("Comments")
                         .required(false)
                         .label(LocalizedStringBuilder.of()
-                                .values(namesForFieldComments)
+                                .values(labelsForFieldComments)
                                 .build()
                         )
                         .type(CustomFieldStringType.of())

@@ -114,7 +114,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                             logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
                         }
                     }))
-                    .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID().toString())
+                    .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
                     .buildProjectRoot(projectKey);
 
 
@@ -124,7 +124,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         logger.info("Get project information with pre-set correlation id: " +
                 client
                     .get()
-                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID().toString())
+                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
                     .execute()
                     .toCompletableFuture().get()
                     .getBody().getKey()
@@ -147,6 +147,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 )
                 .withRetryMiddleware(3, Arrays.asList(500, 503))
                 .buildProjectRoot(projectKey);
+
         logger.info("Get project information via retryClient " +
                 retryClient
                         .get()

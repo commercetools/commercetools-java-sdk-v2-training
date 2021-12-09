@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class StateMachineService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public StateMachineService(final ProjectApiRoot client) {
         this.apiRoot = client;

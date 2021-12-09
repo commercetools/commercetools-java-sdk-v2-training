@@ -25,8 +25,6 @@ public class Task04c_CART_MERGING {
 
         CustomerService customerService = new CustomerService(client);
         CartService cartService = new CartService(client);
-        OrderService orderService = new OrderService(client);
-        PaymentService paymentService = new PaymentService(client);
         Logger logger = LoggerFactory.getLogger(Task04c_CART_MERGING.class.getName());
 
         // TODO:    Inspect cart merging

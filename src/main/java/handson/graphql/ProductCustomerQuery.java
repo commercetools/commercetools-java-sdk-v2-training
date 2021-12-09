@@ -5,7 +5,7 @@ import io.aexp.nodes.graphql.annotations.GraphQLProperty;
 
 public class ProductCustomerQuery {
 
-    @GraphQLProperty(name="products", arguments = { @GraphQLArgument(name = "limit"), @GraphQLArgument(name = "sort") })
+    @GraphQLProperty(name="products", arguments = { @GraphQLArgument(name = "limit", type = "Integer"), @GraphQLArgument(name = "sort", type = "String") })
     Products products;
     Customers customers;
 

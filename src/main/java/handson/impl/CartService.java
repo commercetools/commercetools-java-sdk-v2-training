@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  */
 public class CartService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public CartService(final ProjectApiRoot client) {
         this.apiRoot = client;

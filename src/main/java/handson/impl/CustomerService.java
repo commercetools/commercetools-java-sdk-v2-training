@@ -6,12 +6,7 @@ import com.commercetools.api.models.customer.*;
 
 import com.commercetools.api.models.customer_group.CustomerGroup;
 import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.vrap.rmf.base.client.ApiHttpResponse;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -19,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CustomerService {
 
-    ProjectApiRoot apiRoot;
+    final ProjectApiRoot apiRoot;
 
     public CustomerService(final ProjectApiRoot client) {
         this.apiRoot = client;

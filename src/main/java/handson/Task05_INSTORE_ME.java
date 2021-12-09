@@ -1,7 +1,10 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.cart.CartDraftBuilder;
+import com.commercetools.api.models.me.MyCartDraftBuilder;
 import handson.impl.ApiPrefixHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,20 +69,20 @@ public class Task05_INSTORE_ME {
 //        final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
 //        final String customerEmail = getCustomerEmail(meApiClientPrefix);
 
-//        logger.info("Created cart for customer via me endpoint: " +
+//        logger.info("Get cart for customer via me endpoint: " +
 //                meClient
 //                        .me()
 //                        .carts()
 //                        .post(
 //                                MyCartDraftBuilder.of()
-//                                        .currency("EUR")
-//                                        .deleteDaysAfterLastModification(90l)
-//                                        .customerEmail(customerEmail)
-//                                        .build()
+//                                                  .currency("EUR")
+//                                                  .deleteDaysAfterLastModification(90L)
+//                                                  .customerEmail(customerEmail)
+//                                                  .build()
 //                        )
 //                        .execute()
 //                        .exceptionally(throwable -> {
-//                            logger.info(throwable.getLocalizedMessage().toString());
+//                            logger.info(throwable.getLocalizedMessage());
 //                            return null;
 //                        })
 //                        .toCompletableFuture().get()
