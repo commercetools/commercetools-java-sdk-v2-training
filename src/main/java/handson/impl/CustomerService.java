@@ -20,7 +20,7 @@ public class CustomerService {
         this.apiRoot = client;
     }
 
-    public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(String customerKey) {
+    public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(final String customerKey) {
         return
                 null;
     }
@@ -86,7 +86,7 @@ public class CustomerService {
                         .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<CustomerGroup>> getCustomerGroupByKey(String customerGroupKey) {
+    public CompletableFuture<ApiHttpResponse<CustomerGroup>> getCustomerGroupByKey(final String customerGroupKey) {
         return
                 apiRoot
                         .customerGroups()

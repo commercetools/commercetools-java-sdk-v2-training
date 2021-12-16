@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static handson.impl.ClientService.createApiClient;
@@ -19,7 +18,6 @@ import static handson.impl.ClientService.createApiClient;
 public class Task06a_SEARCH {
 
     public static void main(String[] args) throws Exception {
-
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
@@ -47,33 +45,25 @@ public class Task06a_SEARCH {
             ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = null;
 
 
-
-
-
-
         int size = productProjectionPagedSearchResponse.getResults().size();
         logger.info("No. of products: " + size);
         List<ProductProjection> result =  productProjectionPagedSearchResponse.getResults().subList(0, size);
         System.out.println("products searched: ");
         result.forEach((r) -> System.out.println(r.getKey()));
 
-        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
-        logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values().toString());
-        Map<String, FacetResult> facetResults= productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
-        facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
-        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
-
-            logger.info("Facet Weight: ");
-            FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get("variants.attributes.weight_in_kg");
-            if (weightRangeFacetResult instanceof RangeFacetResult) {
-                logger.info("No. of Weight Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().size());
-                logger.info("Weight Ranges: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().toString());
+        logger.info("Facet count: " + productProjectionPagedSearchResponse.getFacets().values().size());
+        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().keySet());
+        for (String facet: productProjectionPagedSearchResponse.getFacets().values().keySet()){
+            FacetResult facetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get(facet);
+            if (facetResult instanceof RangeFacetResult) {
+                logger.info("No. of Ranges: {}", ((RangeFacetResult)facetResult).getRanges().size());
+                logger.info("Facet Result: {}", ((RangeFacetResult)facetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFromStr() + " to " + facetResultRange.getToStr() + ": " + facetResultRange.getCount()).collect(Collectors.toList()));
             }
-            logger.info("Facet Size: ");
-            FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get("variants.attributes.size");
-            if (sizeBoxFacetResult instanceof TermFacetResult) {
-                logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString()).collect(Collectors.joining(",")));
+            else if (facetResult instanceof TermFacetResult) {
+                logger.info("No. of Terms: {}", ((TermFacetResult)facetResult).getTerms().size());
+                logger.info("Facet Result: {}", ((TermFacetResult)facetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm() + ": " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
             }
+        }
 
         client.close();
     }

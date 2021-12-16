@@ -115,7 +115,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                         }
                     }))
                     .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
-                    .buildProjectRoot(projectKey);
+                    .build(projectKey);
 
 
 
@@ -146,7 +146,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 )
                 .withRetryMiddleware(3, Arrays.asList(500, 503))
-                .buildProjectRoot(projectKey);
+                .build(projectKey);
 
         logger.info("Get project information via retryClient " +
                 retryClient

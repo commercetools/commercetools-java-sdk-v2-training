@@ -32,6 +32,17 @@ public class CartService {
      *
      * @return the customer creation completion stage
      */
+
+    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId) {
+
+        return
+                apiRoot
+                        .carts()
+                        .withId(cartId)
+                        .get()
+                        .execute();
+    }
+
     public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
 
         return

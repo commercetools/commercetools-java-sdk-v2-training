@@ -21,6 +21,15 @@ public class OrderService {
         this.apiRoot = client;
     }
 
+    public CompletableFuture<ApiHttpResponse<Order>> getOrderById(final String orderId) {
+        return
+                apiRoot
+                        .orders()
+                        .withId(orderId)
+                        .get()
+                        .execute();
+    }
+
     public CompletableFuture<ApiHttpResponse<Order>> createOrder(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
         return null;

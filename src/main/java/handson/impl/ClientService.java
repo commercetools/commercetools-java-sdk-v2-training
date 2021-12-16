@@ -75,7 +75,7 @@ public class ClientService {
                 com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                 com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
             )
-                .buildProjectRoot(projectKey);
+                .build(projectKey);
 
         return importApiRoot;
     }
@@ -127,7 +127,7 @@ public class ClientService {
                         storeCustomerPassword,
                         ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token"
                 )
-                .buildProjectRoot(projectKey);
+                .build(projectKey);
     }
 
 
