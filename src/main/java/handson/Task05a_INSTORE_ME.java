@@ -19,11 +19,11 @@ import static handson.impl.ClientService.createMeTokenApiClient;
 /**
  *
  */
-public class Task05_INSTORE_ME {
+public class Task05a_INSTORE_ME {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05_INSTORE_ME.class.getName());
+        Logger logger = LoggerFactory.getLogger(Task05a_INSTORE_ME.class.getName());
 
         // TODO: Create in-store cart with global API client
         //  Provide an API client with global permissions
