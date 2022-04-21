@@ -154,5 +154,32 @@ public class Task09b_SPHERECLIENT_LOGGING {
                         .toCompletableFuture().get()
                         .getBody().getKey()
         );
+
+        ProjectApiRoot concurrentClient = ApiRootBuilder.of()
+                .defaultClient(
+                        ClientCredentials.of()
+                                .withClientId(clientId)
+                                .withClientSecret(clientSecret)
+                                .build(),
+                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                )
+                .addConcurrentModificationMiddleware(3)
+                .build(projectKey);
+        logger.info("Update customer via concurrentClient " +
+                concurrentClient
+                        .customers()
+                        .withKey("nd-customer")
+                        .post(CustomerUpdateBuilder.of()
+                                .version(1L)
+                                .actions(CustomerSetLastNameActionBuilder.of()
+                                        .lastName("dixit")
+                                        .build())
+                                .build())
+                        .execute()
+                        .toCompletableFuture().get()
+                        .getBody().getLastName()
+        );
+        concurrentClient.close();
     }
 }

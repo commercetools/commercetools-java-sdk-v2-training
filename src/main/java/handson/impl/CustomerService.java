@@ -49,7 +49,7 @@ public class CustomerService {
                                             .country(country)
                                             .build()
                                 )
-                                .defaultShippingAddress(0L)
+                                .defaultShippingAddress(0)
                                 .build())
                         .execute();
 

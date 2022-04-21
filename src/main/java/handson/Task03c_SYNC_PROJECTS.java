@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 
 
@@ -45,7 +44,7 @@ public class Task03c_SYNC_PROJECTS {
         //  Modify as wished
         //  RUN the project sync
         //
-        dockerRun.append(" commercetools/commercetools-project-sync:5.0.0 -s all");
+        dockerRun.append(" commercetools/commercetools-project-sync:5.1.2 -s all");
         logger.info(dockerRun.toString());
 
         Process process = Runtime.getRuntime().exec(dockerRun.toString());
