@@ -12,6 +12,7 @@ import com.commercetools.importapi.models.importrequests.PriceImportRequestBuild
 import com.commercetools.importapi.models.prices.PriceImportBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -45,10 +46,12 @@ public class ImportService {
             final String productVariantKey,
             final Money amount) {
 
+        Random rand = new Random();
+
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
                 .resources(
                     PriceImportBuilder.of()
-                            .key(productKey + Math.random())        // key for ResourceImport, not the Sink
+                            .key(productKey + Math.abs(rand.nextLong()))  // key for ResourceImport, not the Sink
                             .country("DE")                              // TODO: adjust
                             .product(ProductKeyReferenceBuilder.of()
                                     .key(productKey)
