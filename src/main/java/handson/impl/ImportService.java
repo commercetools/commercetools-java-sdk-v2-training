@@ -44,6 +44,7 @@ public class ImportService {
             final String containerKey,
             final String productKey,
             final String productVariantKey,
+            final String priceKey,
             final Money amount) {
 
         Random rand = new Random();
@@ -51,7 +52,7 @@ public class ImportService {
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
                 .resources(
                     PriceImportBuilder.of()
-                            .key(productKey + Math.abs(rand.nextLong()))  // key for ResourceImport, not the Sink
+                            .key(priceKey)     // key for the Price record
                             .country("DE")                              // TODO: adjust
                             .product(ProductKeyReferenceBuilder.of()
                                     .key(productKey)
