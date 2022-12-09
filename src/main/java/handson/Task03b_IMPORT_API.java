@@ -46,7 +46,7 @@ public class Task03b_IMPORT_API {
         Money amount = null;
 
         logger.info("Created price resource {} ",
-                importService.createPriceImportRequest(containerKey,"tulip-seed-product","tulip-seed-box", amount)
+                importService.createPriceImportRequest(containerKey,"tulip-seed-product","TULIPSEED01", "TulipSeed01Price01", amount)
                         .toCompletableFuture().get()
         );
 

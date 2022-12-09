@@ -43,6 +43,7 @@ public class ImportService {
             final String containerKey,
             final String productKey,
             final String productVariantKey,
+            final String priceKey,
             final Money amount) {
 
 
