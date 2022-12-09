@@ -47,8 +47,6 @@ public class ImportService {
             final String priceKey,
             final Money amount) {
 
-        Random rand = new Random();
-
         final PriceImportRequest resources = PriceImportRequestBuilder.of()
                 .resources(
                     PriceImportBuilder.of()
