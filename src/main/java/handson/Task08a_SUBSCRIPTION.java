@@ -2,9 +2,7 @@ package handson;
 
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.subscription.GoogleCloudPubSubDestinationBuilder;
-import com.commercetools.api.models.subscription.MessageSubscriptionBuilder;
-import com.commercetools.api.models.subscription.SubscriptionDraftBuilder;
+import com.commercetools.api.models.subscription.*;
 import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +47,14 @@ public class Task08a_SUBSCRIPTION {
                                         )
                                         .messages(
                                                 MessageSubscriptionBuilder.of()
-                                                        .resourceTypeId("order") // https://docs.commercetools.com/api/types#referencetype
-                                                        .types("OrderCreated") // https://docs.commercetools.com/api/message-types
+                                                        .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER)
+                                                        .types("OrderCreated")
                                                         .build()
                                         )
                                         .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody()
         );
 

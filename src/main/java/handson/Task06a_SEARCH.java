@@ -5,7 +5,6 @@ import com.commercetools.api.models.category.Category;
 import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.category.CategoryReferenceBuilder;
 import com.commercetools.api.models.product.*;
-import com.commercetools.api.product.FacetResultsAccessor;
 import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
