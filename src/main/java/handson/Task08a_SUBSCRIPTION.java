@@ -4,6 +4,7 @@ package handson;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.subscription.GoogleCloudPubSubDestinationBuilder;
 import com.commercetools.api.models.subscription.MessageSubscriptionBuilder;
+import com.commercetools.api.models.subscription.MessageSubscriptionResourceTypeId;
 import com.commercetools.api.models.subscription.SubscriptionDraftBuilder;
 import handson.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
@@ -49,9 +50,9 @@ public class Task08a_SUBSCRIPTION {
                                         )
                                         .messages(
                                                 MessageSubscriptionBuilder.of()
-                                                        .resourceTypeId("order") // https://docs.commercetools.com/api/types#referencetype
-                                                        .types("OrderCreated") // https://docs.commercetools.com/api/message-types
-                                                        .build()
+                                                      .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER) // https://docs.commercetools.com/api/types#referencetype
+                                                      .types("OrderCreated") // https://docs.commercetools.com/api/message-types
+                                                      .build()
                                         )
                                         .build()
                         )

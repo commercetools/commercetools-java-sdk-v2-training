@@ -29,7 +29,7 @@ public class Task07c_APIEXTENSION {
                                         .key("mhCustomerBlocker")
                                         .destination(
                                                 // for GCP Cloud functions
-                                                ExtensionHttpDestinationBuilder.of()
+                                                HttpDestinationBuilder.of()
                                                         .url("https://europe-west3-ct-support.cloudfunctions.net/training-extensions-sample")
                                                         .build()
                                                 //for AWS Lambda functions
