@@ -68,12 +68,8 @@ public class Task06b_PAGEDQUERY {
 
                             // Important, internally we use id > $lastId, it will not work without this line
                             .withSort("id asc")
-
-                            .withWhere("id > :lastId")
-                            .addWhere("productType(id = :productTypeId)")
-                            .withPredicateVar("lastId", lastId)
-                            .addPredicateVar("productTypeId", productTypeId)
-
+                            .withQuery(q -> q.id().isVar("lastId"), "lastId", lastId)
+                            .addQuery(q -> q.productType(t -> t.id().isVar("productTypeId")), "productTypeId", productTypeId)
 
                             // Limit the size per page
                             .withLimit(PAGE_SIZE)

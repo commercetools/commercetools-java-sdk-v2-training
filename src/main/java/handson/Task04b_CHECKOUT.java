@@ -39,7 +39,7 @@ public class Task04b_CHECKOUT {
         Channel channel = client
                 .channels()
                 .get()
-                .withWhere("key=" + "\"" + "berlin-warehouse" + "\"")                          // See also: .addWhere
+                .withQuery(q -> q.key().is("berlin-warehouse"))
                 .execute()
                 .toCompletableFuture().get()
                 .getBody().getResults().get(0);
