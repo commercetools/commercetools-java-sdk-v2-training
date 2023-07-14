@@ -68,13 +68,13 @@ public class ClientService {
         String projectKey = prop.getProperty(prefix + "projectKey");
 
         importApiRoot = ImportApiRootBuilder.of().defaultClient(
-                ClientCredentials.of()
-                        .withClientId(clientId)
-                        .withClientSecret(clientSecret)
-                        .build(),
-                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-            )
+                        ClientCredentials.of()
+                                .withClientId(clientId)
+                                .withClientSecret(clientSecret)
+                                .build(),
+                        com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                        com.commercetools.importapi.defaultconfig.ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                )
                 .build(projectKey);
 
         return importApiRoot;
@@ -92,18 +92,18 @@ public class ClientService {
         String clientSecret = prop.getProperty(prefix + "clientSecret");
 
         return ApiRootBuilder.of().defaultClient(
-                     ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 )
                 .withGlobalCustomerPasswordFlow(
                         ClientCredentials.of()
                                 .withClientId(clientId)
                                 .withClientSecret(clientSecret)
-                            .build(),
-                    customerEmail,
-                    customerPassword,
-                    ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth/" + projectKey + "/customers/token"
+                                .build(),
+                        customerEmail,
+                        customerPassword,
+                        ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth/" + projectKey + "/customers/token"
                 )
-                .buildProjectRoot(projectKey);
+                .build(projectKey);
     }
 
     public static ProjectApiRoot createStoreMeApiClient(final String prefix) throws IOException {

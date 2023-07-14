@@ -36,7 +36,7 @@ public class Task05a_INSTORE_ME {
         logger.info("Created in-store cart with a global api client: " +
                 " "
         );
-
+        client.close();
 
         // TODO: Create in-store Cart with in-store API client
         //  Update the ApiPrefixHelper with the prefix for Store API Client
@@ -51,6 +51,7 @@ public class Task05a_INSTORE_ME {
         logger.info("Created in-store cart with a store api client: "+
                 " "
         );
+//        storeClient.close();
 
         // TODO
         //  Verify on impex that the carts are holding the same information
@@ -122,7 +123,7 @@ public class Task05a_INSTORE_ME {
 //        );
 //        storeClient.close();
 
-        client.close();
+
 
     }
 }

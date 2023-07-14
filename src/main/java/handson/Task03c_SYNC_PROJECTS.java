@@ -45,7 +45,7 @@ public class Task03c_SYNC_PROJECTS {
         //  Modify as wished
         //  RUN the project sync
         //
-        dockerRun.append(" commercetools/commercetools-project-sync:5.0.0 -s all");
+        dockerRun.append(" commercetools/commercetools-project-sync:5.3.1 -s all");
         logger.info(dockerRun.toString());
 
         Process process = Runtime.getRuntime().exec(dockerRun.toString());
