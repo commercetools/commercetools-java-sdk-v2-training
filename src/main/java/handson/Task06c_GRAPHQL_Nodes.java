@@ -1,8 +1,8 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.graph_ql.GraphQLRequest;
 import com.commercetools.graphql.api.GraphQL;
-import com.commercetools.graphql.api.GraphQLRequestBuilder;
 import com.commercetools.graphql.api.GraphQLResponse;
 import com.commercetools.graphql.api.types.ProductQueryResult;
 import handson.impl.ApiPrefixHelper;
@@ -34,11 +34,9 @@ public class Task06c_GRAPHQL_Nodes {
                 client
                         .graphql()
                         .post(
-                                GraphQLRequestBuilder.of()
-                                        .query(
-                                                "{ products { total }}"
-                                        )
-                                        .build()
+                                GraphQLRequest.builder()
+                                      .query("{ products { total }}")
+                                      .build()
                         )
                         .execute()
                         .toCompletableFuture().get()
