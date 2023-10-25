@@ -8,7 +8,7 @@ plugins {
 
     id 'idea'
 
-    id 'maven'
+    //id 'maven'
     id 'maven-publish'
 
     id 'java'
