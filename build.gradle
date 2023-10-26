@@ -8,7 +8,7 @@ plugins {
 
     id 'idea'
 
-    id 'maven'
+    //id 'maven' - 8.4 doesn't know this plugin
     id 'maven-publish'
 
     id 'java'
