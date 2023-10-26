@@ -10,10 +10,10 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    target-branch: "training"
+    target-branch: "master"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    target-branch: "training"
+    target-branch: "master"
