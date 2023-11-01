@@ -98,7 +98,7 @@
   <groupId>com.commercetools.training</groupId>
   <modelVersion>4.0.0</modelVersion>
   <properties>
-    <commercetools.version>17.0.0</commercetools.version>
+    <commercetools.version>17.1.0</commercetools.version>
     <graphql-java.version>21.3</graphql-java.version>
     <json-api.version>1.1.4</json-api.version>
     <json.version>20231013</json.version>
