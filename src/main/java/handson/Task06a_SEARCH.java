@@ -56,7 +56,7 @@ public class Task06a_SEARCH {
 
                 // TODO Get all Facets for Enum size and Number weight_in_kg
 
-                .withFacet("variants.attributes.size")
+                .withFacet("variants.attributes.packing")
                 .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
 
 
@@ -85,17 +85,17 @@ public class Task06a_SEARCH {
         logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
 
 
-        logger.info("Facet Weight: ");
+        logger.info("Facet Weight (kg): ");
         FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg");
         if (weightRangeFacetResult instanceof RangeFacetResult) {
             logger.info("No. of Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().size());
             logger.info("Weight Terms: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFrom().intValue() + " to " + facetResultRange.getTo().intValue() + " - " + facetResultRange.getCount()).collect(Collectors.toList()));
         }
-        logger.info("Facet Size: ");
-        FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.size");
+        logger.info("Facet Packing Type: ");
+        FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.packing");
         if (sizeBoxFacetResult instanceof TermFacetResult) {
-            logger.info("No. of Size Terms: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().size());
-            logger.info("Size Box Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
+            logger.info("No. of Packing Terms: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().size());
+            logger.info("Packing Type Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
         }
 
         client.close();

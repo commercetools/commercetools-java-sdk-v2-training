@@ -59,7 +59,7 @@ public class Task09a_ERROR_HANDLING {
                         .getCustomerByKey("customer-michele-WRONG-KEY")
                         .thenApply(ApiHttpResponse::getBody)
                         .exceptionally(throwable -> null)
-                        .toCompletableFuture().get()
+                        .get()
         );
 
         if (!optionalCustomer.isPresent()) {
@@ -74,7 +74,7 @@ public class Task09a_ERROR_HANDLING {
                         .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
                                 customerTokenApiHttpResponse.getBody()
                         ))
-                        .toCompletableFuture().get();
+                        .get();
             }
             catch (Exception e) {
                 e.printStackTrace();

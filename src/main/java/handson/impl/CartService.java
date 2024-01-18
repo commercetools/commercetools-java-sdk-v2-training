@@ -26,6 +26,15 @@ public class CartService {
     }
 
 
+    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId) {
+
+        return
+                apiRoot
+                        .carts()
+                        .withId(cartId)
+                        .get()
+                        .execute();
+    }
     /**
      * Creates a cart for the given customer.
      *
@@ -82,7 +91,7 @@ public class CartService {
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final Channel channel,
+            final String channelKey,
             final String ... skus) {
 
         final Cart cart = cartApiHttpResponse.getBody();
@@ -95,7 +104,12 @@ public class CartService {
                             .quantity(1L)
                             .supplyChannel(
                                     ChannelResourceIdentifierBuilder.of()
-                                            .id(channel.getId())
+                                            .key(channelKey)
+                                            .build()
+                            )
+                            .distributionChannel(
+                                    ChannelResourceIdentifierBuilder.of()
+                                            .key(channelKey)
                                             .build()
                             )
                             .build()

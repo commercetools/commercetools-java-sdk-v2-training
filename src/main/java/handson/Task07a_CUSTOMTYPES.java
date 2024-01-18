@@ -29,14 +29,14 @@ public class Task07a_CUSTOMTYPES {
 
         Map<String, String> labelsForFieldCheck = new HashMap<String, String>() {
             {
-                put("DE", "Allowed to place orders");
-                put("EN", "Allowed to place orders");
+                put("de-DE", "Allowed to place orders");
+                put("en-US", "Allowed to place orders");
             }
         };
         Map<String, String> labelsForFieldComments = new HashMap<String, String>() {
             {
-                put("DE", "Bemerkungen");
-                put("EN", "comments");
+                put("de-DE", "Bemerkungen");
+                put("en-US", "comments");
             }
         };
 
@@ -44,7 +44,7 @@ public class Task07a_CUSTOMTYPES {
         List<FieldDefinition> definitions = Arrays.asList(
                 FieldDefinitionBuilder.of()
                         .name("allowed-to-place-orders")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldCheck)
                                 .build()
@@ -54,7 +54,7 @@ public class Task07a_CUSTOMTYPES {
                 ,
                 FieldDefinitionBuilder.of()
                         .name("Comments")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldComments)
                                 .build()
@@ -66,8 +66,8 @@ public class Task07a_CUSTOMTYPES {
 
         Map<String, String> namesForType = new HashMap<String, String>() {
             {
-                put("DE", "mh-Block-Customer");
-                put("EN", "mh-Block-Customer");
+                put("de-DE", "mh-Block-Customer");
+                put("en-US", "mh-Block-Customer");
             }
         };
 

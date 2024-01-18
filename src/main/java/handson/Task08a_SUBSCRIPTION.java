@@ -57,7 +57,7 @@ public class Task08a_SUBSCRIPTION {
                                         .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody()
         );
 

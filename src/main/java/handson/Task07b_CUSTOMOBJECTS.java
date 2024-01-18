@@ -25,9 +25,9 @@ public class Task07b_CUSTOMOBJECTS {
         Logger logger = LoggerFactory.getLogger(Task07b_CUSTOMOBJECTS.class.getName());
 
         // TODO:
-        // Store custom objects
-        // container: MH_PlantCheck, Add your prefix
-        // key: the product variant sku
+        // Create a custom object
+        // container: plants-compatibility-info
+        // key: the product key
         // incompatibleSKUs: all the product variants above sku is incompatible with
 
         JsonObject tulipObject = Json.createObjectBuilder()
@@ -46,7 +46,6 @@ public class Task07b_CUSTOMOBJECTS {
         logger.info("Custom Object info: " +
                 client
                         .customObjects()
-                        // .withContainerAndKey("plantCheck", "tulip6736")
                         .post(
                                 CustomObjectDraftBuilder.of()
                                         .container("plants-compatibility-info")

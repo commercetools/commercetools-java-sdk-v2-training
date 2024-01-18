@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 import static handson.impl.ClientService.*;
 
 
-public class Task06c_GRAPHQL_Nodes {
+public class Task06c_GRAPHQL {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 

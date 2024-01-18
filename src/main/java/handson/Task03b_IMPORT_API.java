@@ -37,19 +37,25 @@ public class Task03b_IMPORT_API {
         //  CREATE a price import request
         //  CHECK the status of your import requests
         //
-        logger.info("Created import container {} ",
-                importService.createImportContainer(containerKey)
-                        .toCompletableFuture().get()
-        );
+//        logger.info("Created import container {} ",
+//                importService.createImportContainer(containerKey)
+//                        .toCompletableFuture().get()
+//        );
 
         Money amount = MoneyBuilder.of()
                 .currencyCode("EUR")
                 .centAmount(3412L)
                 .build();
 
-        logger.info("Created price resource {} ",
-                importService.createPriceImportRequest(containerKey,"tulip-seed-product","TULIPSEED01", "TulipSeed01Price01", amount)
-                        .toCompletableFuture().get()
+        logger.info("Importing {} price(s) ",
+                importService.createPriceImportRequest(
+                                containerKey,
+                                "tulip-seed-product",
+                                "tulip-seed-box",
+                                "TulipSeed01Price01",
+                                amount
+                        )
+                        .get().getBody().getOperationStatus().size()
         );
 
         logger.info("Total containers in our project: {}",

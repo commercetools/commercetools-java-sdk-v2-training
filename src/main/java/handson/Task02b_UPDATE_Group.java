@@ -13,13 +13,6 @@ import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
 
-/**
- * Configure sphere client and get project information.
- *
- * See:
- *  TODO dev.properties
- *  TODO {@link ClientService#createApiClient(String prefix)}
- */
 public class Task02b_UPDATE_Group {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
@@ -31,23 +24,15 @@ public class Task02b_UPDATE_Group {
         CustomerService customerService = new CustomerService(client);
 
         // TODO:
-        //  GET a customer
-        //  GET a customer group
         //  ASSIGN the customer to the customer group
         //
         logger.info("Customer assigned to group: " +
-                customerService
-                        .getCustomerByKey("customer-michael15")
-                        .thenCombineAsync(
-                                customerService.getCustomerGroupByKey("outdoor-customer-group"),
-                                customerService::assignCustomerToCustomerGroup
-                        )
-                        .thenComposeAsync(CompletableFuture::toCompletableFuture)
-                        .exceptionally(throwable -> { logger.info(throwable.getLocalizedMessage()); return null; })
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
+                customerService.assignCustomerToCustomerGroup(
+                        "customer-michael15",
+                        "vip-customers"
+                    )
+                    .get().getBody().getId()
         );
-
         client.close();
     }
 

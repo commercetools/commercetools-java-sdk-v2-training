@@ -101,30 +101,29 @@ public class ProductSelectionService {
     }
 
     public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToStore(
-            final ApiHttpResponse<Store> storeApiHttpResponse,
-            final ApiHttpResponse<ProductSelection> productSelectionApiHttpResponse) {
+            final String storeKey,
+            final String productSelectionKey) {
 
-        final Store store = storeApiHttpResponse.getBody();
         return
-                apiRoot
+                getStoreByKey(storeKey).thenComposeAsync(storeApiHttpResponse ->
+                        apiRoot
                         .stores()
-                        .withId(store.getId())
+                        .withKey(storeKey)
                         .post(
                                 StoreUpdateBuilder.of()
-                                        .version(store.getVersion())
+                                        .version(storeApiHttpResponse.getBody().getVersion())
                                         .actions(
-                                                StoreSetProductSelectionsActionBuilder.of()
-                                                        .productSelections(ProductSelectionSettingDraftBuilder.of()
-                                                                .productSelection(ProductSelectionResourceIdentifierBuilder.of()
-                                                                        .id(productSelectionApiHttpResponse.getBody().getId())
-                                                                        .build())
-                                                                .active(true)
+                                                StoreAddProductSelectionActionBuilder.of()
+                                                        .productSelection(ProductSelectionResourceIdentifierBuilder.of()
+                                                                .key(productSelectionKey)
                                                                 .build())
+                                                        .active(true)
                                                         .build()
                                         )
                                         .build()
                         )
-                        .execute();
+                        .execute()
+                );
     }
 
     public CompletableFuture<ApiHttpResponse<ProductSelectionProductPagedQueryResponse>> getProductsInProductSelection(

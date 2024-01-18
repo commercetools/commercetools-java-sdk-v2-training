@@ -20,7 +20,7 @@ plugins {
 
 ext {
     versions = [
-        commercetools: "14.5.0",
+        commercetools: "17.4.0",
         slf4j: "1.7.36",
         logback: "1.2.10",
     ]
@@ -46,7 +46,6 @@ dependencies {
     implementation "com.commercetools.sdk:commercetools-sdk-java-api:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-graphql-api:${versions.commercetools}"
     implementation "com.commercetools.sdk:commercetools-sdk-java-importapi:${versions.commercetools}"
-    implementation "com.commercetools.sdk:commercetools-sdk-java-ml:${versions.commercetools}"
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
     implementation "ch.qos.logback:logback-classic:${versions.logback}"
 

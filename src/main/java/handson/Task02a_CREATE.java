@@ -30,12 +30,12 @@ public class Task02a_CREATE {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client);
 
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey("customer-alex-242281870")
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
-        );
+//        logger.info("Customer fetch: " +
+//                customerService
+//                        .getCustomerByKey("customer-alex-242281870")
+//                        .toCompletableFuture().get()
+//                        .getBody().getEmail()
+//        );
 
         // TODO:
         //  CREATE a customer
@@ -43,20 +43,18 @@ public class Task02a_CREATE {
         //  Verify customer
         //
         logger.info("Customer created: " +
-                customerService.createCustomer(
-                        "michael15@example.com",
-                        "password",
-                        "customer-michael15",
-                        "michael",
-                        "hartwig",
-                        "DE"
-                )
+                        customerService.createCustomer(
+                                "michael15@example.com",
+                                "password",
+                                "customer-michael15",
+                                "michael",
+                                "hartwig",
+                                "DE"
+                        )
                         .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
                         .thenComposeAsync(customerService::verifyEmail)
-                        .toCompletableFuture().get()
-                        .getBody()
+                        .get().getBody().getId()
         );
-
 
         client.close();
     }

@@ -15,10 +15,6 @@ import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
 
-
-/**
- *
- */
 public class Task05b_PRODUCTSELECTIONS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
@@ -29,40 +25,28 @@ public class Task05b_PRODUCTSELECTIONS {
 
         final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
-        final String productSelectionKey = "mh-berlin-product-selection";
+        // TODO: In Merchant Center, create product selection and add a product to the product selection.
+        // Update the key below
 
-        // TODO: Create product selection and add a product to the product selection
+        final String productSelectionKey = "nd-berlin-store-selection";
+        final String storeKey = "berlin-store";
 
-//        ProductSelection productSelection = productSelectionService.createProductSelection(productSelectionKey,"MH Berlin Product Selection")
-//                    .thenComposeAsync(productSelectionApiHttpResponse ->
-//                            productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse,"tulip-seed-product"))
-//                .toCompletableFuture().get()
-//                .getBody();
-//        logger.info("Created product selection: " + productSelection.getId());
-//
-//
-//
-//        // TODO: Get a store and assign the product selection to the store
-//
+        // TODO: Get a store and assign the product selection to the store
 
-//        logger.info("Product selections assigned to the store: "+
-//                productSelectionService.getStoreByKey("berlin-store")
-//                        .thenCombineAsync(productSelectionService.getProductSelectionByKey(productSelectionKey),((storeApiHttpResponse, productSelectionApiHttpResponse) ->
-//                                productSelectionService.addProductSelectionToStore(storeApiHttpResponse,productSelectionApiHttpResponse))
-//                        )
-//                        .thenComposeAsync(CompletableFuture::toCompletableFuture)
-//                        .toCompletableFuture().get()
-//                        .getBody().getProductSelections().size()
-//        );
-//
-//
-//        // TODO Get products in a product selection
-//
+        logger.info("Product selections assigned to the store: "
+                    + productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
+                        .get().getBody().getProductSelections().size()
+        );
+
+
+        // TODO Get products in a product selection
+
         List<AssignedProductReference> assignedProductReferences =
                 productSelectionService.getProductsInProductSelection(productSelectionKey)
-                        .toCompletableFuture().get().getBody().getResults();
+                        .get().getBody().getResults();
 
         assignedProductReferences.forEach(assignedProductReference -> logger.info(assignedProductReference.getProduct().getObj().getKey()));
 
+        client.close();
     }
 }

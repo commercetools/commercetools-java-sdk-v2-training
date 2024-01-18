@@ -50,7 +50,7 @@ public class Task07c_APIEXTENSION {
                                         .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getId()
         );
 

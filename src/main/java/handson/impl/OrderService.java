@@ -67,7 +67,7 @@ public class OrderService {
 
     public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
             final ApiHttpResponse<Order> orderApiHttpResponse,
-            final State workflowState) {
+            final String workflowStateKey) {
 
         Order order = orderApiHttpResponse.getBody();
 
@@ -82,7 +82,7 @@ public class OrderService {
                                             OrderTransitionStateActionBuilder.of()
                                                 .state(
                                                         StateResourceIdentifierBuilder.of()
-                                                            .id(workflowState.getId())
+                                                            .key(workflowStateKey)
                                                         .build()
                                                 )
                                                 .build()

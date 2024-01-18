@@ -6,6 +6,7 @@ import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.customer_group.CustomerGroup;
 import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
+
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -131,27 +132,26 @@ public class CustomerService {
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
-            final ApiHttpResponse<Customer> customerApiHttpResponse,
-            final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse) {
+            final String customerKey,
+            final String customerGroupKey) {
 
-        final Customer customer = customerApiHttpResponse.getBody();
-        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
-
-        return
-                apiRoot
-                        .customers()
-                        .withKey(customer.getKey())
-                        .post(CustomerUpdateBuilder.of()
-                                .version(customer.getVersion())
-                                .actions(
-                                    CustomerSetCustomerGroupActionBuilder.of()
-                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                .key(customerGroup.getKey())
-                                                .build())
+        return getCustomerByKey(customerKey)
+                .thenComposeAsync(customerApiHttpResponse ->
+                        apiRoot.customers()
+                        .withKey(customerKey)
+                        .post(
+                                CustomerUpdateBuilder.of()
+                                        .version(customerApiHttpResponse.getBody().getVersion())
+                                        .actions(
+                                                CustomerSetCustomerGroupActionBuilder.of()
+                                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                                                .key(customerGroupKey)
+                                                                .build())
+                                                        .build()
+                                        )
                                         .build()
-                                )
-                                .build())
-                        .execute();
+                )
+                .execute());
     }
 
 }
