@@ -89,7 +89,7 @@ public class Task07a_CUSTOMTYPES {
                                         .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getId()
         );
 

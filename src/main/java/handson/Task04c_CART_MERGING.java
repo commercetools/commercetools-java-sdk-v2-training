@@ -29,7 +29,7 @@ public class Task04c_CART_MERGING {
         Logger logger = LoggerFactory.getLogger(Task04c_CART_MERGING.class.getName());
         final String customerKey = "customer-michael15";
 
-        final String channelKey = "sunrise-store-berlin";
+        final String channelKey = "berlin-store-channel";
 
         // TODO:    Inspect cart merging
         //          Complete the checkout by adding products, payment, ... test
@@ -43,7 +43,7 @@ public class Task04c_CART_MERGING {
                         channelKey,
                         "tulip-seed-box", "tulip-seed-box", "tulip-seed-sack"
                 ))
-                .toCompletableFuture().get()
+                .get()
                 .getBody();
         logger.info("cart-id: " + customerCart.getId());
 
@@ -56,7 +56,7 @@ public class Task04c_CART_MERGING {
                         channelKey,
                         "tulip-seed-box"
                 ))
-                .toCompletableFuture().get()
+                .get()
                 .getBody();
         logger.info("cart-id-anonymous: " + anonymousCart.getId());
 
@@ -76,7 +76,7 @@ public class Task04c_CART_MERGING {
                                 .build()
                 )
                 .execute()
-                .toCompletableFuture().get().getBody().getCart();
+                .get().getBody().getCart();
 
         logger.info("cart ID in use after merge: " + cart.getId());
 

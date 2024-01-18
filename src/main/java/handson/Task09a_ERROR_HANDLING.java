@@ -47,7 +47,7 @@ public class Task09a_ERROR_HANDLING {
                                             .email("anonymous@example.org")
                                             .build();                               // e.g. return anon customer
                         })
-                        .toCompletableFuture().get().getEmail()
+                        .get().getEmail()
         );
 
 

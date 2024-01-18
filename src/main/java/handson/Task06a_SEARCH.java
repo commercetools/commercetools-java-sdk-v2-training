@@ -30,7 +30,7 @@ public class Task06a_SEARCH {
                 .withKey("plant-seeds")
                 .get()
                 .execute()
-                .toCompletableFuture().get()
+                .get()
                 .getBody();
 
         // to get categoryReference

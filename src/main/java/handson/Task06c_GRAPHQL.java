@@ -39,7 +39,7 @@ public class Task06c_GRAPHQL {
                                       .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody()
                         .getData()
         );

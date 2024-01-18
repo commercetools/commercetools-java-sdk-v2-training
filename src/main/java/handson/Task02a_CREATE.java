@@ -33,7 +33,7 @@ public class Task02a_CREATE {
 //        logger.info("Customer fetch: " +
 //                customerService
 //                        .getCustomerByKey("customer-alex-242281870")
-//                        .toCompletableFuture().get()
+//                        .get()
 //                        .getBody().getEmail()
 //        );
 
@@ -48,7 +48,7 @@ public class Task02a_CREATE {
                                 "password",
                                 "customer-michael15",
                                 "michael",
-                                "hartwig",
+                                "tester",
                                 "DE"
                         )
                         .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))

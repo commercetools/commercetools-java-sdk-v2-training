@@ -44,7 +44,7 @@ public class Task06b_PAGEDQUERY {
                 .withSort("id asc")
                 .withLimit(1)
                 .execute()
-                .toCompletableFuture().get()
+                .get()
                 .getBody().getResults().get(0).getId();
         lastId = lastId.substring(0,lastId.length() -1) + "0"; // Starting last id less than the first one
 
@@ -55,7 +55,7 @@ public class Task06b_PAGEDQUERY {
                 .withKey("plant-seeds-product-type")
                 .get()
                 .execute()
-                .toCompletableFuture().get()
+                .get()
                 .getBody().getId();
 
         //  link to give to our customers https://docs.commercetools.com/api/predicates/query
@@ -78,7 +78,7 @@ public class Task06b_PAGEDQUERY {
                             .withWithTotal(false)
 
                             .execute()
-                            .toCompletableFuture().get()
+                            .get()
                             .getBody();
 
             // Print results

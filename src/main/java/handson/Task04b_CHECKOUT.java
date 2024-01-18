@@ -68,7 +68,7 @@ public class Task04b_CHECKOUT {
                         .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.CONFIRMED))
                         .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, initialStateKey))
 
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getId()
         );
 

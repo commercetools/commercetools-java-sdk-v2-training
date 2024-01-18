@@ -33,11 +33,11 @@ public class Task04a_STATEMACHINE {
         //
         State orderPackedState =
                 stateMachineService.createState("mhOrderPacked", StateTypeEnum.ORDER_STATE, true, "MH Order Packed")
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody();
         State orderShippedState =
                 stateMachineService.createState("mhOrderShipped", StateTypeEnum.ORDER_STATE, false, "MH Order Shipped")
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody();
 
         logger.info("State info {}",
@@ -50,7 +50,7 @@ public class Task04a_STATEMACHINE {
                         )
                                 .collect(Collectors.toList())
                 )
-                        .toCompletableFuture().get()
+                        .get()
         );
 
         logger.info("State info {}",
@@ -58,7 +58,7 @@ public class Task04a_STATEMACHINE {
                                 orderShippedState,
                                 new ArrayList<>()
                         )
-                        .toCompletableFuture().get()
+                        .get()
         );
 
         client.close();

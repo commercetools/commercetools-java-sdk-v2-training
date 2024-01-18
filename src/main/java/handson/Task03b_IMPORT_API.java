@@ -39,7 +39,7 @@ public class Task03b_IMPORT_API {
         //
 //        logger.info("Created import container {} ",
 //                importService.createImportContainer(containerKey)
-//                        .toCompletableFuture().get()
+//                        .get()
 //        );
 
         Money amount = MoneyBuilder.of()
@@ -63,7 +63,7 @@ public class Task03b_IMPORT_API {
                         .importContainers()
                         .get()
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getTotal()
         );
         OperationStates states = client
@@ -72,7 +72,7 @@ public class Task03b_IMPORT_API {
                 .importSummaries()
                 .get()
                 .execute()
-                .toCompletableFuture().get()
+                .get()
                 .getBody().getStates();
 
         logger.info("Processing: {} Imported: {} Unresolved: {} ",

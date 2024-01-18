@@ -126,7 +126,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                     .get()
                     .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
                     .execute()
-                    .toCompletableFuture().get()
+                    .get()
                     .getBody().getKey()
         );
 
@@ -151,7 +151,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 retryClient
                         .get()
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getKey()
         );
 
@@ -169,15 +169,15 @@ public class Task09b_SPHERECLIENT_LOGGING {
         logger.info("Update customer via concurrentClient " +
                 concurrentClient
                         .customers()
-                        .withKey("nd-customer")
+                        .withKey("customer-michael15")
                         .post(CustomerUpdateBuilder.of()
                                 .version(1L)
                                 .actions(CustomerSetLastNameActionBuilder.of()
-                                        .lastName("dixit")
+                                        .lastName("tester")
                                         .build())
                                 .build())
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getLastName()
         );
         concurrentClient.close();

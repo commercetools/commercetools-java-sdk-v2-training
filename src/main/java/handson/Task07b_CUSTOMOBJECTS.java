@@ -56,7 +56,7 @@ public class Task07b_CUSTOMOBJECTS {
                                         .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getId()
         );
 
