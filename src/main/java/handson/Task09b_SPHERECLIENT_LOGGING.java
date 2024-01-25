@@ -145,7 +145,8 @@ public class Task09b_SPHERECLIENT_LOGGING {
                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 )
-                .withRetryMiddleware(3, Arrays.asList(500, 503))
+                .withPolicies(policies -> policies.withRetry(builder -> builder.maxRetries(5)
+                        .statusCodes(Arrays.asList(502, 503, 504, 404, 400))))
                 .build(projectKey);
         logger.info("Get project information via retryClient " +
                 retryClient
@@ -173,7 +174,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                         .post(CustomerUpdateBuilder.of()
                                 .version(1L)
                                 .actions(CustomerSetLastNameActionBuilder.of()
-                                        .lastName("tester")
+                                        .lastName("tester1")
                                         .build())
                                 .build())
                         .execute()

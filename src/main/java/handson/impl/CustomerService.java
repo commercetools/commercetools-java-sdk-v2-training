@@ -38,22 +38,22 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
-                        .customers()
-                        .post(CustomerDraftBuilder.of()
-                                .email(email)
-                                .password(password)
-                                .firstName(firstName)
-                                .lastName(lastName)
-                                .key(customerKey)
-                                .addresses(
-                                    AddressBuilder.of()
-                                            .country(country)
-                                            .build()
-                                )
-                                .defaultShippingAddress(0)
-                                .build())
-                        .execute();
-
+                .customers()
+                .post(
+                        customerDraftBuilder ->
+                            customerDraftBuilder.email(email)
+                            .password(password)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .key(customerKey)
+                            .addresses(
+                                AddressBuilder.of()
+                                        .country(country)
+                                        .build()
+                            )
+                            .defaultShippingAddress(0)
+                            )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(
@@ -69,9 +69,9 @@ public class CustomerService {
                         .emailToken()
                         .post(
                                 CustomerCreateEmailTokenBuilder.of()
-                                        .id(customer.getId())
-                                        .ttlMinutes(timeToLiveInMinutes)
-                                        .build()
+                                    .id(customer.getId())
+                                    .ttlMinutes(timeToLiveInMinutes)
+                                    .build()
                         )
                         .execute();
     }

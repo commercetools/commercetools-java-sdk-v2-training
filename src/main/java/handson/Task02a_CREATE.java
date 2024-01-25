@@ -1,9 +1,12 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.customer.Customer;
+import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,20 +45,20 @@ public class Task02a_CREATE {
         //  CREATE a email verification token
         //  Verify customer
         //
-        logger.info("Customer created: " +
-                        customerService.createCustomer(
-                                "michael15@example.com",
-                                "password",
-                                "customer-michael15",
-                                "michael",
-                                "tester",
-                                "DE"
-                        )
-                        .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
-                        .thenComposeAsync(customerService::verifyEmail)
-                        .get().getBody().getId()
-        );
 
-        client.close();
+        customerService.createCustomer(
+                "michael16@example.com",
+                "password",
+                "customer-michael16",
+                "michael",
+                "tester",
+                "DE"
+        )
+        .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
+        .thenComposeAsync(customerService::verifyEmail)
+                .thenApply(response -> response.getBody())
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> client.close());
     }
 }

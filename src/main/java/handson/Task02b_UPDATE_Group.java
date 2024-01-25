@@ -19,21 +19,22 @@ public class Task02b_UPDATE_Group {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client);
 
         // TODO:
         //  ASSIGN the customer to the customer group
         //
-        logger.info("Customer assigned to group: " +
-                customerService.assignCustomerToCustomerGroup(
-                        "customer-michael15",
-                        "vip-customers"
-                    )
-                    .get().getBody().getId()
-        );
-        client.close();
+
+        customerService.assignCustomerToCustomerGroup(
+                "customer-michael16",
+                "vip-customers"
+        )
+                .thenApply(response -> response.getBody())
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> client.close());
     }
 
 }

@@ -54,31 +54,31 @@ public class Task05c_ME {
         //  Try creating a global cart without me and check the error message
         //  Visit impex to inspect the carts created
 
-        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
-        final ProjectApiRoot meStoreClient = createStoreMeApiClient(storeMeApiClientPrefix);
-        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
-        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
-
-        logger.info("Created in-store cart with a store api client: "+
-                meStoreClient
-                        .inStore(meStoreKey)
-                        .me()
-                        .carts()
-                        .post(
-                                MyCartDraftBuilder.of()
-                                        .deleteDaysAfterLastModification(90L)
-                                        .currency("EUR")
-                                        .customerEmail(storeCustomerEmail)
-                                        .build()
-                        )
-                        .execute()
-                        .exceptionally(throwable -> {
-                            logger.info(throwable.getLocalizedMessage());
-                            return null;
-                        })
-                        .get()
-                        .getBody().getId()
-        );
-        meStoreClient.close();
+//        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
+//        final ProjectApiRoot meStoreClient = createStoreMeApiClient(storeMeApiClientPrefix);
+//        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
+//        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
+//
+//        logger.info("Created in-store cart with a store api client: "+
+//                meStoreClient
+//                        .inStore(meStoreKey)
+//                        .me()
+//                        .carts()
+//                        .post(
+//                                MyCartDraftBuilder.of()
+//                                        .deleteDaysAfterLastModification(90L)
+//                                        .currency("EUR")
+//                                        .customerEmail(storeCustomerEmail)
+//                                        .build()
+//                        )
+//                        .execute()
+//                        .exceptionally(throwable -> {
+//                            logger.info(throwable.getLocalizedMessage());
+//                            return null;
+//                        })
+//                        .get()
+//                        .getBody().getId()
+//        );
+//        meStoreClient.close();
     }
 }

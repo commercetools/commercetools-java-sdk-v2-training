@@ -47,25 +47,34 @@ public class Task03b_IMPORT_API {
                 .centAmount(3412L)
                 .build();
 
-        logger.info("Importing {} price(s) ",
-                importService.createPriceImportRequest(
-                                containerKey,
-                                "tulip-seed-product",
-                                "tulip-seed-box",
-                                "TulipSeed01Price01",
-                                amount
-                        )
-                        .get().getBody().getOperationStatus().size()
-        );
 
-        logger.info("Total containers in our project: {}",
-                client
-                        .importContainers()
-                        .get()
-                        .execute()
-                        .get()
-                        .getBody().getTotal()
-        );
+        importService.createPriceImportRequest(
+                containerKey,
+                "tulip-seed-product",
+                "tulip-seed-box",
+                "TulipSeed01Price01",
+                amount
+            )
+            .thenApply(response -> response.getBody())
+            .thenAccept(resource -> logger.info("Importing {} price(s) ", resource.getOperationStatus().size()))
+            .exceptionally(exception -> {
+                logger.info("An error occured " + exception.getMessage());
+                client.close();
+                return null;}
+            );
+
+        client
+                .importContainers()
+                .get()
+                .execute()
+                .thenApply(response -> response.getBody())
+                .thenAccept(resource -> logger.info("Total containers in our project: {}", resource.getTotal()))
+                .exceptionally(exception -> {
+                    logger.info("An error occured " + exception.getMessage());
+                    client.close();
+                    return null;}
+                );
+
         OperationStates states = client
                 .importContainers()
                 .withImportContainerKeyValue(containerKey)

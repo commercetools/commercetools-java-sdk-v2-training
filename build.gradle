@@ -20,9 +20,9 @@ plugins {
 
 ext {
     versions = [
-        commercetools: "17.4.0",
-        slf4j: "1.7.36",
-        logback: "1.2.10",
+        commercetools: "17.5.0",
+        slf4j: "2.0.11",
+        logback: "1.4.14",
     ]
 }
 
