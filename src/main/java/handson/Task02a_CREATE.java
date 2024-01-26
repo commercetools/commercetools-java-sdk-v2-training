@@ -56,7 +56,7 @@ public class Task02a_CREATE {
         )
         .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
         .thenComposeAsync(customerService::verifyEmail)
-                .thenApply(response -> response.getBody())
+                .thenApply(ApiHttpResponse::getBody)
                 .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
                 .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
                 .thenRun(() -> client.close());

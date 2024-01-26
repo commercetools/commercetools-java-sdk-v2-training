@@ -6,11 +6,13 @@ import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import com.commercetools.api.models.state.StateTypeEnum;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.StateMachineService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,36 +33,33 @@ public class Task04a_STATEMACHINE {
         // TODO
         // Use StateMachineService.java to create your designed order state machine
         //
-        State orderPackedState =
-                stateMachineService.createState("mhOrderPacked", StateTypeEnum.ORDER_STATE, true, "MH Order Packed")
-                        .get()
-                        .getBody();
-        State orderShippedState =
-                stateMachineService.createState("mhOrderShipped", StateTypeEnum.ORDER_STATE, false, "MH Order Shipped")
-                        .get()
-                        .getBody();
 
-        logger.info("State info {}",
-                stateMachineService.setStateTransitions(
-                        orderPackedState,
-                        Stream.of(
-                                StateResourceIdentifierBuilder.of().
-                                        id(orderShippedState.getId())
-                                        .build()
-                        )
+        stateMachineService.createState("mhOrderPacked", StateTypeEnum.ORDER_STATE, true, "MH Order Packed")
+            .thenCombineAsync(stateMachineService.createState("mhOrderShipped", StateTypeEnum.ORDER_STATE, false, "MH Order Shipped"),
+                    (orderPackedStateApiResponse, orderShippedStateApiResponse)->
+                            stateMachineService.setStateTransitions(
+                                orderPackedStateApiResponse.getBody(),
+                                Stream.of(
+                                        StateResourceIdentifierBuilder.of().
+                                                id(orderShippedStateApiResponse.getBody().getId())
+                                                .build()
+                                )
                                 .collect(Collectors.toList())
-                )
-                        .get()
-        );
-
-        logger.info("State info {}",
-                stateMachineService.setStateTransitions(
-                                orderShippedState,
-                                new ArrayList<>()
-                        )
-                        .get()
-        );
-
-        client.close();
+                            )
+                            .thenComposeAsync(apiHttpResponse ->
+                                stateMachineService.setStateTransitions(
+                                    orderShippedStateApiResponse.getBody(),
+                                    new ArrayList<>()
+                                )
+                            )
+            )
+                .get()
+            .thenApply(ApiHttpResponse::getBody)
+            .thenAccept(resource -> logger.info("State info {}",resource.getId()))
+            .exceptionally(exception -> {
+                logger.info("An error occured " + exception.getMessage());
+                return null;}
+            )
+            .thenRun(() -> client.close());
     }
 }

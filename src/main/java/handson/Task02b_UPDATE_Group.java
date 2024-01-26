@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class Task02b_UPDATE_Group {
                 "customer-michael16",
                 "vip-customers"
         )
-                .thenApply(response -> response.getBody())
+                .thenApply(ApiHttpResponse::getBody)
                 .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
                 .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
                 .thenRun(() -> client.close());

@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.type.*;
 import handson.impl.ApiPrefixHelper;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,28 +72,27 @@ public class Task07a_CUSTOMTYPES {
             }
         };
 
-        logger.info("Custom Type info: " +
-                client
-                        .types()
-                        .post(
-                                TypeDraftBuilder.of()
-                                        .key("mh-block-customer")
-                                        .name(
-                                                LocalizedStringBuilder.of()
-                                                        .values(namesForType)
-                                                        .build()
-                                        )
-                                        .resourceTypeIds(
-                                                ResourceTypeId.CUSTOMER
-                                        )
-                                        .fieldDefinitions(definitions)
-                                        .build()
-                        )
-                        .execute()
-                        .get()
-                        .getBody().getId()
-        );
+        client
+                .types()
+                .post(
+                        TypeDraftBuilder.of()
+                                .key("mh-block-customer")
+                                .name(
+                                        LocalizedStringBuilder.of()
+                                                .values(namesForType)
+                                                .build()
+                                )
+                                .resourceTypeIds(
+                                        ResourceTypeId.CUSTOMER
+                                )
+                                .fieldDefinitions(definitions)
+                                .build()
+                )
+                .execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> client.close());
 
-        client.close();
     }
 }

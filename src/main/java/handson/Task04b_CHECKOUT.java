@@ -47,11 +47,11 @@ public class Task04b_CHECKOUT {
         logger.info("Created cart/order ID: " +
                 customerService.getCustomerByKey("customer-michael15")
                         .thenComposeAsync(cartService::createCart)
-
-                        .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
-                                cartApiHttpResponse,
-                                channelKey,
-                                "TULIPSEED01", "TULIPSEED01", "TULIPSEED02")
+                        .thenComposeAsync(cartApiHttpResponse ->
+                                cartService.addProductToCartBySkusAndChannel(
+                                    cartApiHttpResponse,
+                                    channelKey,
+                                    "TULIPSEED01", "TULIPSEED01", "TULIPSEED02")
                         )
                         .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse,"MIXED"))
                         .thenComposeAsync(cartService::setShipping)

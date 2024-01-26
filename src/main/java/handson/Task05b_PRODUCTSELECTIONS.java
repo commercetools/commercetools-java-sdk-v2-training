@@ -5,6 +5,7 @@ import com.commercetools.api.models.product_selection.AssignedProductReference;
 import com.commercetools.api.models.product_selection.ProductSelection;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ProductSelectionService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,20 +34,23 @@ public class Task05b_PRODUCTSELECTIONS {
 
         // TODO: Get a store and assign the product selection to the store
 
-        logger.info("Product selections assigned to the store: "
-                    + productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
-                        .get().getBody().getProductSelections().size()
-        );
+//        productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
+//                .thenApply(ApiHttpResponse::getBody)
+//                .thenAccept(resource -> logger.info("Product selections assigned to the store: {}", resource.getProductSelections().size()))
+//                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+//            .thenRun(() -> client.close());
 
 
         // TODO Get products in a product selection
 
-        List<AssignedProductReference> assignedProductReferences =
-                productSelectionService.getProductsInProductSelection(productSelectionKey)
-                        .get().getBody().getResults();
-
-        assignedProductReferences.forEach(assignedProductReference -> logger.info(assignedProductReference.getProduct().getObj().getKey()));
-
-        client.close();
+        productSelectionService.getProductsInProductSelection(productSelectionKey)
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(productReferences ->
+                        productReferences.getResults().forEach(assignedProductReference ->
+                            logger.info(assignedProductReference.getProduct().getObj().getKey())
+                    )
+                )
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+            .thenRun(() -> client.close());
     }
 }

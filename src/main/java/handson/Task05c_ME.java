@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.me.MyCartDraftBuilder;
 import handson.impl.ApiPrefixHelper;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,27 +28,21 @@ public class Task05c_ME {
         final ProjectApiRoot meClient = createMeTokenApiClient(meApiClientPrefix);
         final String customerEmail = getCustomerEmail(meApiClientPrefix);
 
-        logger.info("Created cart for customer via me endpoint: " +
-                meClient
-                        .me()
-                        .carts()
-                        .post(
-                                MyCartDraftBuilder.of()
-                                                  .currency("EUR")
-                                                  .deleteDaysAfterLastModification(90L)
-                                                  .customerEmail(customerEmail)
-                                                  .build()
-                        )
-                        .execute()
-                        .exceptionally(throwable -> {
-                            logger.info(throwable.getLocalizedMessage());
-                            return null;
-                        })
-                        .get()
-                        .getBody().getId()
-        );
-        meClient.close();
-
+        meClient
+                .me()
+                .carts()
+                .post(
+                        MyCartDraftBuilder.of()
+                                          .currency("EUR")
+                                          .deleteDaysAfterLastModification(90L)
+                                          .customerEmail(customerEmail)
+                                          .build()
+                )
+                .execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> meClient.close());
         // TODO: Create in-store customer-bound Cart with in-store-me API client
         //  Update the ApiPrefixHelper with the prefix for Me(SPA) API Client
         //  Provide in-store-me API client with scope for a store and me endpoint
@@ -59,26 +54,26 @@ public class Task05c_ME {
 //        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
 //        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
 //
-//        logger.info("Created in-store cart with a store api client: "+
-//                meStoreClient
-//                        .inStore(meStoreKey)
-//                        .me()
-//                        .carts()
-//                        .post(
-//                                MyCartDraftBuilder.of()
-//                                        .deleteDaysAfterLastModification(90L)
-//                                        .currency("EUR")
-//                                        .customerEmail(storeCustomerEmail)
-//                                        .build()
-//                        )
-//                        .execute()
-//                        .exceptionally(throwable -> {
-//                            logger.info(throwable.getLocalizedMessage());
-//                            return null;
-//                        })
-//                        .get()
-//                        .getBody().getId()
-//        );
-//        meStoreClient.close();
+//        meStoreClient
+//                .inStore(meStoreKey)
+//                .me()
+//                .carts()
+//                .post(
+//                        MyCartDraftBuilder.of()
+//                                .deleteDaysAfterLastModification(90L)
+//                                .currency("EUR")
+//                                .customerEmail(storeCustomerEmail)
+//                                .build()
+//                )
+//                .execute()
+//                .exceptionally(throwable -> {
+//                    logger.info(throwable.getLocalizedMessage());
+//                    return null;
+//                })
+//                .thenApply(ApiHttpResponse::getBody)
+//                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+//                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+//                .thenRun(() -> meStoreClient.close());
+
     }
 }

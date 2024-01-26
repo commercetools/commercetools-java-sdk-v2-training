@@ -2,7 +2,6 @@ package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.customer.Customer;
-import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.CustomerService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -35,20 +34,16 @@ public class Task09a_ERROR_HANDLING {
         // TODO: Handle 4XX errors, exceptions
         //  Use CompletionStage
         //
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey(customerKeyMayOrMayNotExist)
-                        .thenApply(ApiHttpResponse::getBody) // unpack response body
-                        .exceptionally(throwable -> {
-                            logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
-                            // handle it
-                            return
-                                    CustomerBuilder.of()
-                                            .email("anonymous@example.org")
-                                            .build();                               // e.g. return anon customer
-                        })
-                        .get().getEmail()
-        );
+
+        customerService
+                .getCustomerByKey(customerKeyMayOrMayNotExist)
+                .thenApply(ApiHttpResponse::getBody) // unpack response body
+                .thenAccept(customer -> logger.info("Customer fetch: " + customer.get().getEmail()))
+                .exceptionally(throwable -> {
+                    logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
+                    // handle it
+                    return null; // e.g. return anon customer
+                });
 
 
         // TODO: Handle 4XX errors, exceptions

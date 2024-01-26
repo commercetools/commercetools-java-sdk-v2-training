@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.ApiPrefixHelper;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,23 +44,21 @@ public class Task07b_CUSTOMOBJECTS {
                 )
                 .build();
 
-        logger.info("Custom Object info: " +
-                client
-                        .customObjects()
-                        .post(
-                                CustomObjectDraftBuilder.of()
-                                        .container("plants-compatibility-info")
-                                        .key("tulip-seed-product")
-                                        .value(
-                                                new ObjectMapper()
-                                                        .readTree(tulipObject.toString()))
-                                        .build()
-                        )
-                        .execute()
-                        .get()
-                        .getBody().getId()
-        );
-
-        client.close();
+        client
+                .customObjects()
+                .post(
+                        CustomObjectDraftBuilder.of()
+                                .container("plants-compatibility-info")
+                                .key("tulip-seed-product")
+                                .value(
+                                        new ObjectMapper()
+                                                .readTree(tulipObject.toString()))
+                                .build()
+                )
+                .execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> client.close());
     }
 }

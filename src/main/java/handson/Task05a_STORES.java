@@ -48,11 +48,12 @@ public class Task05a_STORES {
                                     .currency("EUR")
                                     .deleteDaysAfterLastModification(10L)
                     )
-                    .execute().thenAccept(c ->
+                    .execute().thenAccept(cartApiHttpResponse ->
                         logger.info("Created in-store cart with a global api client: "
-                            + c.getBody().getId())
+                            + cartApiHttpResponse.getBody().getId())
                     );
-            });
+            })
+            .thenRun(() -> client.close());
 
 
         // TODO: Create in-store Cart with in-store API client
@@ -77,14 +78,12 @@ public class Task05a_STORES {
                                     .currency("EUR")
                                     .deleteDaysAfterLastModification(10L)
                     )
-                    .execute().thenAccept(c ->
+                    .execute().thenAccept(cartApiHttpResponse ->
                             logger.info("Created in-store cart with a store api client: "
-                                + c.getBody().getId())
+                                + cartApiHttpResponse.getBody().getId())
                         );
-            });
-
-        client.close();
-        storeClient.close();
+            })
+            .thenRun(() -> storeClient.close());;
 
         // TODO
         //  Visit impex to verify that the carts are holding the same information
