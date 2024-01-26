@@ -34,9 +34,8 @@ public class Task06c_GRAPHQL {
                 client
                         .graphql()
                         .post(
-                                GraphQLRequest.builder()
+                                graphQLRequestBuilder -> graphQLRequestBuilder
                                       .query("{ products { total }}")
-                                      .build()
                         )
                         .execute()
                         .get()

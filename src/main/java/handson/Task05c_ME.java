@@ -32,11 +32,10 @@ public class Task05c_ME {
                 .me()
                 .carts()
                 .post(
-                        MyCartDraftBuilder.of()
+                        myCartDraftBuilder -> myCartDraftBuilder.of()
                                           .currency("EUR")
                                           .deleteDaysAfterLastModification(90L)
                                           .customerEmail(customerEmail)
-                                          .build()
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)
@@ -59,11 +58,10 @@ public class Task05c_ME {
 //                .me()
 //                .carts()
 //                .post(
-//                        MyCartDraftBuilder.of()
+//                        myCartDraftBuilder -> myCartDraftBuilder.of()
 //                                .deleteDaysAfterLastModification(90L)
 //                                .currency("EUR")
 //                                .customerEmail(storeCustomerEmail)
-//                                .build()
 //                )
 //                .execute()
 //                .exceptionally(throwable -> {

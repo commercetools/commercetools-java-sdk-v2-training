@@ -48,7 +48,7 @@ public class CartService {
                 apiRoot
                         .carts()
                         .post(
-                                CartDraftBuilder.of()
+                                cartDraftBuilder -> cartDraftBuilder
                                         .currency("EUR")
                                         .deleteDaysAfterLastModification(90L)
                                         .customerEmail(customer.getEmail())
@@ -66,7 +66,6 @@ public class CartService {
                                                 .orElse(null)
                                         )
                                         .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
-                                        .build()
                         )
                         .execute();
     }
@@ -78,12 +77,11 @@ public class CartService {
                 apiRoot
                         .carts()
                         .post(
-                                CartDraftBuilder.of()
+                                cartDraftBuilder -> cartDraftBuilder
                                         .currency("EUR")
                                         .deleteDaysAfterLastModification(90L)
                                         .anonymousId("an" + System.nanoTime())
                                         .country("DE")
-                                        .build()
                         )
                         .execute();
     }
@@ -103,14 +101,10 @@ public class CartService {
                             .sku(s)
                             .quantity(1L)
                             .supplyChannel(
-                                    ChannelResourceIdentifierBuilder.of()
-                                            .key(channelKey)
-                                            .build()
+                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
                             )
                             .distributionChannel(
-                                    ChannelResourceIdentifierBuilder.of()
-                                            .key(channelKey)
-                                            .build()
+                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
                             )
                             .build()
                     )
@@ -121,13 +115,9 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                     .version(cart.getVersion())
-                                    .actions(
-                                            cartAddLineItemActions
-                                    )
-                                    .build()
-
+                                    .actions(cartAddLineItemActions)
                         )
                         .execute();
     }
@@ -143,15 +133,12 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                            CartAddDiscountCodeActionBuilder.of()
-                                                .code(code)
-                                                .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder.addDiscountCodeBuilder()
+                                                        .code(code)
                                         )
-                                        .build()
-
                         )
                         .execute();
     }
@@ -165,13 +152,13 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                                CartRecalculateActionBuilder.of()
-                                                        .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                                        .recalculateBuilder()
+                                                        .updateProductData(true)
                                         )
-                                        .build()
 
                         )
                         .execute();
@@ -195,18 +182,16 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                            CartSetShippingMethodActionBuilder.of()
-                                                    .shippingMethod(
-                                                            ShippingMethodResourceIdentifierBuilder.of()
-                                                                .id(shippingMethod.getId())
-                                                                .build()
-                                                    )
-                                                    .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                                        .setShippingMethodBuilder()
+                                                        .shippingMethod(
+                                                                shippingMethodResourceIdentifierBuilder -> shippingMethodResourceIdentifierBuilder
+                                                                    .id(shippingMethod.getId())
+                                                        )
                                         )
-                                        .build()
                         )
                         .execute();
     }

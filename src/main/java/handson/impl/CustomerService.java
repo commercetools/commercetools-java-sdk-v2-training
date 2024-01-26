@@ -40,19 +40,19 @@ public class CustomerService {
         return apiRoot
                 .customers()
                 .post(
-                        customerDraftBuilder ->
-                            customerDraftBuilder.email(email)
-                            .password(password)
-                            .firstName(firstName)
-                            .lastName(lastName)
-                            .key(customerKey)
-                            .addresses(
-                                AddressBuilder.of()
-                                        .country(country)
-                                        .build()
-                            )
-                            .defaultShippingAddress(0)
-                            )
+                        customerDraftBuilder -> customerDraftBuilder
+                                .email(email)
+                                .password(password)
+                                .firstName(firstName)
+                                .lastName(lastName)
+                                .key(customerKey)
+                                .addresses(
+                                    AddressBuilder.of()
+                                            .country(country)
+                                            .build()
+                                )
+                                .defaultShippingAddress(0)
+                                )
                 .execute();
     }
 
@@ -68,10 +68,9 @@ public class CustomerService {
                         .customers()
                         .emailToken()
                         .post(
-                                CustomerCreateEmailTokenBuilder.of()
+                                customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
                                     .id(customer.getId())
                                     .ttlMinutes(timeToLiveInMinutes)
-                                    .build()
                         )
                         .execute();
     }
@@ -83,10 +82,9 @@ public class CustomerService {
                         .customers()
                         .emailToken()
                         .post(
-                                CustomerCreateEmailTokenBuilder.of()
+                                customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
                                         .id(customer.getId())
                                         .ttlMinutes(timeToLiveInMinutes)
-                                .build()
                         )
                         .execute();
     }
@@ -100,9 +98,8 @@ public class CustomerService {
                         .customers()
                         .emailConfirm()
                         .post(
-                                CustomerEmailVerifyBuilder.of()
+                                customerEmailVerifyBuilder ->customerEmailVerifyBuilder
                                         .tokenValue(customerToken.getValue())
-                                        .build()
                         )
                         .execute();
     }
@@ -115,9 +112,8 @@ public class CustomerService {
                         .customers()
                         .emailConfirm()
                         .post(
-                               CustomerEmailVerifyBuilder.of()
+                                customerEmailVerifyBuilder ->customerEmailVerifyBuilder
                                     .tokenValue(customerToken.getValue())
-                                    .build()
                                 )
                         .execute();
     }
@@ -140,18 +136,16 @@ public class CustomerService {
                         apiRoot.customers()
                         .withKey(customerKey)
                         .post(
-                                CustomerUpdateBuilder.of()
+                                customerUpdateBuilder -> customerUpdateBuilder
                                         .version(customerApiHttpResponse.getBody().getVersion())
-                                        .actions(
-                                                CustomerSetCustomerGroupActionBuilder.of()
-                                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                                .key(customerGroupKey)
-                                                                .build())
-                                                        .build()
+                                        .plusActions(
+                                                customerUpdateActionBuilder -> customerUpdateActionBuilder
+                                                        .setCustomerGroupBuilder()
+                                                        .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
                                         )
-                                        .build()
-                )
-                .execute());
+                        )
+                        .execute()
+                );
     }
 
 }

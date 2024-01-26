@@ -47,9 +47,9 @@ public class Task02a_CREATE {
         //
 
         customerService.createCustomer(
-                "michael16@example.com",
+                "michael15@example.com",
                 "password",
-                "customer-michael16",
+                "customer-michael15",
                 "michael",
                 "tester",
                 "DE"

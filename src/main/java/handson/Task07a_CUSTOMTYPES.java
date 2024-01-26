@@ -43,7 +43,7 @@ public class Task07a_CUSTOMTYPES {
 
         // Which fields will be used?
         List<FieldDefinition> definitions = Arrays.asList(
-                FieldDefinitionBuilder.of()
+                 FieldDefinitionBuilder.of()
                         .name("allowed-to-place-orders")
                         .required(true)
                         .label(LocalizedStringBuilder.of()
@@ -75,7 +75,7 @@ public class Task07a_CUSTOMTYPES {
         client
                 .types()
                 .post(
-                        TypeDraftBuilder.of()
+                        typeDraftBuilder -> typeDraftBuilder
                                 .key("mh-block-customer")
                                 .name(
                                         LocalizedStringBuilder.of()
@@ -86,7 +86,6 @@ public class Task07a_CUSTOMTYPES {
                                         ResourceTypeId.CUSTOMER
                                 )
                                 .fieldDefinitions(definitions)
-                                .build()
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)

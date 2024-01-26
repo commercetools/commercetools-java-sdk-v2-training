@@ -26,7 +26,7 @@ public class Task07c_APIEXTENSION {
         client
                 .extensions()
                 .post(
-                        ExtensionDraftBuilder.of()
+                        extensionDraftBuilder -> extensionDraftBuilder
                                 .key("mhCustomerBlocker")
                                 .destination(
                                         // for GCP Cloud functions
@@ -40,15 +40,13 @@ public class Task07c_APIEXTENSION {
 //                                                        .accessSecret("gzh4i1X1/0625m6lravT5iHwpWp/+jbL4VTqSijn")
 //                                                        .build()
                                 )
-                                .triggers(
-                                    ExtensionTriggerBuilder.of()
+                                .addTriggers(extensionTriggerBuilder -> extensionTriggerBuilder
                                             .resourceTypeId(ExtensionResourceTypeId.ORDER)
                                             .actions(
                                                 ExtensionAction.CREATE
                                             )
-                                            .build()
+                                        .build()
                                 )
-                                .build()
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)

@@ -69,10 +69,9 @@ public class ProductSelectionService {
                 apiRoot
                         .productSelections()
                         .post(
-                                ProductSelectionDraftBuilder.of()
+                                productSelectionDraftBuilder -> productSelectionDraftBuilder
                                         .key(productSelectionKey)
                                         .name(LocalizedStringBuilder.of().values(psNames).build())
-                                        .build()
                         )
                         .execute();
     }
@@ -88,14 +87,12 @@ public class ProductSelectionService {
                         .productSelections()
                         .withId(productSelection.getId())
                         .post(
-                                ProductSelectionUpdateBuilder.of()
+                                productSelectionUpdateBuilder -> productSelectionUpdateBuilder
                                         .version(productSelection.getVersion())
-                                        .actions(ProductSelectionAddProductActionBuilder.of()
-                                                .product(ProductResourceIdentifierBuilder.of()
-                                                        .key(productKey)
-                                                        .build())
-                                                .build())
-                                        .build()
+                                        .plusActions(
+                                                productSelectionUpdateActionBuilder -> productSelectionUpdateActionBuilder.addProductBuilder()
+                                                        .product(productResourceIdentifierBuilder -> productResourceIdentifierBuilder.key(productKey))
+                                        )
                         )
                         .execute();
     }
@@ -110,17 +107,13 @@ public class ProductSelectionService {
                         .stores()
                         .withKey(storeKey)
                         .post(
-                                StoreUpdateBuilder.of()
+                                storeUpdateBuilder -> storeUpdateBuilder
                                         .version(storeApiHttpResponse.getBody().getVersion())
-                                        .actions(
-                                                StoreAddProductSelectionActionBuilder.of()
-                                                        .productSelection(ProductSelectionResourceIdentifierBuilder.of()
-                                                                .key(productSelectionKey)
-                                                                .build())
+                                        .plusActions(
+                                                storeUpdateActionBuilder -> storeUpdateActionBuilder.addProductSelectionBuilder()
+                                                        .productSelection(productSelectionResourceIdentifierBuilder -> productSelectionResourceIdentifierBuilder.key(productSelectionKey))
                                                         .active(true)
-                                                        .build()
                                         )
-                                        .build()
                         )
                         .execute()
                 );

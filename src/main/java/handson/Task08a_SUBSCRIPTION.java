@@ -2,10 +2,7 @@ package handson;
 
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.subscription.GoogleCloudPubSubDestinationBuilder;
-import com.commercetools.api.models.subscription.MessageSubscriptionBuilder;
-import com.commercetools.api.models.subscription.MessageSubscriptionResourceTypeId;
-import com.commercetools.api.models.subscription.SubscriptionDraftBuilder;
+import com.commercetools.api.models.subscription.*;
 import handson.impl.ApiPrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
@@ -32,7 +29,7 @@ public class Task08a_SUBSCRIPTION {
         client
                 .subscriptions()
                 .post(
-                        SubscriptionDraftBuilder.of()
+                        subscriptionDraftBuilder -> subscriptionDraftBuilder
                                 .key("mhOrderPlacedSubscription")
                                 .destination(
                                         //for GCP Pub/Sub topic
@@ -48,13 +45,13 @@ public class Task08a_SUBSCRIPTION {
 //                                                        .accessSecret("gzh4i1X1/0625m6lravT5iHwpWp/+jbL4VTqSijn")
 //                                                        .build()
                                 )
-                                .messages(
-                                        MessageSubscriptionBuilder.of()
+                                .addMessages(
+                                        messageSubscriptionBuilder -> messageSubscriptionBuilder
                                               .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER) // https://docs.commercetools.com/api/types#referencetype
                                               .types("OrderCreated") // https://docs.commercetools.com/api/message-types
-                                              .build()
+                                                .build()
                                 )
-                                .build()
+
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)

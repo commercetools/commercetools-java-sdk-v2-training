@@ -29,7 +29,7 @@ public class Task02b_UPDATE_Group {
         //
 
         customerService.assignCustomerToCustomerGroup(
-                "customer-michael16",
+                "customer-michael15",
                 "vip-customers"
         )
                 .thenApply(ApiHttpResponse::getBody)

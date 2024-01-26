@@ -29,13 +29,9 @@ public class OrderService {
                 apiRoot
                         .orders()
                         .post(
-                                OrderFromCartDraftBuilder.of()
-                                    .cart(CartResourceIdentifierBuilder.of()
-                                            .id(cart.getId())
-                                            .build())
+                                orderFromCartDraftBuilder -> orderFromCartDraftBuilder
+                                    .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
                                     .version(cart.getVersion())
-                                    .build()
-
                         )
                         .execute();
     }
@@ -52,14 +48,12 @@ public class OrderService {
                         .orders()
                         .withId(order.getId())
                         .post(
-                                OrderUpdateBuilder.of()
+                                orderUpdateBuilder -> orderUpdateBuilder
                                     .version(order.getVersion())
-                                    .actions(
-                                        OrderChangeOrderStateActionBuilder.of()
-                                            .orderState(state)
-                                            .build()
+                                    .plusActions(
+                                            orderUpdateActionBuilder -> orderUpdateActionBuilder.changeOrderStateBuilder()
+                                                    .orderState(state)
                                     )
-                                    .build()
                         )
                         .execute();
     }
@@ -76,18 +70,12 @@ public class OrderService {
                         .orders()
                         .withId(order.getId())
                         .post(
-                                OrderUpdateBuilder.of()
+                                orderUpdateBuilder -> orderUpdateBuilder
                                         .version(order.getVersion())
-                                        .actions(
-                                            OrderTransitionStateActionBuilder.of()
-                                                .state(
-                                                        StateResourceIdentifierBuilder.of()
-                                                            .key(workflowStateKey)
-                                                        .build()
-                                                )
-                                                .build()
+                                        .plusActions(
+                                                orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
+                                                        .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
                                         )
-                                        .build()
                         )
                         .execute();
     }

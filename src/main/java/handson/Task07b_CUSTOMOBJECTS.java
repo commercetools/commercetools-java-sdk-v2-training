@@ -1,8 +1,6 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.ApiPrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
@@ -47,13 +45,10 @@ public class Task07b_CUSTOMOBJECTS {
         client
                 .customObjects()
                 .post(
-                        CustomObjectDraftBuilder.of()
+                        customObjectDraftBuilder -> customObjectDraftBuilder
                                 .container("plants-compatibility-info")
                                 .key("tulip-seed-product")
-                                .value(
-                                        new ObjectMapper()
-                                                .readTree(tulipObject.toString()))
-                                .build()
+                                .value(tulipObject)
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)
