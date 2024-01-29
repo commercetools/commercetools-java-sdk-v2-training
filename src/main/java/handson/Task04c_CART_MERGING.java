@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
 import static handson.impl.ClientService.createApiClient;
@@ -25,31 +26,44 @@ public class Task04c_CART_MERGING {
 
         CustomerService customerService = new CustomerService(client);
         CartService cartService = new CartService(client);
-        Logger logger = LoggerFactory.getLogger(Task04c_CART_MERGING.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
+        final String customerKey = "customer-michael15";
+        final String channelKey = "berlin-store-channel";
 
         // TODO:    Inspect cart merging
         //          Complete the checkout by adding products, payment, ... test
 
         // Get a customer and create a cart for this customer
         //
-        final Cart cart = customerService.getCustomerByKey("customer-michael15")
+        final Cart customerCart = customerService.getCustomerByKey(customerKey)
                 .thenComposeAsync(cartService::createCart)
-                .toCompletableFuture().get()
+                .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
+                        cartApiHttpResponse,
+                        channelKey,
+                        "TULIPSEED01", "TULIPSEED01", "TULIPSEED02"
+                ))
+                .get()
                 .getBody();
-        logger.info("cart-id: " + cart.getId());
+        logger.info("cart-id: " + customerCart.getId());
 
 
         // Create an anonymous cart
         //
         Cart anonymousCart = cartService.createAnonymousCart()
-                .toCompletableFuture().get()
+                .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
+                        cartApiHttpResponse,
+                        channelKey,
+                        "TULIPSEED01"
+                ))
+                .get()
                 .getBody();
         logger.info("cart-id-anonymous: " + anonymousCart.getId());
 
 
         // TODO: Decide on a merging strategy
         //
-        String cartString = client
+        final Cart cart = client
                 .login()
                 .post(
                         CustomerSigninBuilder.of()
@@ -62,11 +76,11 @@ public class Task04c_CART_MERGING {
                                 .build()
                 )
                 .execute()
-                .toCompletableFuture().get().getBody().getCart().getId();
-        logger.info("cart-id-after_merge: " + cartString);
+                .get().getBody().getCart();
 
-        // TODO: Inspect the customers carts here or via impex
-        //
+        logger.info("cart ID in use after merge: " + cart.getId());
+
+        cart.getLineItems().forEach(lineItem -> logger.info(lineItem.getVariant().getSku()));
 
         client.close();
     }

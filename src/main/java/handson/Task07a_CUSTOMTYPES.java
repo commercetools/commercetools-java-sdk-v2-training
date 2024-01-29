@@ -25,7 +25,7 @@ public class Task07a_CUSTOMTYPES {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07a_CUSTOMTYPES.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         Map<String, String> labelsForFieldCheck = new HashMap<String, String>() {
             {
@@ -44,7 +44,7 @@ public class Task07a_CUSTOMTYPES {
         List<FieldDefinition> definitions = Arrays.asList(
                 FieldDefinitionBuilder.of()
                         .name("allowed-to-place-orders")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldCheck)
                                 .build()
@@ -54,7 +54,7 @@ public class Task07a_CUSTOMTYPES {
                 ,
                 FieldDefinitionBuilder.of()
                         .name("Comments")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldComments)
                                 .build()

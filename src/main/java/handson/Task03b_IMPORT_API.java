@@ -25,10 +25,11 @@ public class Task03b_IMPORT_API {
         //  Provide a container key
         //
         final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
-        final String containerKey = "mh-berlin-store-prices";
 
-        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createImportApiClient(apiImportClientPrefix);
+
+        final String containerKey = "mh-berlin-store-prices";
         final ImportService importService = new ImportService(client);
 
 

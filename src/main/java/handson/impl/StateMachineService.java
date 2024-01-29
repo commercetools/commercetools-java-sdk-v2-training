@@ -31,18 +31,16 @@ public class StateMachineService {
                 apiRoot
                         .states()
                         .post(
-                                StateDraftBuilder.of()
+                                stateDraftBuilder -> stateDraftBuilder
                                         .key(key)
                                         .type(stateTypeEnum)
                                         .initial(initial)
                                         .name(
-                                                LocalizedStringBuilder.of()
+                                                localizedStringBuilder -> localizedStringBuilder
                                                         .values(myNames)
-                                                        .build())
-                                        .build()
+                                        )
                         )
                         .execute();
-
     }
 
     public CompletableFuture<ApiHttpResponse<State>> setStateTransitions(final State stateToBeUpdated, final List<StateResourceIdentifier> states) {
@@ -52,14 +50,12 @@ public class StateMachineService {
                         .states()
                         .withId(stateToBeUpdated.getId())
                         .post(
-                                StateUpdateBuilder.of()
-                                    .actions(
-                                        StateSetTransitionsActionBuilder.of()
-                                            .transitions(states)
-                                            .build()
-                                    )
-                                    .version(stateToBeUpdated.getVersion())
-                                    .build()
+                                stateUpdateBuilder -> stateUpdateBuilder
+                                        .version(stateToBeUpdated.getVersion())
+                                        .plusActions(
+                                                stateUpdateActionBuilder -> stateUpdateActionBuilder.setTransitionsBuilder()
+                                                        .transitions(states)
+                                        )
                         )
                         .execute();
     }

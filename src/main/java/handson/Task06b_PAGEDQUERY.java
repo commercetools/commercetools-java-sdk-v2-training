@@ -23,7 +23,7 @@ public class Task06b_PAGEDQUERY {
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
-        Logger logger = LoggerFactory.getLogger(Task06b_PAGEDQUERY.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         // UseCases
         // Fetching ALL products

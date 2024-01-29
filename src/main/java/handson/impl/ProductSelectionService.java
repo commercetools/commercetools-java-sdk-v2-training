@@ -53,28 +53,17 @@ public class ProductSelectionService {
                         .execute();
     }
 
-    /**
-     * Creates a new product selection.
-     *
-     * @return the product selection creation completion stage
-     */
-    public CompletableFuture<ApiHttpResponse<ProductSelection>> createProductSelection(final String productSelectionKey, final String name) {
-        return
-                null;
-    }
-
-
-    public CompletableFuture<ApiHttpResponse<ProductSelection>> addProductToProductSelection(
-            final ApiHttpResponse<ProductSelection> productSelectionApiHttpResponse,
-            final String productKey) {
+    public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToStore(
+            final ApiHttpResponse<Store> storeApiHttpResponse,
+            final ApiHttpResponse<ProductSelection> productSelectionApiHttpResponse) {
 
         return
                 null;
     }
 
     public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToStore(
-            final ApiHttpResponse<Store> storeApiHttpResponse,
-            final ApiHttpResponse<ProductSelection> productSelectionApiHttpResponse) {
+            final String storeKey,
+            final String productSelectionKey) {
 
         return
                 null;

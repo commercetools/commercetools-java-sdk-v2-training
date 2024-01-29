@@ -46,7 +46,7 @@ public class OrderService {
 
     public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
             final ApiHttpResponse<Order> orderApiHttpResponse,
-            final State workflowState) {
+            final String customStateKey) {
 
         return null;
     }

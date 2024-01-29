@@ -1,9 +1,8 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.custom_object.CustomObjectDraftBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import handson.impl.ApiPrefixHelper;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +21,13 @@ public class Task07b_CUSTOMOBJECTS {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07b_CUSTOMOBJECTS.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         // TODO:
-        // Store custom objects
-        // container: MH_PlantCheck, Add your prefix
-        // key: the product variant sku
-        // incompatibleSKUs: all the product variants above sku is incompatible with
+        // Create custom objects
+        // container: plants-compatibility-info
+        // key: the product key
+        // incompatibleProducts: all the products that above product is incompatible with
 
         JsonObject tulipObject = Json.createObjectBuilder()
                 .add("incompatibleProducts", "basil-seed-product")
@@ -43,23 +42,18 @@ public class Task07b_CUSTOMOBJECTS {
                 )
                 .build();
 
-        logger.info("Custom Object info: " +
-                client
-                        .customObjects()
-                        .post(
-                                CustomObjectDraftBuilder.of()
-                                        .container("plants-compatibility-info")
-                                        .key("tulip-seed-product")
-                                        .value(
-                                                new ObjectMapper()
-                                                        .readTree(tulipObject.toString()))
-                                        .build()
-                        )
-                        .execute()
-                        .toCompletableFuture().get()
-                        .getBody().getId()
-        );
-
-        client.close();
+        client
+                .customObjects()
+                .post(
+                        customObjectDraftBuilder -> customObjectDraftBuilder
+                                .container("plants-compatibility-info")
+                                .key("tulip-seed-product")
+                                .value(tulipObject)
+                )
+                .execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
+                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .thenRun(() -> client.close());
     }
 }

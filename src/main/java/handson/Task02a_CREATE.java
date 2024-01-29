@@ -29,7 +29,8 @@ public class Task02a_CREATE {
          */
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client);
 

@@ -69,7 +69,7 @@ public class CartService {
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final Channel channel,
+            final String channelKey,
             final String ... skus) {
 
         return null;
