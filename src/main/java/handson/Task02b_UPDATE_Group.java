@@ -33,8 +33,12 @@ public class Task02b_UPDATE_Group {
                 "vip-customers"
         )
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .handle((customer, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    };
+                    logger.info("Resource ID: " + customer.getId()); return customer;})
                 .thenRun(() -> client.close());
     }
 

@@ -41,7 +41,7 @@ public class Task04c_CART_MERGING {
                 .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
                         cartApiHttpResponse,
                         channelKey,
-                        "tulip-seed-box", "tulip-seed-box", "tulip-seed-sack"
+                        "TULIPSEED01", "TULIPSEED01", "TULIPSEED02"
                 ))
                 .get()
                 .getBody();
@@ -54,7 +54,7 @@ public class Task04c_CART_MERGING {
                 .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
                         cartApiHttpResponse,
                         channelKey,
-                        "tulip-seed-box"
+                        "TULIPSEED01"
                 ))
                 .get()
                 .getBody();

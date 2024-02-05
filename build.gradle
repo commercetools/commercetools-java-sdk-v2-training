@@ -8,7 +8,6 @@ plugins {
 
     id 'idea'
 
-    id 'maven'
     id 'maven-publish'
 
     id 'java'
@@ -26,12 +25,10 @@ ext {
     ]
 }
 
-allprojects {
-    apply plugin: 'java'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
-
 
 repositories {
     mavenCentral()
@@ -48,13 +45,6 @@ dependencies {
     implementation "com.commercetools.sdk:commercetools-sdk-java-importapi:${versions.commercetools}"
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
     implementation "ch.qos.logback:logback-classic:${versions.logback}"
-
-    // implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha0'
-
-    // Sync Library + old jvm sdk v1
-    // implementation 'com.commercetools:commercetools-sync-java:1.9.1'
-    // implementation 'com.commercetools.sdk.jvm.core:commercetools-models:1.53.0'
-    // implementation 'com.commercetools.sdk.jvm.core:commercetools-java-client:1.53.0'
 
     implementation group: 'org.json', name: 'json', version: '20200518'
     implementation 'javax.json:javax.json-api:1.1.4'

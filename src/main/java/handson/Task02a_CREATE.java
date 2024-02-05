@@ -1,8 +1,6 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.customer.Customer;
-import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
@@ -29,16 +27,19 @@ public class Task02a_CREATE {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client);
 
-//        logger.info("Customer fetch: " +
-//                customerService
-//                        .getCustomerByKey("customer-alex-242281870")
-//                        .get()
-//                        .getBody().getEmail()
-//        );
+        customerService
+                .getCustomerByKey("customer-michael")
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((customer, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    };
+                    logger.info("Customer already exists: " + customer.getEmail()); return customer;});
 
         // TODO:
         //  CREATE a customer
@@ -50,15 +51,19 @@ public class Task02a_CREATE {
                 "michael15@example.com",
                 "password",
                 "customer-michael15",
-                "michael",
+                "michael15",
                 "tester",
                 "DE"
         )
         .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
         .thenComposeAsync(customerService::verifyEmail)
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .handle((customer, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    };
+                    logger.info("Resource ID: " + customer.getId()); return customer;})
                 .thenRun(() -> client.close());
     }
 }

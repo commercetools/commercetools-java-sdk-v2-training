@@ -7,6 +7,7 @@ import com.commercetools.api.models.me.MyCartDraftBuilder;
 import handson.impl.ApiPrefixHelper;
 
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,23 +38,31 @@ public class Task05a_STORES {
 
         customerService.getCustomerByKey(customerKey)
             .thenAccept(customerApiHttpResponse -> {
-                Customer customer = customerApiHttpResponse.getBody();
-                client
-                    .inStore(storeKey)
-                    .carts()
-                    .post(
-                            cartDraftBuilder -> cartDraftBuilder
-                                    .customerId(customer.getId())
-                                    .customerEmail(customer.getEmail())
-                                    .currency("EUR")
-                                    .deleteDaysAfterLastModification(10L)
-                    )
-                    .execute().thenAccept(cartApiHttpResponse ->
-                        logger.info("Created in-store cart with a global api client: "
-                            + cartApiHttpResponse.getBody().getId())
-                    );
-            })
-            .thenRun(() -> client.close());
+                        Customer customer = customerApiHttpResponse.getBody();
+                        client
+                                .inStore(storeKey)
+                                .carts()
+                                .post(
+                                        cartDraftBuilder -> cartDraftBuilder
+                                                .customerId(customer.getId())
+                                                .customerEmail(customer.getEmail())
+                                                .currency("EUR")
+                                                .deleteDaysAfterLastModification(10L)
+                                )
+                                .execute()
+                                .thenApply(ApiHttpResponse::getBody)
+                                .handle((cartApiHttpResponse, exception) -> {
+                                    if (exception != null) {
+                                        logger.error("Exception: " + exception.getMessage());
+                                        return null;
+                                    }
+                                    ;
+                                    logger.info("Created in-store cart with a global api client: "
+                                            + cartApiHttpResponse.getId());
+                                    return cartApiHttpResponse;
+                                })
+                                .thenRun(() -> client.close());
+                    });
 
 
         // TODO: Create in-store Cart with in-store API client
@@ -67,23 +76,30 @@ public class Task05a_STORES {
 
         customerService.getCustomerByKey(customerKey)
             .thenAccept(customerApiHttpResponse -> {
-                Customer customer = customerApiHttpResponse.getBody();
-                storeClient
-                    .inStore(storeKey)
-                    .carts()
-                    .post(
-                            cartDraftBuilder -> cartDraftBuilder
-                                    .customerId(customer.getId())
-                                    .customerEmail(customer.getEmail())
-                                    .currency("EUR")
-                                    .deleteDaysAfterLastModification(10L)
-                    )
-                    .execute().thenAccept(cartApiHttpResponse ->
-                            logger.info("Created in-store cart with a store api client: "
-                                + cartApiHttpResponse.getBody().getId())
-                        );
-            })
-            .thenRun(() -> storeClient.close());;
+                        Customer customer = customerApiHttpResponse.getBody();
+                        storeClient
+                                .inStore(storeKey)
+                                .carts()
+                                .post(
+                                        cartDraftBuilder -> cartDraftBuilder
+                                                .customerId(customer.getId())
+                                                .customerEmail(customer.getEmail())
+                                                .currency("EUR")
+                                                .deleteDaysAfterLastModification(10L)
+                                )
+                                .execute().thenApply(ApiHttpResponse::getBody)
+                                .handle((cartApiHttpResponse, exception) -> {
+                                    if (exception != null) {
+                                        logger.error("Exception: " + exception.getMessage());
+                                        return null;
+                                    }
+                                    ;
+                                    logger.info("Created in-store cart with a store api client: "
+                                            + cartApiHttpResponse.getId());
+                                    return cartApiHttpResponse;
+                                })
+                                .thenRun(() -> storeClient.close());
+                    });
 
         // TODO
         //  Visit impex to verify that the carts are holding the same information

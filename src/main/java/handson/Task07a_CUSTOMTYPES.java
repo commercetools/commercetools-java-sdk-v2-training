@@ -89,9 +89,16 @@ public class Task07a_CUSTOMTYPES {
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .handle((type, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    }
+                    ;
+                    logger.info("Custom Type ID: "
+                            + type.getId());
+                    return type;
+                })
                 .thenRun(() -> client.close());
-
     }
 }

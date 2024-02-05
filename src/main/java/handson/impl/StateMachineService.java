@@ -19,6 +19,15 @@ public class StateMachineService {
         this.apiRoot = client;
     }
 
+    public CompletableFuture<ApiHttpResponse<State>> getStateByKey(final String key) {
+
+        return
+                apiRoot
+                        .states()
+                        .withKey(key)
+                        .get()
+                        .execute();
+    }
     public CompletableFuture<ApiHttpResponse<State>> createState(final String key, StateTypeEnum stateTypeEnum, final Boolean initial, final String name) {
 
         Map<String, String> myNames = new HashMap<String, String>() {

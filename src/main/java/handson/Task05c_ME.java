@@ -39,9 +39,18 @@ public class Task05c_ME {
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .handle((cartApiHttpResponse, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    }
+                    ;
+                    logger.info("Me cart with an SPA Client: "
+                            + cartApiHttpResponse.getId());
+                    return cartApiHttpResponse;
+                })
                 .thenRun(() -> meClient.close());
+
         // TODO: Create in-store customer-bound Cart with in-store-me API client
         //  Update the ApiPrefixHelper with the prefix for Me(SPA) API Client
         //  Provide in-store-me API client with scope for a store and me endpoint
@@ -64,13 +73,17 @@ public class Task05c_ME {
 //                                .customerEmail(storeCustomerEmail)
 //                )
 //                .execute()
-//                .exceptionally(throwable -> {
-//                    logger.info(throwable.getLocalizedMessage());
-//                    return null;
-//                })
 //                .thenApply(ApiHttpResponse::getBody)
-//                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-//                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+//                .handle((cartApiHttpResponse, exception) -> {
+//                    if (exception != null) {
+//                        logger.error("Exception: " + exception.getMessage());
+//                        return null;
+//                    }
+//                    ;
+//                    logger.info("Me cart with an SPA Client and a Store Customer: "
+//                            + cartApiHttpResponse.getId());
+//                    return cartApiHttpResponse;
+//                })
 //                .thenRun(() -> meStoreClient.close());
 
     }

@@ -52,8 +52,16 @@ public class Task07b_CUSTOMOBJECTS {
                 )
                 .execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
+                .handle((customObject, exception) -> {
+                    if (exception != null) {
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    }
+                    ;
+                    logger.info("Custom Object ID: "
+                            + customObject.getId());
+                    return customObject;
+                })
                 .thenRun(() -> client.close());
     }
 }
