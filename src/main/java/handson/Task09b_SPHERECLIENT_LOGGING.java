@@ -31,7 +31,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         final String clientId = getClientId(apiClientPrefix);
         final String clientSecret = getClientSecret(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task09b_SPHERECLIENT_LOGGING.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         // TODO 1..5
         //  Execute, inspect individually
@@ -126,7 +126,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                     .get()
                     .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
                     .execute()
-                    .toCompletableFuture().get()
+                    .get()
                     .getBody().getKey()
         );
 
@@ -145,13 +145,14 @@ public class Task09b_SPHERECLIENT_LOGGING {
                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
                 )
-                .withRetryMiddleware(3, Arrays.asList(500, 503))
+                .withPolicies(policies -> policies.withRetry(builder -> builder.maxRetries(5)
+                        .statusCodes(Arrays.asList(502, 503, 504, 404, 400))))
                 .build(projectKey);
         logger.info("Get project information via retryClient " +
                 retryClient
                         .get()
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getKey()
         );
 
@@ -177,7 +178,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                                         .build())
                                 .build())
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getLastName()
         );
         concurrentClient.close();

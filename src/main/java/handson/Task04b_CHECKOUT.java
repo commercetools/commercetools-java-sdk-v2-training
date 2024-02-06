@@ -26,19 +26,20 @@ public class Task04b_CHECKOUT {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         CustomerService customerService = new CustomerService(client);
         CartService cartService = new CartService(client);
         OrderService orderService = new OrderService(client);
         PaymentService paymentService = new PaymentService(client);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+
 
 
         // TODO: Fetch a channel if your inventory mode will not be NONE
         //
-        Channel channel = null;
+        final String channelKey = "";
 
-        final State state = null;
+        final String initialStateKey = "";
 
 
         // TODO: Perform cart operations:

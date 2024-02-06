@@ -23,25 +23,21 @@ public class Task05b_PRODUCTSELECTIONS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05b_PRODUCTSELECTIONS.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         final ProjectApiRoot client = createApiClient(globalApiClientPrefix);
 
         final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
-        final String productSelectionKey = "mh-berlin-product-selection";
+        // TODO: In Merchant Center, create product selection and add a product to the product selection.
+        // Update the keys below
 
-        // TODO: Create product selection and add a product to the product selection
+        final String productSelectionKey = "";
+        final String storeKey = "";
 
-        ProductSelection productSelection = null;
-        logger.info("Created product selection: " + productSelection.getId());
+        // TODO: Get a store and assign the product selection to the store and activate it
 
-
-
-        // TODO: Get a store and assign the product selection to the store
-
-
-        logger.info("Product selections assigned to the store: "
+        logger.info("Product selection added to the store: "
                 + ""
         );
 
@@ -51,5 +47,6 @@ public class Task05b_PRODUCTSELECTIONS {
         List<AssignedProductReference> assignedProductReferences = null;
 //        assignedProductReferences.forEach(assignedProductReference -> logger.info(assignedProductReference.getProduct().getObj().getKey()));
 
+        client.close();
     }
 }

@@ -15,7 +15,7 @@ public class Task03c_SYNC_PROJECTS {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task02b_UPDATE_Group.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         // TODO
         //  Have docker installed

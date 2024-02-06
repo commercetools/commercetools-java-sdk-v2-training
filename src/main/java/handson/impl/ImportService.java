@@ -27,14 +27,10 @@ public class ImportService {
 
     public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportContainer(final String containerKey) {
 
-            return
+        return
                 apiRoot
                         .importContainers()
-                        .post(
-                                ImportContainerDraftBuilder.of()
-                                       .key(containerKey)
-                                       .build()
-                        )
+                        .post(importContainerDraftBuilder -> importContainerDraftBuilder.key(containerKey))
                         .execute();
         }
 
@@ -50,9 +46,5 @@ public class ImportService {
             return
                     null;
     }
-
-
-
-
 
 }

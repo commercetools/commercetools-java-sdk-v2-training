@@ -48,17 +48,18 @@ public class CustomerService {
                 null;
     }
 
-    public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(final Customer customer, final long timeToLiveInMinutes) {
+    public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(
+            final Customer customer,
+            final long timeToLiveInMinutes) {
 
         return
                 apiRoot
                         .customers()
                         .emailToken()
                         .post(
-                                CustomerCreateEmailTokenBuilder.of()
+                                customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
                                         .id(customer.getId())
                                         .ttlMinutes(timeToLiveInMinutes)
-                                .build()
                         )
                         .execute();
     }
@@ -79,10 +80,9 @@ public class CustomerService {
                         .customers()
                         .emailConfirm()
                         .post(
-                               CustomerEmailVerifyBuilder.of()
-                                    .tokenValue(customerToken.getValue())
-                                    .build()
-                                )
+                                customerEmailVerifyBuilder ->customerEmailVerifyBuilder
+                                        .tokenValue(customerToken.getValue())
+                        )
                         .execute();
     }
 
@@ -96,27 +96,24 @@ public class CustomerService {
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
-            final ApiHttpResponse<Customer> customerApiHttpResponse,
-            final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse) {
+            final String customerKey,
+            final String customerGroupKey) {
 
-        final Customer customer = customerApiHttpResponse.getBody();
-        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
-
-        return
-                apiRoot
-                        .customers()
-                        .withKey(customer.getKey())
-                        .post(CustomerUpdateBuilder.of()
-                                .version(customer.getVersion())
-                                .actions(
-                                    CustomerSetCustomerGroupActionBuilder.of()
-                                        .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
-                                                .key(customerGroup.getKey())
-                                                .build())
-                                        .build()
+        return getCustomerByKey(customerKey)
+                .thenComposeAsync(customerApiHttpResponse ->
+                        apiRoot.customers()
+                                .withKey(customerKey)
+                                .post(
+                                        customerUpdateBuilder -> customerUpdateBuilder
+                                                .version(customerApiHttpResponse.getBody().getVersion())
+                                                .plusActions(
+                                                        customerUpdateActionBuilder -> customerUpdateActionBuilder
+                                                                .setCustomerGroupBuilder()
+                                                                .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
+                                                )
                                 )
-                                .build())
-                        .execute();
+                                .execute()
+                );
     }
 
 }
