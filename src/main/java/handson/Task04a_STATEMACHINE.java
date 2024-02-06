@@ -26,16 +26,42 @@ public class Task04a_STATEMACHINE {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task04a_STATEMACHINE.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         final StateMachineService stateMachineService = new StateMachineService(client);
 
         // TODO Use StateMachineService.java to create your designed order state machine
         //
 
-        stateMachineService.createState("mh1OrderPacked", StateTypeEnum.ORDER_STATE, true, "MH1 Order Packed")
-                .thenCombineAsync(stateMachineService.createState("mh1OrderShipped", StateTypeEnum.ORDER_STATE, false, "MH1 Order Shipped"),
-                        (orderPackedStateApiResponse, orderShippedStateApiResponse)->
+        stateMachineService.createState(
+                        "mhOrderPacked1",
+                        StateTypeEnum.ORDER_STATE,
+                        true,
+                        "MH Order Packed1"
+                )
+                .exceptionally( throwable -> {
+                    logger.error("Exception: " + throwable.getMessage());
+                    try {
+                        return stateMachineService.getStateByKey("mhOrderPacked1").get();
+                    }
+                    catch (Exception e){client.close();logger.error(e.getMessage());return null;}
+                })
+                .thenCombineAsync(
+                        stateMachineService.createState(
+                                        "mhOrderShipped1",
+                                        StateTypeEnum.ORDER_STATE,
+                                        false,
+                                        "MH Order Shipped1"
+                                )
+                                .exceptionally( throwable -> {
+                                    logger.error("Exception: " + throwable.getMessage());
+                                    try {
+                                        return stateMachineService.getStateByKey("mhOrderShipped1").get();
+                                    }
+                                    catch (Exception e){client.close();logger.error(e.getMessage());return null;}
+                                }),
+                        (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
                                 stateMachineService.setStateTransitions(
                                                 orderPackedStateApiResponse.getBody(),
                                                 Stream.of(
@@ -54,11 +80,14 @@ public class Task04a_STATEMACHINE {
                 )
                 .get()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("State info {}",resource.getId()))
-                .exceptionally(exception -> {
-                    logger.info("An error occured " + exception.getMessage());
-                    return null;}
-                )
+                .handle((state, exception) -> {
+                    if (exception == null) {
+                        logger.info("Initial state key {}", state.getKey());
+                        return state;
+                    };
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                })
                 .thenRun(() -> client.close());
 
         // TODO Create an order in the Merchant Center and verify that custom workflow states are available

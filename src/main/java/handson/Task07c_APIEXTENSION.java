@@ -46,12 +46,16 @@ public class Task07c_APIEXTENSION {
                                         )
                                         .build()
                                 )
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
-                .thenRun(() -> client.close());
+                .handle((extension, exception) -> {
+                    if (exception == null) {
+                        logger.info("API Extension ID: " + extension.getId());
+                        return extension;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }
 

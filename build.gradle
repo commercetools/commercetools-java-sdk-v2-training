@@ -8,7 +8,6 @@ plugins {
 
     id 'idea'
 
-    id 'maven'
     id 'maven-publish'
 
     id 'java'
@@ -26,10 +25,9 @@ ext {
     ]
 }
 
-allprojects {
-    apply plugin: 'java'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 

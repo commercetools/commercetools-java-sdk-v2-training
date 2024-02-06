@@ -56,14 +56,15 @@ public class Task08a_SUBSCRIPTION {
                                                 .build()
                                 )
 
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> {
-                    logger.info("An error occured " + exception.getMessage());
-                    return null;}
-                )
-                .thenRun(() -> client.close());
+                .handle((subscription, exception) -> {
+                    if (exception == null) {
+                        logger.info("Subscription ID: " + subscription.getId());
+                        return subscription;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

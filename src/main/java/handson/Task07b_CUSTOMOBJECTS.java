@@ -49,11 +49,15 @@ public class Task07b_CUSTOMOBJECTS {
                                 .container("plants-compatibility-info")
                                 .key("tulip-seed-product")
                                 .value(tulipObject)
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(resource -> logger.info("Resource ID: " + resource.getId()))
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
-                .thenRun(() -> client.close());
+                .handle((customObject, exception) -> {
+                    if (exception == null) {
+                        logger.info("Custom Object ID: " + customObject.getId());
+                        return customObject;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }
