@@ -36,20 +36,16 @@ public class Task05c_ME {
                                           .currency("EUR")
                                           .deleteDaysAfterLastModification(90L)
                                           .customerEmail(customerEmail)
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((cartApiHttpResponse, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Me cart with an SPA Client: " + cartApiHttpResponse.getId());
+                        return cartApiHttpResponse;
                     }
-                    ;
-                    logger.info("Me cart with an SPA Client: "
-                            + cartApiHttpResponse.getId());
-                    return cartApiHttpResponse;
-                })
-                .thenRun(() -> meClient.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> meClient.close());
 
         // TODO: Create in-store customer-bound Cart with in-store-me API client
         //  Update the ApiPrefixHelper with the prefix for Me(SPA) API Client
@@ -57,34 +53,30 @@ public class Task05c_ME {
         //  Try creating a global cart without me and check the error message
         //  Visit impex to inspect the carts created
 
-//        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
-//        final ProjectApiRoot meStoreClient = createStoreMeApiClient(storeMeApiClientPrefix);
-//        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
-//        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
-//
-//        meStoreClient
-//                .inStore(meStoreKey)
-//                .me()
-//                .carts()
-//                .post(
-//                        myCartDraftBuilder -> myCartDraftBuilder.of()
-//                                .deleteDaysAfterLastModification(90L)
-//                                .currency("EUR")
-//                                .customerEmail(storeCustomerEmail)
-//                )
-//                .execute()
-//                .thenApply(ApiHttpResponse::getBody)
-//                .handle((cartApiHttpResponse, exception) -> {
-//                    if (exception != null) {
-//                        logger.error("Exception: " + exception.getMessage());
-//                        return null;
-//                    }
-//                    ;
-//                    logger.info("Me cart with an SPA Client and a Store Customer: "
-//                            + cartApiHttpResponse.getId());
-//                    return cartApiHttpResponse;
-//                })
-//                .thenRun(() -> meStoreClient.close());
+        final String storeMeApiClientPrefix = ApiPrefixHelper.API_STORE_ME_CLIENT_PREFIX.getPrefix();
+        final ProjectApiRoot meStoreClient = createStoreMeApiClient(storeMeApiClientPrefix);
+        final String meStoreKey = getStoreKey(storeMeApiClientPrefix);
+        final String storeCustomerEmail = getCustomerEmail(storeMeApiClientPrefix);
+
+        meStoreClient
+                .inStore(meStoreKey)
+                .me()
+                .carts()
+                .post(
+                        myCartDraftBuilder -> myCartDraftBuilder.of()
+                                .deleteDaysAfterLastModification(90L)
+                                .currency("EUR")
+                                .customerEmail(storeCustomerEmail)
+                ).execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((cartApiHttpResponse, exception) -> {
+                    if (exception == null) {
+                        logger.info("Me cart with an SPA Client and a Store Customer: " + cartApiHttpResponse.getId());
+                        return cartApiHttpResponse;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> meStoreClient.close());
 
     }
 }

@@ -59,11 +59,11 @@ public class Task02a_CREATE {
         .thenComposeAsync(customerService::verifyEmail)
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((customer, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Resource ID: " + customer.getId()); return customer;
                     };
-                    logger.info("Resource ID: " + customer.getId()); return customer;})
-                .thenRun(() -> client.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

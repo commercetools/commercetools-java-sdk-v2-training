@@ -48,20 +48,16 @@ public class Task05a_STORES {
                                                 .customerEmail(customer.getEmail())
                                                 .currency("EUR")
                                                 .deleteDaysAfterLastModification(10L)
-                                )
-                                .execute()
+                                ).execute()
                                 .thenApply(ApiHttpResponse::getBody)
                                 .handle((cartApiHttpResponse, exception) -> {
-                                    if (exception != null) {
-                                        logger.error("Exception: " + exception.getMessage());
-                                        return null;
+                                    if (exception == null) {
+                                        logger.info("Created in-store cart with a global api client: " + cartApiHttpResponse.getId());
+                                        return cartApiHttpResponse;
                                     }
-                                    ;
-                                    logger.info("Created in-store cart with a global api client: "
-                                            + cartApiHttpResponse.getId());
-                                    return cartApiHttpResponse;
-                                })
-                                .thenRun(() -> client.close());
+                                    logger.error("Exception: " + exception.getMessage());
+                                    return null;
+                                }).thenRun(() -> client.close());
                     });
 
 
@@ -86,19 +82,16 @@ public class Task05a_STORES {
                                                 .customerEmail(customer.getEmail())
                                                 .currency("EUR")
                                                 .deleteDaysAfterLastModification(10L)
-                                )
-                                .execute().thenApply(ApiHttpResponse::getBody)
+                                ).execute()
+                                .thenApply(ApiHttpResponse::getBody)
                                 .handle((cartApiHttpResponse, exception) -> {
-                                    if (exception != null) {
-                                        logger.error("Exception: " + exception.getMessage());
-                                        return null;
+                                    if (exception == null) {
+                                        logger.info("Created in-store cart with a store api client: " + cartApiHttpResponse.getId());
+                                        return cartApiHttpResponse;
                                     }
-                                    ;
-                                    logger.info("Created in-store cart with a store api client: "
-                                            + cartApiHttpResponse.getId());
-                                    return cartApiHttpResponse;
-                                })
-                                .thenRun(() -> storeClient.close());
+                                    logger.error("Exception: " + exception.getMessage());
+                                    return null;
+                                }).thenRun(() -> storeClient.close());
                     });
 
         // TODO

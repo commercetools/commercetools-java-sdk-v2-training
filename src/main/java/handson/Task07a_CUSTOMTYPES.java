@@ -86,19 +86,15 @@ public class Task07a_CUSTOMTYPES {
                                         ResourceTypeId.CUSTOMER
                                 )
                                 .fieldDefinitions(definitions)
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((type, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Custom Type ID: " + type.getId());
+                        return type;
                     }
-                    ;
-                    logger.info("Custom Type ID: "
-                            + type.getId());
-                    return type;
-                })
-                .thenRun(() -> client.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

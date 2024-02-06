@@ -52,19 +52,15 @@ public class Task08a_SUBSCRIPTION {
                                                 .build()
                                 )
 
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((subscription, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Subscription ID: " + subscription.getId());
+                        return subscription;
                     }
-                    ;
-                    logger.info("Subscription ID: "
-                            + subscription.getId());
-                    return subscription;
-                })
-                .thenRun(() -> client.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

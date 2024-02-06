@@ -80,11 +80,12 @@ public class Task04a_STATEMACHINE {
         .get()
         .thenApply(ApiHttpResponse::getBody)
         .handle((state, exception) -> {
-            if (exception != null) {
-                logger.error("Exception: " + exception.getMessage());
-                return null;
+            if (exception == null) {
+                logger.info("Initial state key {}", state.getKey());
+                return state;
             };
-            logger.info("Initial state key {}", state.getKey()); return state;
+            logger.error("Exception: " + exception.getMessage());
+            return null;
         })
         .thenRun(() -> client.close());
 

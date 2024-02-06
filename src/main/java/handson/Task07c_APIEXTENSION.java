@@ -47,20 +47,16 @@ public class Task07c_APIEXTENSION {
                                             )
                                         .build()
                                 )
-                )
-                .execute()
+                ).execute()
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((extension, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("API Extension ID: " + extension.getId());
+                        return extension;
                     }
-                    ;
-                    logger.info("API Extension ID: "
-                            + extension.getId());
-                    return extension;
-                })
-                .thenRun(() -> client.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }
 

@@ -38,25 +38,23 @@ public class Task03b_IMPORT_API {
         //  CREATE a price import request
         //  CHECK the status of your import requests
 
-//        importService.createImportContainer(containerKey)
-//                .thenApply(ApiHttpResponse::getBody)
-//                .handle((importContainer, exception) -> {
-//                    if (exception != null) {
-//                        logger.error("Exception: " + exception.getMessage());
-//                        client.close();
-//                        return null;
-//                    };
-//                    logger.info("Created import container {} ", importContainer.getKey());
-//                    return importContainer;
-//                })
-//                .thenRun(() -> client.close());
+        importService.createImportContainer(containerKey)
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((importContainer, exception) -> {
+                    if (exception == null) {
+                        logger.info("Created import container {} ", importContainer.getKey());
+                        return importContainer;
+                    };
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
 
 //        Money amount = MoneyBuilder.of()
 //                .currencyCode("EUR")
 //                .centAmount(3412L)
 //                .build();
-
-
+//
+//
 //        importService.createPriceImportRequest(
 //                containerKey,
 //                "tulip-seed-product",
@@ -66,55 +64,47 @@ public class Task03b_IMPORT_API {
 //            )
 //            .thenApply(ApiHttpResponse::getBody)
 //            .handle((response, exception) -> {
-//                if (exception != null) {
-//                    logger.error("Exception: " + exception.getMessage());
-//                    client.close();
-//                    return null;
+//                if (exception == null) {
+//                    logger.info("Importing {} price(s) ", response.getOperationStatus().size());
+//                    return response;
 //                };
-//                logger.info("Importing {} price(s) ", response.getOperationStatus().size());
-//                        return response;
-//            })
-//            .thenRun(() -> client.close());
+//                logger.error("Exception: " + exception.getMessage());
+//                return null;
+//            }).thenRun(() -> client.close());
+
 
 
 //        client
 //                .importContainers()
-//                .get()
-//                .execute()
+//                .get().execute()
 //                .thenApply(ApiHttpResponse::getBody)
 //                .handle((response, exception) -> {
-//                    if (exception != null) {
-//                        logger.error("Exception: " + exception.getMessage());
-//                        client.close();
-//                        return null;
+//                    if (exception == null) {
+//                        logger.info("Total containers in our project: {}", response.getTotal());
+//                        return response;
 //                    };
-//                    logger.info("Total containers in our project: {}", response.getTotal());
-//                    return response;
-//                })
-//                .thenRun(() -> client.close());
+//                    logger.error("Exception: " + exception.getMessage());
+//                    return null;
+//                }).thenRun(() -> client.close());
 
-        client
-                .importContainers()
-                .withImportContainerKeyValue(containerKey)
-                .importSummaries()
-                .get()
-                .execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((importSummary, exception) -> {
-                        if (exception != null) {
-                                logger.error("Exception: " + exception.getMessage());
-                                client.close();
-                                return null;
-                        };
-                        OperationStates states = importSummary.getStates();
-                                logger.info("Processing: {} Imported: {} Unresolved: {} ",
-                                states.getProcessing(),
-                                states.getImported(),
-                                states.getUnresolved()
-                        );
-                        return importSummary;
-                })
-                .thenRun(() -> client.close());
+//        client
+//                .importContainers().withImportContainerKeyValue(containerKey)
+//                .importSummaries()
+//                .get().execute()
+//                .thenApply(ApiHttpResponse::getBody)
+//                .handle((importSummary, exception) -> {
+//                        if (exception == null) {
+//                            OperationStates states = importSummary.getStates();
+//                            logger.info("Processing: {} Imported: {} Unresolved: {} ",
+//                                    states.getProcessing(),
+//                                    states.getImported(),
+//                                    states.getUnresolved()
+//                            );
+//                            return importSummary;
+//                        };
+//                        logger.error("Exception: " + exception.getMessage());
+//                        return null;
+//                }).thenRun(() -> client.close());
     }
 }
 

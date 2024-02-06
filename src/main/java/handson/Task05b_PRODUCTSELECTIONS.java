@@ -34,23 +34,31 @@ public class Task05b_PRODUCTSELECTIONS {
 
         // TODO: Get a store and assign the product selection to the store
 
-//        productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
-//                .thenApply(ApiHttpResponse::getBody)
-//                .thenAccept(resource -> logger.info("Product selections assigned to the store: {}", resource.getProductSelections().size()))
-//                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
-//            .thenRun(() -> client.close());
+        productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((store, exception) -> {
+                    if (exception == null) {
+                        logger.info("Product selections assigned to the store: {}", + store.getProductSelections().size());
+                        return store;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
 
 
         // TODO Get products in a product selection
 
         productSelectionService.getProductsInProductSelection(productSelectionKey)
                 .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(productReferences ->
-                        productReferences.getResults().forEach(assignedProductReference ->
-                            logger.info(assignedProductReference.getProduct().getObj().getKey())
-                    )
-                )
-                .exceptionally(exception -> { logger.info("An error occured " + exception.getMessage()); return null;})
-            .thenRun(() -> client.close());
+                .handle((productReferences, exception) -> {
+                    if (exception == null) {
+                                productReferences.getResults().forEach(assignedProductReference ->
+                                        logger.info(assignedProductReference.getProduct().getObj().getKey())
+                                );
+                                return null;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

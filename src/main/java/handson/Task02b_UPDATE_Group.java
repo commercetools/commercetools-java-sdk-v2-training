@@ -34,12 +34,13 @@ public class Task02b_UPDATE_Group {
         )
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((customer, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Resource ID: " + customer.getId());
+                        return customer;
                     };
-                    logger.info("Resource ID: " + customer.getId()); return customer;})
-                .thenRun(() -> client.close());
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 
 }
