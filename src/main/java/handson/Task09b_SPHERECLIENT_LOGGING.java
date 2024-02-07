@@ -27,11 +27,13 @@ public class Task09b_SPHERECLIENT_LOGGING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final String projectKey = getProjectKey(apiClientPrefix);
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         final String clientId = getClientId(apiClientPrefix);
         final String clientSecret = getClientSecret(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task09b_SPHERECLIENT_LOGGING.class.getName());
+
 
         // TODO 1..5
         //  Execute, inspect individually

@@ -22,9 +22,9 @@ public class Task06c_GRAPHQL {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
+        final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         // TODO:
         //  Use the GraphQL playground to create a graphql query

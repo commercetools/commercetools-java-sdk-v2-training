@@ -22,11 +22,13 @@ public class Task04c_CART_MERGING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         CustomerService customerService = new CustomerService(client);
         CartService cartService = new CartService(client);
-        Logger logger = LoggerFactory.getLogger(Task04c_CART_MERGING.class.getName());
+
         final String customerKey = "customer-michael15";
 
         final String channelKey = "berlin-store-channel";

@@ -23,7 +23,7 @@ public class Task06a_SEARCH {
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task06a_SEARCH.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         Category seedCategory = client
                 .categories()

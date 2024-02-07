@@ -23,8 +23,9 @@ public class Task08a_SUBSCRIPTION {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task08a_SUBSCRIPTION.class.getName());
 
         client
                 .subscriptions()

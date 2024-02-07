@@ -17,7 +17,7 @@ public class Task05c_ME {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05c_ME.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         // TODO: Create a cart via /me endpoint
         //  Provide API client with SPA for customer with global permissions

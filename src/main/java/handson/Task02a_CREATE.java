@@ -35,11 +35,12 @@ public class Task02a_CREATE {
                 .getCustomerByKey("customer-michael")
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((customer, exception) -> {
-                    if (exception != null) {
-                        logger.error("Exception: " + exception.getMessage());
-                        return null;
+                    if (exception == null) {
+                        logger.info("Customer already exists: " + customer.getEmail()); return customer;
                     };
-                    logger.info("Customer already exists: " + customer.getEmail()); return customer;});
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                });
 
         // TODO:
         //  CREATE a customer

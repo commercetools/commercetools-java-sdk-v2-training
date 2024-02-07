@@ -25,8 +25,9 @@ public class Task07a_CUSTOMTYPES {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07a_CUSTOMTYPES.class.getName());
 
         Map<String, String> labelsForFieldCheck = new HashMap<String, String>() {
             {

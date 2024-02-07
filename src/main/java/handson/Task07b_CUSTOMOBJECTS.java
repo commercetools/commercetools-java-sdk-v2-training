@@ -20,8 +20,10 @@ public class Task07b_CUSTOMOBJECTS {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07b_CUSTOMOBJECTS.class.getName());
+
 
         // TODO:
         // Create a custom object

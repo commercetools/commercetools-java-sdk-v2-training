@@ -21,8 +21,9 @@ public class Task09a_ERROR_HANDLING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());
 
         CustomerService customerService = new CustomerService(client);
 

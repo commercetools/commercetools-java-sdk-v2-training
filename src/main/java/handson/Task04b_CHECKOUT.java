@@ -20,13 +20,15 @@ public class Task04b_CHECKOUT {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         CustomerService customerService = new CustomerService(client);
         CartService cartService = new CartService(client);
         OrderService orderService = new OrderService(client);
         PaymentService paymentService = new PaymentService(client);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+
 
 
         // TODO: Fetch a channel if your inventory mode will not be NONE

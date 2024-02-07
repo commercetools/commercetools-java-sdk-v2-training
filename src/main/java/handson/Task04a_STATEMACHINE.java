@@ -26,7 +26,8 @@ public class Task04a_STATEMACHINE {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task04a_STATEMACHINE.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         final StateMachineService stateMachineService = new StateMachineService(client);
 

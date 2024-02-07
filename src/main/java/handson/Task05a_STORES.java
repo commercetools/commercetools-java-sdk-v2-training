@@ -21,7 +21,7 @@ public class Task05a_STORES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05a_STORES.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         final String customerKey = "customer-michael15";
         final String storeKey = "boston-store";

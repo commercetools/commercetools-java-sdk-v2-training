@@ -20,7 +20,7 @@ public class Task05b_PRODUCTSELECTIONS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05b_PRODUCTSELECTIONS.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         final ProjectApiRoot client = createApiClient(globalApiClientPrefix);
 

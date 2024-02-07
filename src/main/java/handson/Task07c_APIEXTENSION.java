@@ -19,9 +19,9 @@ public class Task07c_APIEXTENSION {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07c_APIEXTENSION.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
+        final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         client
                 .extensions()
