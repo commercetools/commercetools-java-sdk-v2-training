@@ -31,11 +31,7 @@ public class ImportService {
             return
                 apiRoot
                         .importContainers()
-                        .post(
-                                ImportContainerDraftBuilder.of()
-                                       .key(containerKey)
-                                       .build()
-                        )
+                        .post(importContainerDraftBuilder -> importContainerDraftBuilder.key(containerKey))
                         .execute();
         }
 
@@ -47,31 +43,21 @@ public class ImportService {
             final String priceKey,
             final Money amount) {
 
-        final PriceImportRequest resources = PriceImportRequestBuilder.of()
-                .resources(
-                    PriceImportBuilder.of()
-                            .key(priceKey)     // key for the Price record
-                            .country("DE")                              // TODO: adjust
-                            .product(ProductKeyReferenceBuilder.of()
-                                    .key(productKey)
-                                    .build()
-                            )
-                            .productVariant(ProductVariantKeyReferenceBuilder.of()
-                                    .key(productVariantKey)             // TODO: check the key!!!
-                                    .build()
-                            )
-                            .value(amount)
-                            .build()
-                )
-                .build();
-
             return
                 apiRoot
                         .prices()
                         .importContainers()
                         .withImportContainerKeyValue(containerKey)
                         .post(
-                                resources
+                                priceImportRequestBuilder -> priceImportRequestBuilder
+                                        .plusResources(
+                                                priceImportBuilder -> priceImportBuilder
+                                                        .key(priceKey)     // key for the Price record
+                                                        .country("DE")                              // TODO: adjust
+                                                        .product(productKeyReferenceBuilder -> productKeyReferenceBuilder.key(productKey))
+                                                        .productVariant(productVariantKeyReferenceBuilder -> productVariantKeyReferenceBuilder.key(productVariantKey))
+                                                        .value(amount)
+                                        )
                         )
                         .execute();
     }

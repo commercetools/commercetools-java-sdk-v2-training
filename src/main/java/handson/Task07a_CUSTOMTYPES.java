@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.type.*;
 import handson.impl.ApiPrefixHelper;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,27 +25,28 @@ public class Task07a_CUSTOMTYPES {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task07a_CUSTOMTYPES.class.getName());
 
         Map<String, String> labelsForFieldCheck = new HashMap<String, String>() {
             {
-                put("DE", "Allowed to place orders");
-                put("EN", "Allowed to place orders");
+                put("de-DE", "Allowed to place orders");
+                put("en-US", "Allowed to place orders");
             }
         };
         Map<String, String> labelsForFieldComments = new HashMap<String, String>() {
             {
-                put("DE", "Bemerkungen");
-                put("EN", "comments");
+                put("de-DE", "Bemerkungen");
+                put("en-US", "comments");
             }
         };
 
         // Which fields will be used?
         List<FieldDefinition> definitions = Arrays.asList(
-                FieldDefinitionBuilder.of()
+                 FieldDefinitionBuilder.of()
                         .name("allowed-to-place-orders")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldCheck)
                                 .build()
@@ -54,7 +56,7 @@ public class Task07a_CUSTOMTYPES {
                 ,
                 FieldDefinitionBuilder.of()
                         .name("Comments")
-                        .required(false)
+                        .required(true)
                         .label(LocalizedStringBuilder.of()
                                 .values(labelsForFieldComments)
                                 .build()
@@ -66,33 +68,34 @@ public class Task07a_CUSTOMTYPES {
 
         Map<String, String> namesForType = new HashMap<String, String>() {
             {
-                put("DE", "mh-Block-Customer");
-                put("EN", "mh-Block-Customer");
+                put("de-DE", "mh-Block-Customer");
+                put("en-US", "mh-Block-Customer");
             }
         };
 
-        logger.info("Custom Type info: " +
-                client
-                        .types()
-                        .post(
-                                TypeDraftBuilder.of()
-                                        .key("mh-block-customer")
-                                        .name(
-                                                LocalizedStringBuilder.of()
-                                                        .values(namesForType)
-                                                        .build()
-                                        )
-                                        .resourceTypeIds(
-                                                ResourceTypeId.CUSTOMER
-                                        )
-                                        .fieldDefinitions(definitions)
-                                        .build()
-                        )
-                        .execute()
-                        .toCompletableFuture().get()
-                        .getBody().getId()
-        );
-
-        client.close();
+        client
+                .types()
+                .post(
+                        typeDraftBuilder -> typeDraftBuilder
+                                .key("mh-block-customer")
+                                .name(
+                                        LocalizedStringBuilder.of()
+                                                .values(namesForType)
+                                                .build()
+                                )
+                                .resourceTypeIds(
+                                        ResourceTypeId.CUSTOMER
+                                )
+                                .fieldDefinitions(definitions)
+                ).execute()
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((type, exception) -> {
+                    if (exception == null) {
+                        logger.info("Custom Type ID: " + type.getId());
+                        return type;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

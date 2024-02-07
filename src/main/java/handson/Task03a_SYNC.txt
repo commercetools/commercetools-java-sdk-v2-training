@@ -79,7 +79,6 @@ public class Task03a_SYNC {
                                                 );
             productSync.sync(productDrafts)
                     .thenAcceptAsync(productSyncStatistics -> LOG.info(productSyncStatistics.getReportMessage()))
-                    .toCompletableFuture()
                     .get();
 
         }

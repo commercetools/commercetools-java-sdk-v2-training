@@ -69,10 +69,9 @@ public class ProductSelectionService {
                 apiRoot
                         .productSelections()
                         .post(
-                                ProductSelectionDraftBuilder.of()
+                                productSelectionDraftBuilder -> productSelectionDraftBuilder
                                         .key(productSelectionKey)
                                         .name(LocalizedStringBuilder.of().values(psNames).build())
-                                        .build()
                         )
                         .execute();
     }
@@ -88,43 +87,36 @@ public class ProductSelectionService {
                         .productSelections()
                         .withId(productSelection.getId())
                         .post(
-                                ProductSelectionUpdateBuilder.of()
+                                productSelectionUpdateBuilder -> productSelectionUpdateBuilder
                                         .version(productSelection.getVersion())
-                                        .actions(ProductSelectionAddProductActionBuilder.of()
-                                                .product(ProductResourceIdentifierBuilder.of()
-                                                        .key(productKey)
-                                                        .build())
-                                                .build())
-                                        .build()
+                                        .plusActions(
+                                                productSelectionUpdateActionBuilder -> productSelectionUpdateActionBuilder.addProductBuilder()
+                                                        .product(productResourceIdentifierBuilder -> productResourceIdentifierBuilder.key(productKey))
+                                        )
                         )
                         .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToStore(
-            final ApiHttpResponse<Store> storeApiHttpResponse,
-            final ApiHttpResponse<ProductSelection> productSelectionApiHttpResponse) {
+            final String storeKey,
+            final String productSelectionKey) {
 
-        final Store store = storeApiHttpResponse.getBody();
         return
-                apiRoot
+                getStoreByKey(storeKey).thenComposeAsync(storeApiHttpResponse ->
+                        apiRoot
                         .stores()
-                        .withId(store.getId())
+                        .withKey(storeKey)
                         .post(
-                                StoreUpdateBuilder.of()
-                                        .version(store.getVersion())
-                                        .actions(
-                                                StoreSetProductSelectionsActionBuilder.of()
-                                                        .productSelections(ProductSelectionSettingDraftBuilder.of()
-                                                                .productSelection(ProductSelectionResourceIdentifierBuilder.of()
-                                                                        .id(productSelectionApiHttpResponse.getBody().getId())
-                                                                        .build())
-                                                                .active(true)
-                                                                .build())
-                                                        .build()
+                                storeUpdateBuilder -> storeUpdateBuilder
+                                        .version(storeApiHttpResponse.getBody().getVersion())
+                                        .plusActions(
+                                                storeUpdateActionBuilder -> storeUpdateActionBuilder.addProductSelectionBuilder()
+                                                        .productSelection(productSelectionResourceIdentifierBuilder -> productSelectionResourceIdentifierBuilder.key(productSelectionKey))
+                                                        .active(true)
                                         )
-                                        .build()
                         )
-                        .execute();
+                        .execute()
+                );
     }
 
     public CompletableFuture<ApiHttpResponse<ProductSelectionProductPagedQueryResponse>> getProductsInProductSelection(

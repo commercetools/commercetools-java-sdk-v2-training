@@ -2,7 +2,6 @@ package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.customer.Customer;
-import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.CustomerService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -22,8 +21,9 @@ public class Task09a_ERROR_HANDLING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
+        Logger logger = LoggerFactory.getLogger("commercetools");
+
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());
 
         CustomerService customerService = new CustomerService(client);
 
@@ -35,20 +35,16 @@ public class Task09a_ERROR_HANDLING {
         // TODO: Handle 4XX errors, exceptions
         //  Use CompletionStage
         //
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey(customerKeyMayOrMayNotExist)
-                        .thenApply(ApiHttpResponse::getBody) // unpack response body
-                        .exceptionally(throwable -> {
-                            logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
-                            // handle it
-                            return
-                                    CustomerBuilder.of()
-                                            .email("anonymous@example.org")
-                                            .build();                               // e.g. return anon customer
-                        })
-                        .toCompletableFuture().get().getEmail()
-        );
+
+        customerService
+                .getCustomerByKey(customerKeyMayOrMayNotExist)
+                .thenApply(ApiHttpResponse::getBody) // unpack response body
+                .thenAccept(customer -> logger.info("Customer fetch: " + customer.get().getEmail()))
+                .exceptionally(throwable -> {
+                    logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
+                    // handle it
+                    return null; // e.g. return anon customer
+                });
 
 
         // TODO: Handle 4XX errors, exceptions
@@ -59,7 +55,7 @@ public class Task09a_ERROR_HANDLING {
                         .getCustomerByKey("customer-michele-WRONG-KEY")
                         .thenApply(ApiHttpResponse::getBody)
                         .exceptionally(throwable -> null)
-                        .toCompletableFuture().get()
+                        .get()
         );
 
         if (!optionalCustomer.isPresent()) {
@@ -74,7 +70,7 @@ public class Task09a_ERROR_HANDLING {
                         .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
                                 customerTokenApiHttpResponse.getBody()
                         ))
-                        .toCompletableFuture().get();
+                        .get();
             }
             catch (Exception e) {
                 e.printStackTrace();

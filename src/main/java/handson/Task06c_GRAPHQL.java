@@ -16,15 +16,15 @@ import java.util.concurrent.ExecutionException;
 import static handson.impl.ClientService.*;
 
 
-public class Task06c_GRAPHQL_Nodes {
+public class Task06c_GRAPHQL {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
+        final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         // TODO:
         //  Use the GraphQL playground to create a graphql query
@@ -34,12 +34,11 @@ public class Task06c_GRAPHQL_Nodes {
                 client
                         .graphql()
                         .post(
-                                GraphQLRequest.builder()
+                                graphQLRequestBuilder -> graphQLRequestBuilder
                                       .query("{ products { total }}")
-                                      .build()
                         )
                         .execute()
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody()
                         .getData()
         );

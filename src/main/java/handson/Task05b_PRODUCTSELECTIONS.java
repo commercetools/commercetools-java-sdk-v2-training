@@ -5,6 +5,7 @@ import com.commercetools.api.models.product_selection.AssignedProductReference;
 import com.commercetools.api.models.product_selection.ProductSelection;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ProductSelectionService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,54 +16,49 @@ import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
 
-
-/**
- *
- */
 public class Task05b_PRODUCTSELECTIONS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(Task05b_PRODUCTSELECTIONS.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final String globalApiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         final ProjectApiRoot client = createApiClient(globalApiClientPrefix);
 
         final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
-        final String productSelectionKey = "mh-berlin-product-selection";
+        // TODO: In Merchant Center, create product selection and add a product to the product selection.
+        // Update the key below
 
-        // TODO: Create product selection and add a product to the product selection
+        final String productSelectionKey = "mh-berlin-store-selection";
+        final String storeKey = "berlin-store";
 
-//        ProductSelection productSelection = productSelectionService.createProductSelection(productSelectionKey,"MH Berlin Product Selection")
-//                    .thenComposeAsync(productSelectionApiHttpResponse ->
-//                            productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse,"tulip-seed-product"))
-//                .toCompletableFuture().get()
-//                .getBody();
-//        logger.info("Created product selection: " + productSelection.getId());
-//
-//
-//
-//        // TODO: Get a store and assign the product selection to the store
-//
+        // TODO: Get a store and assign the product selection to the store
 
-//        logger.info("Product selections assigned to the store: "+
-//                productSelectionService.getStoreByKey("berlin-store")
-//                        .thenCombineAsync(productSelectionService.getProductSelectionByKey(productSelectionKey),((storeApiHttpResponse, productSelectionApiHttpResponse) ->
-//                                productSelectionService.addProductSelectionToStore(storeApiHttpResponse,productSelectionApiHttpResponse))
-//                        )
-//                        .thenComposeAsync(CompletableFuture::toCompletableFuture)
-//                        .toCompletableFuture().get()
-//                        .getBody().getProductSelections().size()
-//        );
-//
-//
-//        // TODO Get products in a product selection
-//
-        List<AssignedProductReference> assignedProductReferences =
-                productSelectionService.getProductsInProductSelection(productSelectionKey)
-                        .toCompletableFuture().get().getBody().getResults();
+        productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((store, exception) -> {
+                    if (exception == null) {
+                        logger.info("Product selections assigned to the store: {}", + store.getProductSelections().size());
+                        return store;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
 
-        assignedProductReferences.forEach(assignedProductReference -> logger.info(assignedProductReference.getProduct().getObj().getKey()));
 
+        // TODO Get products in a product selection
+
+        productSelectionService.getProductsInProductSelection(productSelectionKey)
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((productReferences, exception) -> {
+                    if (exception == null) {
+                                productReferences.getResults().forEach(assignedProductReference ->
+                                        logger.info(assignedProductReference.getProduct().getObj().getKey())
+                                );
+                                return null;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

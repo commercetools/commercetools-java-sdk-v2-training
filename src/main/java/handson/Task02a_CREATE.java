@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
 import handson.impl.CustomerService;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,38 +27,44 @@ public class Task02a_CREATE {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
         CustomerService customerService = new CustomerService(client);
 
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey("customer-alex-242281870")
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
-        );
+        customerService
+                .getCustomerByKey("customer-michael")
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((customer, exception) -> {
+                    if (exception == null) {
+                        logger.info("Customer already exists: " + customer.getEmail()); return customer;
+                    };
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                });
 
         // TODO:
         //  CREATE a customer
         //  CREATE a email verification token
         //  Verify customer
         //
-        logger.info("Customer created: " +
-                customerService.createCustomer(
-                        "michael15@example.com",
-                        "password",
-                        "customer-michael15",
-                        "michael",
-                        "hartwig",
-                        "DE"
-                )
-                        .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
-                        .thenComposeAsync(customerService::verifyEmail)
-                        .toCompletableFuture().get()
-                        .getBody()
-        );
 
-
-        client.close();
+        customerService.createCustomer(
+                "michael15@example.com",
+                "password",
+                "customer-michael15",
+                "michael15",
+                "tester",
+                "DE"
+        )
+        .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
+        .thenComposeAsync(customerService::verifyEmail)
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((customer, exception) -> {
+                    if (exception == null) {
+                        logger.info("Resource ID: " + customer.getId()); return customer;
+                    };
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
     }
 }

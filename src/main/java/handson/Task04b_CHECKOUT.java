@@ -14,16 +14,13 @@ import java.util.concurrent.ExecutionException;
 import static handson.impl.ClientService.createApiClient;
 
 
-/**
- * Create a cart for a customer, add a product to it, create an order from the cart and change the order state.
- *
- * See:
- */
 public class Task04b_CHECKOUT {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
@@ -31,28 +28,13 @@ public class Task04b_CHECKOUT {
         CartService cartService = new CartService(client);
         OrderService orderService = new OrderService(client);
         PaymentService paymentService = new PaymentService(client);
-        Logger logger = LoggerFactory.getLogger(Task04b_CHECKOUT.class.getName());
+
 
 
         // TODO: Fetch a channel if your inventory mode will not be NONE
         //
-        Channel channel = client
-                .channels()
-                .get()
-                .withQuery(q -> q.key().is("berlin-warehouse"))
-                .execute()
-                .toCompletableFuture().get()
-                .getBody().getResults().get(0);
-
-        final State state = client
-                .states()
-                .withKey("mhOrderPacked")
-                .get()
-                .execute()
-                .toCompletableFuture().get()
-                .getBody();
-
-
+        final String channelKey = "berlin-store-channel";
+        final String initialStateKey = "mhOrderPacked";
 
         // TODO: Perform cart operations:
         //      Get Customer, create cart, add products, add inventory mode
@@ -67,17 +49,15 @@ public class Task04b_CHECKOUT {
         logger.info("Created cart/order ID: " +
                 customerService.getCustomerByKey("customer-michael15")
                         .thenComposeAsync(cartService::createCart)
-
-                        .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(
-                                cartApiHttpResponse,
-                                channel,
-                                "TULIPSEED01", "TULIPSEED01", "TULIPSEED02")
+                        .thenComposeAsync(cartApiHttpResponse ->
+                                cartService.addProductToCartBySkusAndChannel(
+                                    cartApiHttpResponse,
+                                    channelKey,
+                                    "TULIPSEED01", "TULIPSEED01", "TULIPSEED02")
                         )
-
                         .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse,"MIXED"))
-                        .thenComposeAsync(cartService::recalculate)
                         .thenComposeAsync(cartService::setShipping)
-
+                        .thenComposeAsync(cartService::recalculate)
                         .thenComposeAsync(cartApiHttpResponse -> paymentService.createPaymentAndAddToCart(
                                 cartApiHttpResponse,
                                 "We_Do_Payments",
@@ -87,10 +67,10 @@ public class Task04b_CHECKOUT {
                         )
 
                         .thenComposeAsync(orderService::createOrder)
-                        .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.COMPLETE))
-                        .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, state))
+                        .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.CONFIRMED))
+                        .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, initialStateKey))
 
-                        .toCompletableFuture().get()
+                        .get()
                         .getBody().getId()
         );
 

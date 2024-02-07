@@ -26,6 +26,15 @@ public class CartService {
     }
 
 
+    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId) {
+
+        return
+                apiRoot
+                        .carts()
+                        .withId(cartId)
+                        .get()
+                        .execute();
+    }
     /**
      * Creates a cart for the given customer.
      *
@@ -39,7 +48,7 @@ public class CartService {
                 apiRoot
                         .carts()
                         .post(
-                                CartDraftBuilder.of()
+                                cartDraftBuilder -> cartDraftBuilder
                                         .currency("EUR")
                                         .deleteDaysAfterLastModification(90L)
                                         .customerEmail(customer.getEmail())
@@ -57,7 +66,6 @@ public class CartService {
                                                 .orElse(null)
                                         )
                                         .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
-                                        .build()
                         )
                         .execute();
     }
@@ -69,12 +77,11 @@ public class CartService {
                 apiRoot
                         .carts()
                         .post(
-                                CartDraftBuilder.of()
+                                cartDraftBuilder -> cartDraftBuilder
                                         .currency("EUR")
                                         .deleteDaysAfterLastModification(90L)
                                         .anonymousId("an" + System.nanoTime())
                                         .country("DE")
-                                        .build()
                         )
                         .execute();
     }
@@ -82,7 +89,7 @@ public class CartService {
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final Channel channel,
+            final String channelKey,
             final String ... skus) {
 
         final Cart cart = cartApiHttpResponse.getBody();
@@ -94,9 +101,10 @@ public class CartService {
                             .sku(s)
                             .quantity(1L)
                             .supplyChannel(
-                                    ChannelResourceIdentifierBuilder.of()
-                                            .id(channel.getId())
-                                            .build()
+                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
+                            )
+                            .distributionChannel(
+                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
                             )
                             .build()
                     )
@@ -107,19 +115,16 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                     .version(cart.getVersion())
-                                    .actions(
-                                            cartAddLineItemActions
-                                    )
-                                    .build()
-
+                                    .actions(cartAddLineItemActions)
                         )
                         .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(
-            final ApiHttpResponse<Cart> cartApiHttpResponse, final String code) {
+            final ApiHttpResponse<Cart> cartApiHttpResponse,
+            final String code) {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
@@ -128,15 +133,12 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                            CartAddDiscountCodeActionBuilder.of()
-                                                .code(code)
-                                                .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder.addDiscountCodeBuilder()
+                                                        .code(code)
                                         )
-                                        .build()
-
                         )
                         .execute();
     }
@@ -150,13 +152,13 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                                CartRecalculateActionBuilder.of()
-                                                        .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                                        .recalculateBuilder()
+                                                        .updateProductData(true)
                                         )
-                                        .build()
 
                         )
                         .execute();
@@ -180,18 +182,16 @@ public class CartService {
                         .carts()
                         .withId(cart.getId())
                         .post(
-                                CartUpdateBuilder.of()
+                                cartUpdateBuilder -> cartUpdateBuilder
                                         .version(cart.getVersion())
-                                        .actions(
-                                            CartSetShippingMethodActionBuilder.of()
-                                                    .shippingMethod(
-                                                            ShippingMethodResourceIdentifierBuilder.of()
-                                                                .id(shippingMethod.getId())
-                                                                .build()
-                                                    )
-                                                    .build()
+                                        .plusActions(
+                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                                        .setShippingMethodBuilder()
+                                                        .shippingMethod(
+                                                                shippingMethodResourceIdentifierBuilder -> shippingMethodResourceIdentifierBuilder
+                                                                    .id(shippingMethod.getId())
+                                                        )
                                         )
-                                        .build()
                         )
                         .execute();
     }
