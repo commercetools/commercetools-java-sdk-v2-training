@@ -24,39 +24,39 @@ public class Task07c_APIEXTENSION {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         client
-                .extensions()
-                .post(
-                        extensionDraftBuilder -> extensionDraftBuilder
-                                .key("mhCustomerBlocker")
-                                .destination(
-                                        // for GCP Cloud functions
-                                        HttpDestinationBuilder.of()
-                                                .url("https://europe-west3-ct-support.cloudfunctions.net/training-extensions-sample")
-                                                .build()
-                                        //for AWS Lambda functions
-//                                                ExtensionAWSLambdaDestinationBuilder.of()
-//                                                        .arn("arn:aws:lambda:eu-central-1:923270384842:function:training-customer-check")
-//                                                        .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
-//                                                        .accessSecret("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")
-//                                                        .build()
-                                )
-                                .addTriggers(extensionTriggerBuilder -> extensionTriggerBuilder
-                                            .resourceTypeId(ExtensionResourceTypeId.ORDER)
-                                            .actions(
-                                                ExtensionAction.CREATE
-                                            )
-                                        .build()
-                                )
-                ).execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((extension, exception) -> {
-                    if (exception == null) {
-                        logger.info("API Extension ID: " + extension.getId());
-                        return extension;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            .extensions()
+            .post(
+                extensionDraftBuilder -> extensionDraftBuilder
+                    .key("mhCustomerBlocker")
+                    .destination(
+                        // for GCP Cloud functions
+                        HttpDestinationBuilder.of()
+                            .url("https://europe-west3-ct-support.cloudfunctions.net/training-extensions-sample")
+                            .build()
+                        //for AWS Lambda functions
+//                        ExtensionAWSLambdaDestinationBuilder.of()
+//                            .arn("arn:aws:lambda:eu-central-1:923270384842:function:training-customer-check")
+//                            .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
+//                            .accessSecret("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")
+//                            .build()
+                    )
+                    .addTriggers(extensionTriggerBuilder -> extensionTriggerBuilder
+                        .resourceTypeId(ExtensionResourceTypeId.ORDER)
+                        .actions(
+                            ExtensionAction.CREATE
+                        )
+                        .build()
+                    )
+            ).execute()
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((extension, exception) -> {
+                if (exception == null) {
+                    logger.info("API Extension ID: " + extension.getId());
+                    return extension;
+                }
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
     }
 }
 

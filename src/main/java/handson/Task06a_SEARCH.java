@@ -26,49 +26,49 @@ public class Task06a_SEARCH {
         Logger logger = LoggerFactory.getLogger("commercetools");
 
         Category seedCategory = client
-                .categories()
-                .withKey("plant-seeds")
-                .get()
-                .execute()
-                .get()
-                .getBody();
+            .categories()
+            .withKey("plant-seeds")
+            .get()
+            .execute()
+            .get()
+            .getBody();
 
         // to get categoryReference
         CategoryReference seedCategoryReference =
-                CategoryReferenceBuilder.of()
-                        .id(seedCategory.getId())
-                        .build();
+            CategoryReferenceBuilder.of()
+                .id(seedCategory.getId())
+                .build();
 
         // filter from product projection query response
 
         // the effective filter from the search response
         // params found in the product projection search https://docs.commercetools.com/api/projects/products-search#search-productprojections
         ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = client
-                // TODO Get all products
-                .productProjections()
-                .search()
-                .get()
-                .withStaged(false)
+            // TODO Get all products
+            .productProjections()
+            .search()
+            .get()
+            .withStaged(false)
 
-                // TODO Restrict on category plant-seeds
-                .withMarkMatchingVariants(true)
-                .withFilterQuery("categories.id:\"" + seedCategoryReference.getId() + "\"")
+            // TODO Restrict on category plant-seeds
+            .withMarkMatchingVariants(true)
+            .withFilterQuery("categories.id:\"" + seedCategoryReference.getId() + "\"")
 
-                // TODO Get all Facets for Enum size and Number weight_in_kg
+            // TODO Get all Facets for Enum size and Number weight_in_kg
 
-                .withFacet("variants.attributes.packing")
-                .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
+            .withFacet("variants.attributes.packing")
+            .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
 
 
-                // TODO Give price range on products with no effect on facets
-                // .withFilter("variants.price.centAmount:range (100 to 100000)")
-                // TODO: with effect on facets
+            // TODO Give price range on products with no effect on facets
+            // .withFilter("variants.price.centAmount:range (100 to 100000)")
+            // TODO: with effect on facets
 //                 .addFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
-                // TODO: Simulate click on facet box from attribute size
-                //.withFilterFacets("variants.attributes.size:\"box\"")
-                .executeBlocking()
-                .getBody();
+            // TODO: Simulate click on facet box from attribute size
+            //.withFilterFacets("variants.attributes.size:\"box\"")
+            .executeBlocking()
+            .getBody();
 
 
 

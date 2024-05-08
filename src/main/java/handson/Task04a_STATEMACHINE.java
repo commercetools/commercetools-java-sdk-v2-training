@@ -35,48 +35,48 @@ public class Task04a_STATEMACHINE {
         //
 
         stateMachineService.createState(
-                "mhOrderPacked1",
-                StateTypeEnum.ORDER_STATE,
-                true,
-                "MH Order Packed1"
+            "mhOrderPacked",
+            StateTypeEnum.ORDER_STATE,
+            true,
+            "MH Order Packed"
         )
         .exceptionally( throwable -> {
-                logger.error("Exception: " + throwable.getMessage());
-                try {
-                    return stateMachineService.getStateByKey("mhOrderPacked1").get();
-                }
-                catch (Exception e){client.close();logger.error(e.getMessage());return null;}
+            logger.error("Exception: " + throwable.getMessage());
+            try {
+                return stateMachineService.getStateByKey("mhOrderPacked1").get();
+            }
+            catch (Exception e){client.close();logger.error(e.getMessage());return null;}
         })
         .thenCombineAsync(
-                stateMachineService.createState(
-                    "mhOrderShipped1",
-                    StateTypeEnum.ORDER_STATE,
-                    false,
-                    "MH Order Shipped1"
+            stateMachineService.createState(
+                "mhOrderShipped",
+                StateTypeEnum.ORDER_STATE,
+                false,
+                "MH Order Shipped"
+            )
+            .exceptionally( throwable -> {
+                logger.error("Exception: " + throwable.getMessage());
+                try {
+                    return stateMachineService.getStateByKey("mhOrderShipped").get();
+                }
+                catch (Exception e){client.close();logger.error(e.getMessage());return null;}
+            }),
+            (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
+                stateMachineService.setStateTransitions(
+                    orderPackedStateApiResponse.getBody(),
+                    Stream.of(
+                        StateResourceIdentifierBuilder.of().
+                            id(orderShippedStateApiResponse.getBody().getId())
+                            .build()
+                    )
+                    .collect(Collectors.toList())
                 )
-                .exceptionally( throwable -> {
-                    logger.error("Exception: " + throwable.getMessage());
-                    try {
-                        return stateMachineService.getStateByKey("mhOrderShipped1").get();
-                    }
-                    catch (Exception e){client.close();logger.error(e.getMessage());return null;}
-                }),
-                (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
-                        stateMachineService.setStateTransitions(
-                                orderPackedStateApiResponse.getBody(),
-                                Stream.of(
-                                        StateResourceIdentifierBuilder.of().
-                                                id(orderShippedStateApiResponse.getBody().getId())
-                                                .build()
-                                )
-                                .collect(Collectors.toList())
-                        )
-                        .thenComposeAsync(apiHttpResponse ->
-                                stateMachineService.setStateTransitions(
-                                    orderShippedStateApiResponse.getBody(),
-                                    new ArrayList<>()
-                                )
-                        )
+                .thenComposeAsync(apiHttpResponse ->
+                    stateMachineService.setStateTransitions(
+                        orderShippedStateApiResponse.getBody(),
+                        new ArrayList<>()
+                    )
+                )
         )
         .get()
         .thenApply(ApiHttpResponse::getBody)

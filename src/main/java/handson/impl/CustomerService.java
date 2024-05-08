@@ -5,6 +5,8 @@ import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.customer_group.CustomerGroup;
 import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
+import com.commercetools.api.models.store.StoreResourceIdentifier;
+import com.commercetools.api.models.store.StoreResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,9 +17,11 @@ import java.util.concurrent.CompletableFuture;
 public class CustomerService {
 
     final ProjectApiRoot apiRoot;
+    final String storeKey;
 
-    public CustomerService(final ProjectApiRoot client) {
+    public CustomerService(final ProjectApiRoot client, final String storeKey) {
         this.apiRoot = client;
+        this.storeKey = storeKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(String customerKey) {
@@ -38,21 +42,25 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
-                .customers()
-                .post(
-                        customerDraftBuilder -> customerDraftBuilder
-                                .email(email)
-                                .password(password)
-                                .firstName(firstName)
-                                .lastName(lastName)
-                                .key(customerKey)
-                                .addresses(
-                                    AddressBuilder.of()
-                                            .country(country)
-                                            .build()
-                                )
-                                .defaultShippingAddress(0)
-                                )
+            .customers()
+            .post(
+                customerDraftBuilder -> customerDraftBuilder
+                    .email(email)
+                    .password(password)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .key(customerKey)
+                    .addresses(
+                        AddressBuilder.of()
+                            .key(customerKey + "-default-address")
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .country(country)
+                            .build()
+                    )
+                    .defaultShippingAddress(0)
+                    .stores(StoreResourceIdentifierBuilder.of().key(storeKey).build())
+                )
                 .execute();
     }
 
@@ -64,29 +72,29 @@ public class CustomerService {
         final Customer customer = customerSignInResultApiHttpResponse.getBody().getCustomer();
 
         return
-                apiRoot
-                        .customers()
-                        .emailToken()
-                        .post(
-                                customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
-                                    .id(customer.getId())
-                                    .ttlMinutes(timeToLiveInMinutes)
-                        )
-                        .execute();
+            apiRoot
+                .customers()
+                .emailToken()
+                .post(
+                    customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
+                        .id(customer.getId())
+                        .ttlMinutes(timeToLiveInMinutes)
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<CustomerToken>> createEmailVerificationToken(final Customer customer, final long timeToLiveInMinutes) {
 
         return
-                apiRoot
-                        .customers()
-                        .emailToken()
-                        .post(
-                                customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
-                                        .id(customer.getId())
-                                        .ttlMinutes(timeToLiveInMinutes)
-                        )
-                        .execute();
+            apiRoot
+                .customers()
+                .emailToken()
+                .post(
+                    customerCreateEmailTokenBuilder -> customerCreateEmailTokenBuilder
+                        .id(customer.getId())
+                        .ttlMinutes(timeToLiveInMinutes)
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final ApiHttpResponse<CustomerToken> customerTokenApiHttpResponse) {
@@ -94,37 +102,37 @@ public class CustomerService {
         final CustomerToken customerToken = customerTokenApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .customers()
-                        .emailConfirm()
-                        .post(
-                                customerEmailVerifyBuilder ->customerEmailVerifyBuilder
-                                        .tokenValue(customerToken.getValue())
-                        )
-                        .execute();
+            apiRoot
+                .customers()
+                .emailConfirm()
+                .post(
+                    customerEmailVerifyBuilder ->customerEmailVerifyBuilder
+                        .tokenValue(customerToken.getValue())
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final CustomerToken customerToken) {
 
 
         return
-                apiRoot
-                        .customers()
-                        .emailConfirm()
-                        .post(
-                                customerEmailVerifyBuilder ->customerEmailVerifyBuilder
-                                    .tokenValue(customerToken.getValue())
-                                )
-                        .execute();
+            apiRoot
+                .customers()
+                .emailConfirm()
+                .post(
+                    customerEmailVerifyBuilder ->customerEmailVerifyBuilder
+                        .tokenValue(customerToken.getValue())
+                    )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<CustomerGroup>> getCustomerGroupByKey(String customerGroupKey) {
         return
-                apiRoot
-                        .customerGroups()
-                        .withKey(customerGroupKey)
-                        .get()
-                        .execute();
+            apiRoot
+                .customerGroups()
+                .withKey(customerGroupKey)
+                .get()
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
@@ -132,20 +140,20 @@ public class CustomerService {
             final String customerGroupKey) {
 
         return getCustomerByKey(customerKey)
-                .thenComposeAsync(customerApiHttpResponse ->
-                        apiRoot.customers()
-                        .withKey(customerKey)
-                        .post(
-                                customerUpdateBuilder -> customerUpdateBuilder
-                                        .version(customerApiHttpResponse.getBody().getVersion())
-                                        .plusActions(
-                                                customerUpdateActionBuilder -> customerUpdateActionBuilder
-                                                        .setCustomerGroupBuilder()
-                                                        .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
-                                        )
+            .thenComposeAsync(customerApiHttpResponse ->
+                apiRoot.customers()
+                .withKey(customerKey)
+                .post(
+                    customerUpdateBuilder -> customerUpdateBuilder
+                        .version(customerApiHttpResponse.getBody().getVersion())
+                        .plusActions(
+                            customerUpdateActionBuilder -> customerUpdateActionBuilder
+                                .setCustomerGroupBuilder()
+                                .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
                         )
-                        .execute()
-                );
+                )
+                .execute()
+            );
     }
 
 }

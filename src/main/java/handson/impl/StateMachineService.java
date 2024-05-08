@@ -22,11 +22,11 @@ public class StateMachineService {
     public CompletableFuture<ApiHttpResponse<State>> getStateByKey(final String key) {
 
         return
-                apiRoot
-                        .states()
-                        .withKey(key)
-                        .get()
-                        .execute();
+            apiRoot
+                .states()
+                .withKey(key)
+                .get()
+                .execute();
     }
     public CompletableFuture<ApiHttpResponse<State>> createState(final String key, StateTypeEnum stateTypeEnum, final Boolean initial, final String name) {
 
@@ -37,36 +37,36 @@ public class StateMachineService {
             }
         };
         return
-                apiRoot
-                        .states()
-                        .post(
-                                stateDraftBuilder -> stateDraftBuilder
-                                        .key(key)
-                                        .type(stateTypeEnum)
-                                        .initial(initial)
-                                        .name(
-                                                localizedStringBuilder -> localizedStringBuilder
-                                                        .values(myNames)
-                                        )
+            apiRoot
+                .states()
+                .post(
+                    stateDraftBuilder -> stateDraftBuilder
+                        .key(key)
+                        .type(stateTypeEnum)
+                        .initial(initial)
+                        .name(
+                            localizedStringBuilder -> localizedStringBuilder
+                                .values(myNames)
                         )
-                        .execute();
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<State>> setStateTransitions(final State stateToBeUpdated, final List<StateResourceIdentifier> states) {
 
         return
-                apiRoot
-                        .states()
-                        .withId(stateToBeUpdated.getId())
-                        .post(
-                                stateUpdateBuilder -> stateUpdateBuilder
-                                        .version(stateToBeUpdated.getVersion())
-                                        .plusActions(
-                                                stateUpdateActionBuilder -> stateUpdateActionBuilder.setTransitionsBuilder()
-                                                        .transitions(states)
-                                        )
+            apiRoot
+                .states()
+                .withId(stateToBeUpdated.getId())
+                .post(
+                    stateUpdateBuilder -> stateUpdateBuilder
+                        .version(stateToBeUpdated.getVersion())
+                        .plusActions(
+                            stateUpdateActionBuilder -> stateUpdateActionBuilder.setTransitionsBuilder()
+                                .transitions(states)
                         )
-                        .execute();
+                )
+                .execute();
     }
 
 }

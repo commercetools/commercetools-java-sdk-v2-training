@@ -1,8 +1,6 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.product_selection.AssignedProductReference;
-import com.commercetools.api.models.product_selection.ProductSelection;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ProductSelectionService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -10,13 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
 
-public class Task05b_PRODUCTSELECTIONS {
+public class Task04b_PRODUCTSELECTIONS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
@@ -35,15 +31,15 @@ public class Task05b_PRODUCTSELECTIONS {
         // TODO: Get a store and assign the product selection to the store
 
         productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((store, exception) -> {
-                    if (exception == null) {
-                        logger.info("Product selections assigned to the store: {}", + store.getProductSelections().size());
-                        return store;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((store, exception) -> {
+                if (exception == null) {
+                    logger.info("Product selections assigned to the store: {}", + store.getProductSelections().size());
+                    return store;
+                }
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
 
 
         // TODO Get products in a product selection
@@ -52,10 +48,10 @@ public class Task05b_PRODUCTSELECTIONS {
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((productReferences, exception) -> {
                     if (exception == null) {
-                                productReferences.getResults().forEach(assignedProductReference ->
-                                        logger.info(assignedProductReference.getProduct().getObj().getKey())
-                                );
-                                return null;
+                        productReferences.getResults().forEach(assignedProductReference ->
+                            logger.info(assignedProductReference.getProduct().getObj().getKey())
+                        );
+                        return null;
                     }
                     logger.error("Exception: " + exception.getMessage());
                     return null;

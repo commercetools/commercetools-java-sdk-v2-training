@@ -2,10 +2,9 @@ package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
-import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
-import com.commercetools.api.models.order.*;
-import com.commercetools.api.models.state.State;
-import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
+import com.commercetools.api.models.order.Order;
+import com.commercetools.api.models.order.OrderPagedSearchResponse;
+import com.commercetools.api.models.order.OrderState;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,14 +25,14 @@ public class OrderService {
         final Cart cart = cartApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .orders()
-                        .post(
-                                orderFromCartDraftBuilder -> orderFromCartDraftBuilder
-                                    .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
-                                    .version(cart.getVersion())
-                        )
-                        .execute();
+            apiRoot
+                .orders()
+                .post(
+                    orderFromCartDraftBuilder -> orderFromCartDraftBuilder
+                        .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
+                        .version(cart.getVersion())
+                )
+                .execute();
     }
 
 
@@ -44,18 +43,18 @@ public class OrderService {
         Order order = orderApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .orders()
-                        .withId(order.getId())
-                        .post(
-                                orderUpdateBuilder -> orderUpdateBuilder
-                                    .version(order.getVersion())
-                                    .plusActions(
-                                            orderUpdateActionBuilder -> orderUpdateActionBuilder.changeOrderStateBuilder()
-                                                    .orderState(state)
-                                    )
+            apiRoot
+                .orders()
+                .withId(order.getId())
+                .post(
+                    orderUpdateBuilder -> orderUpdateBuilder
+                        .version(order.getVersion())
+                        .plusActions(
+                            orderUpdateActionBuilder -> orderUpdateActionBuilder.changeOrderStateBuilder()
+                                .orderState(state)
                         )
-                        .execute();
+                )
+                .execute();
     }
 
 
@@ -66,18 +65,18 @@ public class OrderService {
         Order order = orderApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .orders()
-                        .withId(order.getId())
-                        .post(
-                                orderUpdateBuilder -> orderUpdateBuilder
-                                        .version(order.getVersion())
-                                        .plusActions(
-                                                orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
-                                                        .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
-                                        )
+            apiRoot
+                .orders()
+                .withId(order.getId())
+                .post(
+                    orderUpdateBuilder -> orderUpdateBuilder
+                        .version(order.getVersion())
+                        .plusActions(
+                            orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
+                                .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
                         )
-                        .execute();
+                )
+                .execute();
     }
 
 }

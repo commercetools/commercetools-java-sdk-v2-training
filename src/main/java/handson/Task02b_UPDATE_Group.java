@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 public class Task02b_UPDATE_Group {
 
@@ -23,25 +24,26 @@ public class Task02b_UPDATE_Group {
         Logger logger = LoggerFactory.getLogger("commercetools");
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client);
+        final String storeKey = getStoreKey(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client, storeKey);
 
         // TODO:
         //  ASSIGN the customer to the customer group
         //
 
         customerService.assignCustomerToCustomerGroup(
-                "customer-michael15",
+                "customer-michael",
                 "vip-customers"
         )
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((customer, exception) -> {
-                    if (exception == null) {
-                        logger.info("Resource ID: " + customer.getId());
-                        return customer;
-                    };
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((customer, exception) -> {
+                if (exception == null) {
+                    logger.info("Resource ID: " + customer.getId());
+                    return customer;
+                };
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
     }
 
 }

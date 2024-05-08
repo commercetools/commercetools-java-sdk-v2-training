@@ -26,174 +26,182 @@ public class CartService {
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId) {
+    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId, final String storeKey) {
 
         return
-                apiRoot
-                        .carts()
-                        .withId(cartId)
-                        .get()
-                        .execute();
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .withId(cartId)
+                .get()
+                .execute();
     }
     /**
      * Creates a cart for the given customer.
      *
      * @return the customer creation completion stage
      */
-    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
+    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse, final String storeKey) {
 
         final Customer customer = customerApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .carts()
-                        .post(
-                                cartDraftBuilder -> cartDraftBuilder
-                                        .currency("EUR")
-                                        .deleteDaysAfterLastModification(90L)
-                                        .customerEmail(customer.getEmail())
-                                        .customerId(customer.getId())
-                                        .country(
-                                                customer.getAddresses().stream()
-                                                    .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
-                                                    .findFirst()
-                                                        .orElse(null)
-                                                    .getCountry()
-                                        )
-                                        .shippingAddress(customer.getAddresses().stream()
-                                                .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
-                                                .findFirst()
-                                                .orElse(null)
-                                        )
-                                        .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .post(
+                    cartDraftBuilder -> cartDraftBuilder
+                        .currency("EUR")
+                        .deleteDaysAfterLastModification(90L)
+                        .customerEmail(customer.getEmail())
+                        .customerId(customer.getId())
+                        .country(
+                            customer.getAddresses().stream()
+                                .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
+                                .findFirst()
+                                    .orElse(null)
+                                .getCountry()
                         )
-                        .execute();
+                        .shippingAddress(customer.getAddresses().stream()
+                            .filter(a -> a.getId().equals(customer.getDefaultShippingAddressId()))
+                            .findFirst()
+                            .orElse(null)
+                        )
+                        .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
+                )
+                .execute();
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Cart>> createAnonymousCart() {
+    public CompletableFuture<ApiHttpResponse<Cart>> createAnonymousCart(final String storeKey) {
 
         return
-                apiRoot
-                        .carts()
-                        .post(
-                                cartDraftBuilder -> cartDraftBuilder
-                                        .currency("EUR")
-                                        .deleteDaysAfterLastModification(90L)
-                                        .anonymousId("an" + System.nanoTime())
-                                        .country("DE")
-                        )
-                        .execute();
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .post(
+                    cartDraftBuilder -> cartDraftBuilder
+                        .currency("EUR")
+                        .deleteDaysAfterLastModification(90L)
+                        .anonymousId("an" + System.nanoTime())
+                        .country("DE")
+                )
+                .execute();
     }
 
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
+            final String storeKey,
             final String channelKey,
             final String ... skus) {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
         List<CartUpdateAction> cartAddLineItemActions =                         // Cast
-                Stream.of(skus)
-                    .map(s ->
-                            CartAddLineItemActionBuilder.of()
-                            .sku(s)
-                            .quantity(1L)
-                            .supplyChannel(
-                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
-                            )
-                            .distributionChannel(
-                                    channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
-                            )
-                            .build()
+            Stream.of(skus)
+                .map(s ->
+                    CartAddLineItemActionBuilder.of()
+                    .sku(s)
+                    .quantity(1L)
+                    .supplyChannel(
+                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
                     )
-                    .collect(Collectors.toList());
+                    .distributionChannel(
+                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
+                    )
+                    .build()
+                )
+                .collect(Collectors.toList());
 
         return
-                apiRoot
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                cartUpdateBuilder -> cartUpdateBuilder
-                                    .version(cart.getVersion())
-                                    .actions(cartAddLineItemActions)
-                        )
-                        .execute();
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .withId(cart.getId())
+                .post(
+                    cartUpdateBuilder -> cartUpdateBuilder
+                        .version(cart.getVersion())
+                        .actions(cartAddLineItemActions)
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(
-            final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final String code) {
+        final ApiHttpResponse<Cart> cartApiHttpResponse,
+        final String storeKey,
+        final String code) {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                cartUpdateBuilder -> cartUpdateBuilder
-                                        .version(cart.getVersion())
-                                        .plusActions(
-                                                cartUpdateActionBuilder -> cartUpdateActionBuilder.addDiscountCodeBuilder()
-                                                        .code(code)
-                                        )
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .withId(cart.getId())
+                .post(
+                    cartUpdateBuilder -> cartUpdateBuilder
+                        .version(cart.getVersion())
+                        .plusActions(
+                            cartUpdateActionBuilder -> cartUpdateActionBuilder.addDiscountCodeBuilder()
+                                .code(code)
                         )
-                        .execute();
+                )
+                .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final ApiHttpResponse<Cart> cartApiHttpResponse) {
+    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final ApiHttpResponse<Cart> cartApiHttpResponse, final String storeKey) {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                cartUpdateBuilder -> cartUpdateBuilder
-                                        .version(cart.getVersion())
-                                        .plusActions(
-                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
-                                                        .recalculateBuilder()
-                                                        .updateProductData(true)
-                                        )
-
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .withId(cart.getId())
+                .post(
+                    cartUpdateBuilder -> cartUpdateBuilder
+                        .version(cart.getVersion())
+                        .plusActions(
+                            cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                .recalculateBuilder()
+                                .updateProductData(true)
                         )
-                        .execute();
+                )
+                .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse) {
+    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse, final String storeKey) {
 
         final Cart cart = cartApiHttpResponse.getBody();
 
         final ShippingMethod shippingMethod =
-                apiRoot
-                    .shippingMethods()
-                    .matchingCart()
-                    .get()
-                    .withCartId(cart.getId())
-                    .executeBlocking()
-                    .getBody().getResults().get(0);
+            apiRoot
+                .shippingMethods()
+                .matchingCart()
+                .get()
+                .withCartId(cart.getId())
+                .executeBlocking()
+                .getBody().getResults().get(0);
 
         return
-                apiRoot
-                        .carts()
-                        .withId(cart.getId())
-                        .post(
-                                cartUpdateBuilder -> cartUpdateBuilder
-                                        .version(cart.getVersion())
-                                        .plusActions(
-                                                cartUpdateActionBuilder -> cartUpdateActionBuilder
-                                                        .setShippingMethodBuilder()
-                                                        .shippingMethod(
-                                                                shippingMethodResourceIdentifierBuilder -> shippingMethodResourceIdentifierBuilder
-                                                                    .id(shippingMethod.getId())
-                                                        )
-                                        )
+            apiRoot
+                .inStore(storeKey)
+                .carts()
+                .withId(cart.getId())
+                .post(
+                    cartUpdateBuilder -> cartUpdateBuilder
+                        .version(cart.getVersion())
+                        .plusActions(
+                            cartUpdateActionBuilder -> cartUpdateActionBuilder
+                                .setShippingMethodBuilder()
+                                .shippingMethod(
+                                    shippingMethodResourceIdentifierBuilder -> shippingMethodResourceIdentifierBuilder
+                                        .id(shippingMethod.getId())
+                                )
                         )
-                        .execute();
+                )
+                .execute();
     }
 
 }

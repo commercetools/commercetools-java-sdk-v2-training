@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 public class Task09a_ERROR_HANDLING {
@@ -25,7 +26,8 @@ public class Task09a_ERROR_HANDLING {
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
-        CustomerService customerService = new CustomerService(client);
+        final String storeKey = getStoreKey(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client, storeKey);
 
         // TODO:
         //  Provide a WRONG or CORRECT customer key
@@ -37,25 +39,25 @@ public class Task09a_ERROR_HANDLING {
         //
 
         customerService
-                .getCustomerByKey(customerKeyMayOrMayNotExist)
-                .thenApply(ApiHttpResponse::getBody) // unpack response body
-                .thenAccept(customer -> logger.info("Customer fetch: " + customer.get().getEmail()))
-                .exceptionally(throwable -> {
-                    logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
-                    // handle it
-                    return null; // e.g. return anon customer
-                });
+            .getCustomerByKey(customerKeyMayOrMayNotExist)
+            .thenApply(ApiHttpResponse::getBody) // unpack response body
+            .thenAccept(customer -> logger.info("Customer fetch: " + customer.get().getEmail()))
+            .exceptionally(throwable -> {
+                logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
+                // handle it
+                return null; // e.g. return anon customer
+            });
 
 
         // TODO: Handle 4XX errors, exceptions
         //  Use Optionals, Either (Java 9+)
         //
         Optional<Customer> optionalCustomer = Optional.ofNullable(
-                customerService
-                        .getCustomerByKey("customer-michele-WRONG-KEY")
-                        .thenApply(ApiHttpResponse::getBody)
-                        .exceptionally(throwable -> null)
-                        .get()
+            customerService
+                .getCustomerByKey("customer-michele-WRONG-KEY")
+                .thenApply(ApiHttpResponse::getBody)
+                .exceptionally(throwable -> null)
+                .get()
         );
 
         if (!optionalCustomer.isPresent()) {
@@ -67,10 +69,10 @@ public class Task09a_ERROR_HANDLING {
             logger.info("Customer: " + customerKeyMayOrMayNotExist + "exists.");
             try {
                 customerService.createEmailVerificationToken(customer, 5)
-                        .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
-                                customerTokenApiHttpResponse.getBody()
-                        ))
-                        .get();
+                    .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
+                            customerTokenApiHttpResponse.getBody()
+                    ))
+                    .get();
             }
             catch (Exception e) {
                 e.printStackTrace();

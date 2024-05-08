@@ -55,26 +55,26 @@ public class Task09b_SPHERECLIENT_LOGGING {
             .customers()
             .withKey("myCustomerKey")
             .post(CustomerUpdateBuilder.of()
-                    .version(1L)
-                    .actions(
-                        CustomerSetFirstNameActionBuilder.of()
-                            .firstName("his new first name ")
+                .version(1L)
+                .actions(
+                    CustomerSetFirstNameActionBuilder.of()
+                        .firstName("his new first name ")
+                        .build()
+                )
+                .build())
+            .execute();
+
+        client
+            .customers()
+            .withKey("myCustomerKey")
+            .post(CustomerUpdateBuilder.of()
+                .version(1L)
+                .actions(
+                    CustomerSetLastNameActionBuilder.of()
+                            .lastName("his new last name")
                             .build()
-                    )
-                    .build())
-            .execute();
-
-        client
-            .customers()
-            .withKey("myCustomerKey")
-            .post(CustomerUpdateBuilder.of()
-                    .version(1L)
-                    .actions(
-                        CustomerSetLastNameActionBuilder.of()
-                                .lastName("his new last name")
-                                .build()
-                    )
-                    .build())
+                )
+                .build())
             .execute();
 
 
@@ -82,16 +82,16 @@ public class Task09b_SPHERECLIENT_LOGGING {
             .customers()
             .withKey("myCustomerKey")
             .post(CustomerUpdateBuilder.of()
-                    .version(1L)
-                    .actions(
-                        CustomerSetFirstNameActionBuilder.of()
-                                .firstName("his new first name ")
-                                .build(),
-                        CustomerSetLastNameActionBuilder.of()
-                                .lastName("his new last name")
-                                .build()
-                    )
-                    .build())
+                .version(1L)
+                .actions(
+                    CustomerSetFirstNameActionBuilder.of()
+                            .firstName("his new first name ")
+                            .build(),
+                    CustomerSetLastNameActionBuilder.of()
+                            .lastName("his new last name")
+                            .build()
+                )
+                .build())
             .execute();
 
 
@@ -101,87 +101,87 @@ public class Task09b_SPHERECLIENT_LOGGING {
             //      Run GET Project and inspect x-correlation-id in the headers
 
         ProjectApiRoot correlationIdClient = ApiRootBuilder.of()
-                .defaultClient(
-                        ClientCredentials.of()
-                                .withClientId(clientId)
-                                .withClientSecret(clientSecret)
-                                .build(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                )
-                .withMiddleware((request, next) -> next.apply(request).whenComplete((response, throwable) -> {
-                    if (throwable.getCause() instanceof ApiHttpException) {
-                        logger.info(((ApiHttpException) throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
-                    } else {
-                        logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
-                    }
-                }))
-                .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
-                .build(projectKey);
+            .defaultClient(
+                ClientCredentials.of()
+                    .withClientId(clientId)
+                    .withClientSecret(clientSecret)
+                    .build(),
+                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+            )
+            .withMiddleware((request, next) -> next.apply(request).whenComplete((response, throwable) -> {
+                if (throwable.getCause() instanceof ApiHttpException) {
+                    logger.info(((ApiHttpException) throwable.getCause()).getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                } else {
+                    logger.info(response.getHeaders().getFirst(ApiHttpHeaders.X_CORRELATION_ID));
+                }
+            }))
+            .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
+            .build(projectKey);
 
 
 
         // Or, per request
 
         logger.info("Get project information with pre-set correlation id: " +
-                client
-                    .get()
-                    .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
-                    .execute()
-                    .get()
-                    .getBody().getKey()
+            client
+                .get()
+                .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
+                .execute()
+                .get()
+                .getBody().getKey()
         );
 
         // 5
         //      Simulate failover, 5xx errors
         //      Nice test: Replace with
-        //                  new RetryMiddleware(20, Arrays.asList(404, 500, 503))
-        //                  and query for wrong customer, inspect then logging about the re-tries
+//                  new RetryMiddleware(20, Arrays.asList(404, 500, 503))
+//                  and query for wrong customer, inspect then logging about the re-tries
 
         ProjectApiRoot retryClient = ApiRootBuilder.of()
-                .defaultClient(
-                       ClientCredentials.of()
-                                        .withClientId(clientId)
-                                        .withClientSecret(clientSecret)
-                                        .build(),
-                       ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                       ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                )
-                .withPolicies(policies -> policies.withRetry(builder -> builder.maxRetries(5)
-                        .statusCodes(Arrays.asList(502, 503, 504, 404, 400))))
-                .build(projectKey);
+            .defaultClient(
+               ClientCredentials.of()
+                .withClientId(clientId)
+                .withClientSecret(clientSecret)
+                .build(),
+               ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+               ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+            )
+            .withPolicies(policies -> policies.withRetry(builder -> builder.maxRetries(5)
+                .statusCodes(Arrays.asList(502, 503, 504, 404, 400))))
+            .build(projectKey);
         logger.info("Get project information via retryClient " +
-                retryClient
-                        .get()
-                        .execute()
-                        .get()
-                        .getBody().getKey()
+            retryClient
+                .get()
+                .execute()
+                .get()
+                .getBody().getKey()
         );
 
         ProjectApiRoot concurrentClient = ApiRootBuilder.of()
-                .defaultClient(
-                        ClientCredentials.of()
-                                .withClientId(clientId)
-                                .withClientSecret(clientSecret)
-                                .build(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                )
-                .addConcurrentModificationMiddleware(3)
-                .build(projectKey);
+            .defaultClient(
+                ClientCredentials.of()
+                    .withClientId(clientId)
+                    .withClientSecret(clientSecret)
+                    .build(),
+                ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
+                ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
+            )
+            .addConcurrentModificationMiddleware(3)
+            .build(projectKey);
         logger.info("Update customer via concurrentClient " +
-                concurrentClient
-                        .customers()
-                        .withKey("customer-michael15")
-                        .post(CustomerUpdateBuilder.of()
-                                .version(1L)
-                                .actions(CustomerSetLastNameActionBuilder.of()
-                                        .lastName("tester1")
-                                        .build())
-                                .build())
-                        .execute()
-                        .get()
-                        .getBody().getLastName()
+            concurrentClient
+                .customers()
+                .withKey("customer-michael15")
+                .post(CustomerUpdateBuilder.of()
+                    .version(1L)
+                    .actions(CustomerSetLastNameActionBuilder.of()
+                        .lastName("tester1")
+                        .build())
+                    .build())
+                .execute()
+                .get()
+                .getBody().getLastName()
         );
         concurrentClient.close();
     }

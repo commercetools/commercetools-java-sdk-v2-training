@@ -32,34 +32,34 @@ public class Task07b_CUSTOMOBJECTS {
         // incompatibleSKUs: all the product variants above sku is incompatible with
 
         JsonObject tulipObject = Json.createObjectBuilder()
-                .add("incompatibleProducts", "basil-seed-product")
-                .add("leafletID", "leaflet_1234")
+            .add("incompatibleProducts", "basil-seed-product")
+            .add("leafletID", "leaflet_1234")
 
-                .add("instructions",
-                        Json.createObjectBuilder()
-                                .add("title", "Flower Handling")
-                                .add("distance_in_m", "2")
-                                .add("watering", "heavy")
-                                .build()
-                )
-                .build();
+            .add("instructions",
+                Json.createObjectBuilder()
+                    .add("title", "Flower Handling")
+                    .add("distance_in_m", "2")
+                    .add("watering", "heavy")
+                    .build()
+            )
+            .build();
 
         client
-                .customObjects()
-                .post(
-                        customObjectDraftBuilder -> customObjectDraftBuilder
-                                .container("plants-compatibility-info")
-                                .key("tulip-seed-product")
-                                .value(tulipObject)
-                ).execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((customObject, exception) -> {
-                    if (exception == null) {
-                        logger.info("Custom Object ID: " + customObject.getId());
-                        return customObject;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            .customObjects()
+            .post(
+                customObjectDraftBuilder -> customObjectDraftBuilder
+                    .container("plants-compatibility-info")
+                    .key("tulip-seed-product")
+                    .value(tulipObject)
+            ).execute()
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((customObject, exception) -> {
+                if (exception == null) {
+                    logger.info("Custom Object ID: " + customObject.getId());
+                    return customObject;
+                }
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
     }
 }

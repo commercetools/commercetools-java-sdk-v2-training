@@ -28,42 +28,37 @@ public class ImportService {
 
     public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportContainer(final String containerKey) {
 
-            return
-                apiRoot
-                        .importContainers()
-                        .post(importContainerDraftBuilder -> importContainerDraftBuilder.key(containerKey))
-                        .execute();
+        return
+            apiRoot
+                .importContainers()
+                .post(importContainerDraftBuilder -> importContainerDraftBuilder.key(containerKey))
+                .execute();
         }
 
 
     public CompletableFuture<ApiHttpResponse<ImportResponse>> createPriceImportRequest(
-            final String containerKey,
-            final String productKey,
-            final String productVariantKey,
-            final String priceKey,
-            final Money amount) {
+        final String containerKey,
+        final String productKey,
+        final String productVariantKey,
+        final String priceKey,
+        final Money amount) {
 
-            return
-                apiRoot
-                        .prices()
-                        .importContainers()
-                        .withImportContainerKeyValue(containerKey)
-                        .post(
-                                priceImportRequestBuilder -> priceImportRequestBuilder
-                                        .plusResources(
-                                                priceImportBuilder -> priceImportBuilder
-                                                        .key(priceKey)     // key for the Price record
-                                                        .country("DE")                              // TODO: adjust
-                                                        .product(productKeyReferenceBuilder -> productKeyReferenceBuilder.key(productKey))
-                                                        .productVariant(productVariantKeyReferenceBuilder -> productVariantKeyReferenceBuilder.key(productVariantKey))
-                                                        .value(amount)
-                                        )
+        return
+            apiRoot
+                .prices()
+                .importContainers()
+                .withImportContainerKeyValue(containerKey)
+                .post(
+                    priceImportRequestBuilder -> priceImportRequestBuilder
+                        .plusResources(
+                            priceImportBuilder -> priceImportBuilder
+                                .key(priceKey)     // key for the Price record
+                                .country("DE")                              // TODO: adjust
+                                .product(productKeyReferenceBuilder -> productKeyReferenceBuilder.key(productKey))
+                                .productVariant(productVariantKeyReferenceBuilder -> productVariantKeyReferenceBuilder.key(productVariantKey))
+                                .value(amount)
                         )
-                        .execute();
+                )
+                .execute();
     }
-
-
-
-
-
 }

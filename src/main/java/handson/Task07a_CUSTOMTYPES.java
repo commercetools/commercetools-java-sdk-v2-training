@@ -44,26 +44,26 @@ public class Task07a_CUSTOMTYPES {
 
         // Which fields will be used?
         List<FieldDefinition> definitions = Arrays.asList(
-                 FieldDefinitionBuilder.of()
-                        .name("allowed-to-place-orders")
-                        .required(true)
-                        .label(LocalizedStringBuilder.of()
-                                .values(labelsForFieldCheck)
-                                .build()
-                        )
-                        .type(CustomFieldBooleanType.of())
+             FieldDefinitionBuilder.of()
+                .name("allowed-to-place-orders")
+                .required(true)
+                .label(LocalizedStringBuilder.of()
+                        .values(labelsForFieldCheck)
                         .build()
-                ,
-                FieldDefinitionBuilder.of()
-                        .name("Comments")
-                        .required(true)
-                        .label(LocalizedStringBuilder.of()
-                                .values(labelsForFieldComments)
-                                .build()
-                        )
-                        .type(CustomFieldStringType.of())
-                        .inputHint(TypeTextInputHint.MULTI_LINE)            // shown as single line????
+                )
+                .type(CustomFieldBooleanType.of())
+                .build()
+            ,
+            FieldDefinitionBuilder.of()
+                .name("Comments")
+                .required(true)
+                .label(LocalizedStringBuilder.of()
+                        .values(labelsForFieldComments)
                         .build()
+                )
+                .type(CustomFieldStringType.of())
+                .inputHint(TypeTextInputHint.MULTI_LINE)            // shown as single line????
+                .build()
         );
 
         Map<String, String> namesForType = new HashMap<String, String>() {
@@ -74,28 +74,28 @@ public class Task07a_CUSTOMTYPES {
         };
 
         client
-                .types()
-                .post(
-                        typeDraftBuilder -> typeDraftBuilder
-                                .key("mh-block-customer")
-                                .name(
-                                        LocalizedStringBuilder.of()
-                                                .values(namesForType)
-                                                .build()
-                                )
-                                .resourceTypeIds(
-                                        ResourceTypeId.CUSTOMER
-                                )
-                                .fieldDefinitions(definitions)
-                ).execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((type, exception) -> {
-                    if (exception == null) {
-                        logger.info("Custom Type ID: " + type.getId());
-                        return type;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            .types()
+            .post(
+                typeDraftBuilder -> typeDraftBuilder
+                    .key("mh-block-customer")
+                    .name(
+                        LocalizedStringBuilder.of()
+                            .values(namesForType)
+                            .build()
+                    )
+                    .resourceTypeIds(
+                        ResourceTypeId.CUSTOMER
+                    )
+                    .fieldDefinitions(definitions)
+            ).execute()
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((type, exception) -> {
+                if (exception == null) {
+                    logger.info("Custom Type ID: " + type.getId());
+                    return type;
+                }
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
     }
 }

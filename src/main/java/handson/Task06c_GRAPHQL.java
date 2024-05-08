@@ -31,28 +31,28 @@ public class Task06c_GRAPHQL {
         //
 
         logger.info("GraphQl : " +
-                client
-                        .graphql()
-                        .post(
-                                graphQLRequestBuilder -> graphQLRequestBuilder
-                                      .query("{ products { total }}")
-                        )
-                        .execute()
-                        .get()
-                        .getBody()
-                        .getData()
+            client
+                .graphql()
+                .post(
+                    graphQLRequestBuilder -> graphQLRequestBuilder
+                      .query("{ products { total }}")
+                )
+                .execute()
+                .get()
+                .getBody()
+                .getData()
         );
 
         GraphQLResponse<ProductQueryResult> responseEntity =
-                client
-                        .graphql()
-                        .query(GraphQL.products(q -> q.limit(3).sort(Collections.singletonList("masterData.current.name.en desc")))
-                                      .projection(p -> p.total().results().id().masterData().current().name("en", null)))
-                        .executeBlocking()
-                        .getBody();
+            client
+                .graphql()
+                .query(GraphQL.products(q -> q.limit(3).sort(Collections.singletonList("masterData.current.name.en desc")))
+                      .projection(p -> p.total().results().id().masterData().current().name("en", null)))
+                .executeBlocking()
+                .getBody();
         logger.info("Total products: " + responseEntity.getData().getTotal());
         responseEntity.getData().getResults().forEach(result ->
-                    logger.info("Id: " + result.getId() + "Name: " + result.getMasterData().getCurrent().getName()));
+            logger.info("Id: " + result.getId() + "Name: " + result.getMasterData().getCurrent().getName()));
 
         client.close();
     }

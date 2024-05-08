@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 /**
@@ -25,11 +26,12 @@ public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_TEST_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client);
+        final String storeKey = getStoreKey(apiClientPrefix);
+        CustomerService customerService = new CustomerService(client, storeKey);
 
         customerService
                 .getCustomerByKey("customer-michael")
@@ -49,10 +51,10 @@ public class Task02a_CREATE {
         //
 
         customerService.createCustomer(
-                "michael15@example.com",
+                "michael@example.com",
                 "password",
-                "customer-michael15",
-                "michael15",
+                "customer-michael",
+                "michael",
                 "tester",
                 "DE"
         )

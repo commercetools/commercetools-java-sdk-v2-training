@@ -1,27 +1,19 @@
 ## mh-dev-admin
-mh-dev-admin.projectKey=
-mh-dev-admin.clientId=
-mh-dev-admin.clientSecret=
-mh-dev-admin.authUrl=
-mh-dev-admin.apiUrl=
-mh-dev-admin.scopes=
+
+dev-admin.projectKey=
+dev-admin.clientId=
+dev-admin.clientSecret=
+dev-admin.authUrl=
+dev-admin.apiUrl=
+dev-admin.scopes=
+dev-admin.storeKey=
 
 
 ## mh-import-admin
-##
+
 
 ## mh-test-admin
 ##
 
-## mh-berlin-store-admin
-##
-
-## aws-plantcheck-read
-##
-
 ## mh-me-client
-##
-
-
-## mh-store-me-client
 ##

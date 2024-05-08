@@ -28,40 +28,40 @@ public class Task08a_SUBSCRIPTION {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         client
-                .subscriptions()
-                .post(
-                        subscriptionDraftBuilder -> subscriptionDraftBuilder
-                                .key("mhOrderPlacedSubscription")
-                                .destination(
-                                        //for GCP Pub/Sub topic
-                                        GoogleCloudPubSubDestinationBuilder.of()
-                                                .projectId("ct-support")
-                                                .topic("training-subscription-sample")
-                                                .build()
-                                        //for AWS SQS Queue
-//                                                SqsDestinationBuilder.of()
-//                                                        .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-customer_change_queue")
-//                                                        .region("eu-central-1")
-//                                                        .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
-//                                                        .accessSecret("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")
-//                                                        .build()
-                                )
-                                .addMessages(
-                                        messageSubscriptionBuilder -> messageSubscriptionBuilder
-                                              .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER) // https://docs.commercetools.com/api/types#referencetype
-                                              .types("OrderCreated") // https://docs.commercetools.com/api/message-types
-                                                .build()
-                                )
+            .subscriptions()
+            .post(
+                subscriptionDraftBuilder -> subscriptionDraftBuilder
+                    .key("mhOrderPlacedSubscription")
+                    .destination(
+                            //for GCP Pub/Sub topic
+                        GoogleCloudPubSubDestinationBuilder.of()
+                            .projectId("ct-support")
+                            .topic("training-subscription-sample")
+                            .build()
+//                        for AWS SQS Queue
+//                        SqsDestinationBuilder.of()
+//                            .queueUrl("https://sqs.eu-central-1.amazonaws.com/923270384842/training-customer_change_queue")
+//                            .region("eu-central-1")
+//                            .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
+//                            .accessSecret("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")
+//                            .build()
+                    )
+                    .addMessages(
+                        messageSubscriptionBuilder -> messageSubscriptionBuilder
+                          .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER) // https://docs.commercetools.com/api/types#referencetype
+                          .types("OrderCreated") // https://docs.commercetools.com/api/message-types
+                            .build()
+                    )
 
-                ).execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((subscription, exception) -> {
-                    if (exception == null) {
-                        logger.info("Subscription ID: " + subscription.getId());
-                        return subscription;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
+            ).execute()
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((subscription, exception) -> {
+                if (exception == null) {
+                    logger.info("Subscription ID: " + subscription.getId());
+                    return subscription;
+                }
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
     }
 }
