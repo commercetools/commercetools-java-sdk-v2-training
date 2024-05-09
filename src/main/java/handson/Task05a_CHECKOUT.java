@@ -36,27 +36,35 @@ public class Task05a_CHECKOUT {
         //
         final String channelKey = "berlin-store-channel";
         final String initialStateKey = "mhOrderPacked";
+        final String customerKey = "";
 
         // TODO: Perform cart operations:
-        //      Get Customer, create cart, add products, add inventory mode
-        //      add discount codes, perform a recalculation
-        // TODO: Convert cart into an order, set order status, set state in custom work
-        //
+        //      Get Customer, create cart, add products
+
+        logger.info("Created cart ID: " +
+                customerService.getCustomerByKey(customerKey)
+                        .thenComposeAsync(customerApiHttpResponse -> cartService.createCart(customerApiHttpResponse, storeKey))
+                        .thenComposeAsync(cartApiHttpResponse ->
+                                cartService.addProductToCartBySkusAndChannel(
+                                        cartApiHttpResponse,
+                                        storeKey,
+                                        channelKey,
+                                        "TULIPSEED01", "TULIPSEED01")
+                        )
+                        .get()
+                        .getBody().getId()
+        );
+
+        // TODO: Update Cart ID
+
+        final String cartId = "";
+
+        // TODO: add discount codes, perform a recalculation
         // TODO: add payment
-        // TAKE CARE: Take off payment for second or third try OR change the interfaceID with a timestamp
-        //
         // TODO additionally: add custom line items, add shipping method
-        //
-        logger.info("Created cart/order ID: " +
-            customerService.getCustomerByKey("customer-michael")
-                .thenComposeAsync(customerApiHttpResponse -> cartService.createCart(customerApiHttpResponse, storeKey))
-                .thenComposeAsync(cartApiHttpResponse ->
-                    cartService.addProductToCartBySkusAndChannel(
-                        cartApiHttpResponse,
-                        storeKey,
-                        channelKey,
-                        "TULIPSEED01", "TULIPSEED01")
-                )
+
+        logger.info("Updated cart ID: " +
+            cartService.getCartById(cartId, storeKey)
                 .thenComposeAsync(cartApiHttpResponse -> cartService.addDiscountToCart(cartApiHttpResponse, storeKey,"MIXED"))
                 .thenComposeAsync(cartApiHttpResponse -> cartService.setShipping(cartApiHttpResponse, storeKey))
                 .thenComposeAsync(cartApiHttpResponse -> cartService.recalculate(cartApiHttpResponse, storeKey))
@@ -68,13 +76,30 @@ public class Task05a_CHECKOUT {
                     "we_pay_73636" + Math.random(),                // Must be unique.
                     "pay82626"+ Math.random())                    // Must be unique.
                 )
+                .get().getBody().getId()
+        );
 
+        // TODO: Place the order and update Order ID
+
+        final String orderId = cartService.getCartById(cartId, storeKey)
                 .thenComposeAsync(orderService::createOrder)
-                .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(orderApiHttpResponse, OrderState.CONFIRMED))
-                .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(orderApiHttpResponse, initialStateKey))
+                .get().getBody().getId();
 
-                .get()
-                .getBody().getId()
+        // TODO: Set order status to CONFIRMED, set custom workflow state to intial state
+
+        logger.info("Updated order status: " +
+            orderService.getOrderById(orderId)
+                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
+                            orderApiHttpResponse,
+                            storeKey,
+                            OrderState.CONFIRMED
+                    ))
+                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
+                            orderApiHttpResponse,
+                            storeKey,
+                            initialStateKey
+                    ))
+                .get().getBody().getId()
         );
 
         client.close();

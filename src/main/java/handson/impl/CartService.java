@@ -67,7 +67,7 @@ public class CartService {
                             .findFirst()
                             .orElse(null)
                         )
-                        .inventoryMode(InventoryMode.RESERVE_ON_ORDER)
+                        .inventoryMode(InventoryMode.NONE)
                 )
                 .execute();
     }

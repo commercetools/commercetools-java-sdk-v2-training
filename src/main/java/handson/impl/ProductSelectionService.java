@@ -141,7 +141,7 @@ public class ProductSelectionService {
                 .productSelectionAssignments()
                 .get()
                 .addExpand("product")
-                .addExpand("product-selection")
+                .addExpand("productSelection")
                 .execute();
     }
 }

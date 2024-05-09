@@ -1,8 +1,6 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.cart.CartDraftBuilder;
-import com.commercetools.api.models.me.MyCartDraftBuilder;
 import handson.impl.ApiPrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
@@ -13,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.*;
 
-public class Task05c_ME {
+public class Task05d_ME {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
