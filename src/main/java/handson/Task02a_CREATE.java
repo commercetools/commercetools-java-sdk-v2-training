@@ -26,7 +26,7 @@ public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_TEST_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         Logger logger = LoggerFactory.getLogger("commercetools");
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
@@ -63,7 +63,7 @@ public class Task02a_CREATE {
                 .thenApply(ApiHttpResponse::getBody)
                 .handle((customer, exception) -> {
                     if (exception == null) {
-                        logger.info("Resource ID: " + customer.getId()); return customer;
+                        logger.info("Customer ID: " + customer.getId()); return customer;
                     };
                     logger.error("Exception: " + exception.getMessage());
                     return null;

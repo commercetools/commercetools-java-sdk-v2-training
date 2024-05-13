@@ -1,4 +1,4 @@
-## mh-dev-admin
+## API Client for Dev Admin
 
 dev-admin.projectKey=
 dev-admin.clientId=
@@ -8,12 +8,34 @@ dev-admin.apiUrl=
 dev-admin.scopes=
 dev-admin.storeKey=
 
+## SUGGESTED SCOPE for DEV ADMIN:
+    ## manage_product_selections:project-key
+    ## manage_states:project-key
+    ## manage_order_edits:project-key
+    ## manage_cart_discounts:project-key:the-good-store
+    ## view_project_settings:project-key
+    ## view_published_products:project-key
+    ## view_categories:project-key
+    ## manage_shopping_lists:project-key:the-good-store
+    ## manage_stores:project-key
+    ## manage_orders:project-key:the-good-store
+    ## manage_customers:project-key:the-good-store
+    ## view_cart_discounts:project-key
+    ## view_discount_codes:project-key
+    ## manage_payments:project-key
+    ## create_anonymous_token:project-key
+    ## view_tax_categories:project-key
+    ## manage_standalone_prices:project-key
+    ## view_shipping_methods:project-key
+    ## manage_types:project-key
+    ## view_customer_groups:project-key
 
-## mh-import-admin
+
+## API Client for importing Products/Prices
 
 
 ## mh-test-admin
 ##
 
-## mh-me-client
+## API Client for MyAPI
 ##

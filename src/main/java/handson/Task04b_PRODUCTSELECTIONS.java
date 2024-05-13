@@ -27,7 +27,7 @@ public class Task04b_PRODUCTSELECTIONS {
         // TODO: In Merchant Center, create a product selection and add a product to the product selection.
         // Update the key below
 
-        final String productSelectionKey = "dach-selection";
+        final String productSelectionKey = "good-store-selection";
 
         // TODO: Assign the product selection to the store
         productSelectionService.addProductSelectionToStore(storeKey, productSelectionKey)

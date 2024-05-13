@@ -63,18 +63,18 @@ public class Task04a_STATEMACHINE {
             }),
             (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
                 stateMachineService.setStateTransitions(
-                    orderPackedStateApiResponse.getBody(),
-                    Stream.of(
-                        StateResourceIdentifierBuilder.of().
-                            id(orderShippedStateApiResponse.getBody().getId())
-                            .build()
-                    )
-                    .collect(Collectors.toList())
+                    orderShippedStateApiResponse.getBody(),
+                    new ArrayList<>()
                 )
                 .thenComposeAsync(apiHttpResponse ->
                     stateMachineService.setStateTransitions(
-                        orderShippedStateApiResponse.getBody(),
-                        new ArrayList<>()
+                        orderPackedStateApiResponse.getBody(),
+                        Stream.of(
+                            StateResourceIdentifierBuilder.of().
+                                id(orderShippedStateApiResponse.getBody().getId())
+                                .build()
+                            )
+                            .collect(Collectors.toList())
                     )
                 )
         )

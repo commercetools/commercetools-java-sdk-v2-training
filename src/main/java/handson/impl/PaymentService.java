@@ -26,20 +26,19 @@ import java.util.concurrent.CompletableFuture;
 public class PaymentService {
 
     final ProjectApiRoot apiRoot;
+    final String storeKey;
 
-    public PaymentService(final ProjectApiRoot client) {
+    public PaymentService(final ProjectApiRoot client, final String storeKey) {
         this.apiRoot = client;
+        this.storeKey = storeKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> createPaymentAndAddToCart(
-            final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final String storeKey,
+            final Cart cart,
             String psp_Name,
             String psp_Method,
             String interfaceId,
             String interactionId) {
-
-        final Cart cart = cartApiHttpResponse.getBody();
 
         return
             apiRoot

@@ -25,9 +25,6 @@ public class Task06b_SEARCHQUERY {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         final String storeKey = getStoreKey(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client, storeKey);
-
-        OrderService orderService = new OrderService(client);
 
         logger.info("Today's orders: " +
             client

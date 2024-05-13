@@ -27,6 +27,7 @@ public class CustomerService {
     public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(String customerKey) {
         return
                 apiRoot
+                        .inStore(storeKey)
                         .customers()
                         .withKey(customerKey)
                         .get()
@@ -42,6 +43,7 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
+            .inStore(storeKey)
             .customers()
             .post(
                 customerDraftBuilder -> customerDraftBuilder
@@ -59,7 +61,7 @@ public class CustomerService {
                             .build()
                     )
                     .defaultShippingAddress(0)
-                    .stores(StoreResourceIdentifierBuilder.of().key(storeKey).build())
+//                    .stores(StoreResourceIdentifierBuilder.of().key(storeKey).build())
                 )
                 .execute();
     }
@@ -73,6 +75,7 @@ public class CustomerService {
 
         return
             apiRoot
+                .inStore(storeKey)
                 .customers()
                 .emailToken()
                 .post(
@@ -87,6 +90,7 @@ public class CustomerService {
 
         return
             apiRoot
+                .inStore(storeKey)
                 .customers()
                 .emailToken()
                 .post(
@@ -103,6 +107,7 @@ public class CustomerService {
 
         return
             apiRoot
+                .inStore(storeKey)
                 .customers()
                 .emailConfirm()
                 .post(
@@ -117,6 +122,7 @@ public class CustomerService {
 
         return
             apiRoot
+                .inStore(storeKey)
                 .customers()
                 .emailConfirm()
                 .post(
@@ -141,18 +147,20 @@ public class CustomerService {
 
         return getCustomerByKey(customerKey)
             .thenComposeAsync(customerApiHttpResponse ->
-                apiRoot.customers()
-                .withKey(customerKey)
-                .post(
-                    customerUpdateBuilder -> customerUpdateBuilder
-                        .version(customerApiHttpResponse.getBody().getVersion())
-                        .plusActions(
-                            customerUpdateActionBuilder -> customerUpdateActionBuilder
-                                .setCustomerGroupBuilder()
-                                .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
-                        )
-                )
-                .execute()
+                apiRoot
+                    .inStore(storeKey)
+                    .customers()
+                    .withKey(customerKey)
+                    .post(
+                        customerUpdateBuilder -> customerUpdateBuilder
+                            .version(customerApiHttpResponse.getBody().getVersion())
+                            .plusActions(
+                                customerUpdateActionBuilder -> customerUpdateActionBuilder
+                                    .setCustomerGroupBuilder()
+                                    .customerGroup(customerGroupResourceIdentifierBuilder -> customerGroupResourceIdentifierBuilder.key(customerGroupKey))
+                            )
+                    )
+                    .execute()
             );
     }
 

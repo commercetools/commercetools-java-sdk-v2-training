@@ -17,25 +17,27 @@ import java.util.concurrent.ExecutionException;
 public class OrderService {
 
     final ProjectApiRoot apiRoot;
+    final String storeKey;
 
-    public OrderService(final ProjectApiRoot client) {
+    public OrderService(final ProjectApiRoot client, final String storeKey) {
         this.apiRoot = client;
+        this.storeKey = storeKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Order>> getOrderById(final String orderId) {
         return apiRoot
+                .inStore(storeKey)
                 .orders()
                 .withId(orderId)
                 .get()
                 .execute();
     }
 
-        public CompletableFuture<ApiHttpResponse<Order>> createOrder(final ApiHttpResponse<Cart> cartApiHttpResponse) {
-
-        final Cart cart = cartApiHttpResponse.getBody();
+        public CompletableFuture<ApiHttpResponse<Order>> createOrder(final Cart cart) {
 
         return
             apiRoot
+                .inStore(storeKey)
                 .orders()
                 .post(
                     orderFromCartDraftBuilder -> orderFromCartDraftBuilder
@@ -48,7 +50,6 @@ public class OrderService {
 
     public CompletableFuture<ApiHttpResponse<Order>> changeState(
             final ApiHttpResponse<Order> orderApiHttpResponse,
-            final String storeKey,
             final OrderState state) {
 
         Order order = orderApiHttpResponse.getBody();
@@ -72,7 +73,6 @@ public class OrderService {
 
     public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
             final ApiHttpResponse<Order> orderApiHttpResponse,
-            final String storeKey,
             final String workflowStateKey) {
 
         Order order = orderApiHttpResponse.getBody();
@@ -93,36 +93,37 @@ public class OrderService {
                 .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<OrderEdit>> getOrderEditById(
-            final String orderEditId
-            ) {
+    public CompletableFuture<ApiHttpResponse<OrderEdit>> getOrderEditByKey(
+            final String orderEditKey) {
 
         return
-                apiRoot
-                        .orders()
-                        .edits()
-                        .withId(orderEditId)
-                        .get()
-                        .withExpand("order")
-                        .execute();
+            apiRoot
+                .orders()
+                .edits()
+                .withKey(orderEditKey)
+                .get()
+                .withExpand("resource")
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<OrderEdit>> createOrderEdit(
             final ApiHttpResponse<Order> orderApiHttpResponse,
+            final String orderEditKey,
             final StagedOrderUpdateAction stagedOrderUpdateAction) {
 
         Order order = orderApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .orders()
-                        .edits()
-                        .post(
-                                orderEditDraftBuilder -> orderEditDraftBuilder
-                                        .stagedActions(stagedOrderUpdateAction)
-                                        .resource(orderReferenceBuilder -> orderReferenceBuilder.id(order.getId()))
-                        )
-                        .execute();
+            apiRoot
+                .orders()
+                .edits()
+                .post(
+                    orderEditDraftBuilder -> orderEditDraftBuilder
+                        .stagedActions(stagedOrderUpdateAction)
+                        .key(orderEditKey)
+                        .resource(orderReferenceBuilder -> orderReferenceBuilder.id(order.getId()))
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<OrderEdit>> applyOrderEdit(
@@ -131,17 +132,17 @@ public class OrderService {
         OrderEdit orderEdit = orderEditApiHttpResponse.getBody();
 
         return
-                apiRoot
-                        .orders()
-                        .edits()
-                        .withId(orderEdit.getId())
-                        .apply()
-                        .post(
-                                orderEditApplyBuilder -> orderEditApplyBuilder
-                                        .editVersion(orderEdit.getVersion())
-                                        .resourceVersion(orderEdit.getResource().getObj().getVersion())
-                        )
-                        .execute();
+            apiRoot
+                .orders()
+                .edits()
+                .withId(orderEdit.getId())
+                .apply()
+                .post(
+                    orderEditApplyBuilder -> orderEditApplyBuilder
+                        .editVersion(orderEdit.getVersion())
+                        .resourceVersion(orderEdit.getResource().getObj().getVersion())
+                )
+                .execute();
     }
 
 }

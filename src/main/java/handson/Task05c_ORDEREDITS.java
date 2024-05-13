@@ -6,6 +6,7 @@ import com.commercetools.api.models.order.StagedOrderUpdateAction;
 import com.commercetools.api.models.order.StagedOrderUpdateActionBuilder;
 import com.commercetools.api.models.order_edit.StagedOrderAddLineItemActionBuilder;
 import handson.impl.*;
+import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,36 +28,49 @@ public class Task05c_ORDEREDITS {
         final ProjectApiRoot client = createApiClient(apiClientPrefix);
 
         final String storeKey = getStoreKey(apiClientPrefix);
-        OrderService orderService = new OrderService(client);
-        final String orderId = "6218d502-6fd1-4bef-a9b7-d4ae7988626b";
+        OrderService orderService = new OrderService(client, storeKey);
+        final String supplyChannelKey = "inventory-channel";
+        final String distChannelKey = "distribution-channel";
+
+        final String orderId = "e85cd198-5254-4679-abaa-b6fc7b59abd1";
 
         // TODO: Create and Apply an Order Edit
 
         final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
                     .addLineItemBuilder()
-                    .sku("M0E20000000E93Z")
-                    .supplyChannel(channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key("sunrise-store-newyork"))
-                    .distributionChannel(channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key("sunrise-store-newyork"))
+                    .sku("CCM-089")
+                    .supplyChannel(channelResourceIdentifierBuilder ->
+                            channelResourceIdentifierBuilder.key(supplyChannelKey))
+                    .distributionChannel(channelResourceIdentifierBuilder ->
+                            channelResourceIdentifierBuilder.key(distChannelKey))
                 .build();
 
-        logger.info("Created OrderEdit: " +
-                orderService.getOrderById(orderId)
-                    .thenComposeAsync(orderApiHttpResponse -> orderService.createOrderEdit(orderApiHttpResponse, stagedOrderUpdateAction))
-                    .get()
-                    .getBody()
-                    .getResult()
-        );
+        orderService.getOrderById(orderId)
+            .thenComposeAsync(orderApiHttpResponse -> orderService.createOrderEdit(
+                    orderApiHttpResponse,
+                    "mh-orderedit",
+                    stagedOrderUpdateAction))
+                .thenApply(ApiHttpResponse::getBody)
+                .handle((orderEdit, exception) -> {
+                    if (exception == null) {
+                        logger.info("orderEdit created {}", orderEdit.getResult().getType());
+                        return orderEdit;
+                    }
+                    logger.error("Exception: " + exception.getMessage());
+                    return null;
+                }).thenRun(() -> client.close());
 
-//        final String orderEditId = "";
-//        logger.info("Applied OrderEdit: " +
-//                orderService.getOrderEditById(orderEditId)
-//                    .thenComposeAsync(orderEditApiHttpResponse -> orderService.applyOrderEdit(orderEditApiHttpResponse))
-//                    .get()
-//                    .getBody()
-//                    .getResult().getType()
-//
-//        );
-
-        client.close();
+//           //  TODO: Apply OrderEdit
+//            orderService.getOrderEditByKey("mh-orderedit")
+//                .thenComposeAsync(orderEditApiHttpResponse -> orderService.applyOrderEdit(orderEditApiHttpResponse))
+//                    .thenApply(ApiHttpResponse::getBody)
+//                    .handle((orderEdit, exception) -> {
+//                        if (exception == null) {
+//                            logger.info("orderEdit created {}", orderEdit.getResult().getType());
+//                            return orderEdit;
+//                        }
+//                        logger.error("Exception: " + exception.getMessage());
+//                        return null;
+//                    }).thenRun(() -> client.close());
     }
 }

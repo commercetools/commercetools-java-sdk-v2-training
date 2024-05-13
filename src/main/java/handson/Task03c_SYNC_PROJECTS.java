@@ -47,9 +47,9 @@ public class Task03c_SYNC_PROJECTS {
         dockerRun.append(" commercetools/commercetools-project-sync:5.4.5 -s all");
         logger.info(dockerRun.toString());
 
-        Process process = Runtime.getRuntime().exec(dockerRun.toString());
-        process.waitFor();
-        logger.info(process.exitValue() + " ");
+//        Process process = Runtime.getRuntime().exec(dockerRun.toString());
+//        process.waitFor();
+//        logger.info(process.exitValue() + " ");
 
     }
 }

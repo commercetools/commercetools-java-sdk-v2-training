@@ -19,7 +19,7 @@ public class Task06a_SEARCH {
 
     public static void main(String[] args) throws Exception {
 
-
+// TODO UPDATE: Product projection in Store
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
         final ProjectApiRoot client = createApiClient(apiClientPrefix);

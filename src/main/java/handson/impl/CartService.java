@@ -2,11 +2,8 @@ package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.*;
-import com.commercetools.api.models.channel.Channel;
-import com.commercetools.api.models.channel.ChannelResourceIdentifierBuilder;
-import com.commercetools.api.models.customer.Customer;
+import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.shipping_method.ShippingMethod;
-import com.commercetools.api.models.shipping_method.ShippingMethodResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.List;
@@ -20,13 +17,15 @@ import java.util.stream.Stream;
 public class CartService {
 
     final ProjectApiRoot apiRoot;
+    final String storeKey;
 
-    public CartService(final ProjectApiRoot client) {
+    public CartService(final ProjectApiRoot client, final String storeKey) {
         this.apiRoot = client;
+        this.storeKey = storeKey;
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId, final String storeKey) {
+    public CompletableFuture<ApiHttpResponse<Cart>> getCartById(final String cartId) {
 
         return
             apiRoot
@@ -36,12 +35,46 @@ public class CartService {
                 .get()
                 .execute();
     }
+
+    public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> loginCustomer(
+            final String customerEmail,
+            final String password) {
+        CustomerSignin customerSignin = CustomerSigninBuilder.of()
+                        .email(customerEmail)
+                        .password(password)
+                        .build();
+        return apiRoot
+                .inStore(storeKey)
+                .login()
+                .post(customerSignin)
+                .execute();
+    }
+
+    public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> loginCustomer(
+            final String customerEmail,
+            final String password,
+            final String anonymousCartId,
+            final AnonymousCartSignInMode anonymousCartSignInMode) {
+        CustomerSignin customerSignin = CustomerSigninBuilder.of()
+                .email(customerEmail)
+                .password(password)
+                .anonymousCart(CartResourceIdentifierBuilder.of()
+                        .id(anonymousCartId)
+                        .build())
+                .anonymousCartSignInMode(anonymousCartSignInMode)
+                .build();
+        return apiRoot
+                .inStore(storeKey)
+                .login()
+                .post(customerSignin)
+                .execute();
+    }
     /**
      * Creates a cart for the given customer.
      *
      * @return the customer creation completion stage
      */
-    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse, final String storeKey) {
+    public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
 
         final Customer customer = customerApiHttpResponse.getBody();
 
@@ -73,7 +106,7 @@ public class CartService {
     }
 
 
-    public CompletableFuture<ApiHttpResponse<Cart>> createAnonymousCart(final String storeKey) {
+    public CompletableFuture<ApiHttpResponse<Cart>> createAnonymousCart() {
 
         return
             apiRoot
@@ -92,8 +125,8 @@ public class CartService {
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final String storeKey,
-            final String channelKey,
+            final String supplyChannelKey,
+            final String distChannelKey,
             final String ... skus) {
 
         final Cart cart = cartApiHttpResponse.getBody();
@@ -105,10 +138,10 @@ public class CartService {
                     .sku(s)
                     .quantity(1L)
                     .supplyChannel(
-                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
+                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(supplyChannelKey)
                     )
                     .distributionChannel(
-                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(channelKey)
+                        channelResourceIdentifierBuilder -> channelResourceIdentifierBuilder.key(distChannelKey)
                     )
                     .build()
                 )
@@ -128,11 +161,8 @@ public class CartService {
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addDiscountToCart(
-        final ApiHttpResponse<Cart> cartApiHttpResponse,
-        final String storeKey,
+        final Cart cart,
         final String code) {
-
-        final Cart cart = cartApiHttpResponse.getBody();
 
         return
             apiRoot
@@ -150,9 +180,7 @@ public class CartService {
                 .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final ApiHttpResponse<Cart> cartApiHttpResponse, final String storeKey) {
-
-        final Cart cart = cartApiHttpResponse.getBody();
+    public CompletableFuture<ApiHttpResponse<Cart>> recalculate(final Cart cart) {
 
         return
             apiRoot
@@ -171,9 +199,7 @@ public class CartService {
                 .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse, final String storeKey) {
-
-        final Cart cart = cartApiHttpResponse.getBody();
+    public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final Cart cart) {
 
         final ShippingMethod shippingMethod =
             apiRoot
