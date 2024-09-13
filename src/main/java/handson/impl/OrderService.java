@@ -145,4 +145,23 @@ public class OrderService {
                 .execute();
     }
 
+    public CompletableFuture<ApiHttpResponse<Order>> changeOrderNumber(
+            final ApiHttpResponse<Order> orderApiHttpResponse) {
+
+        Order order = orderApiHttpResponse.getBody();
+
+        return
+                apiRoot
+                        .orders()
+                        .withId(order.getId())
+                        .post(
+                                orderUpdateBuilder -> orderUpdateBuilder
+                                        .version(order.getVersion())
+                                        .plusActions(orderUpdateActionBuilder -> orderUpdateActionBuilder
+                                                .setOrderNumberBuilder()
+                                                .orderNumber(""))
+                        )
+                        .execute();
+    }
+
 }

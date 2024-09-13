@@ -36,7 +36,7 @@ public class Task08a_SUBSCRIPTION {
                             //for GCP Pub/Sub topic
                         GoogleCloudPubSubDestinationBuilder.of()
                             .projectId("ct-support")
-                            .topic("training-subscription-sample")
+                            .topic("nd-connect-dev")
                             .build()
 //                        for AWS SQS Queue
 //                        SqsDestinationBuilder.of()
@@ -48,8 +48,8 @@ public class Task08a_SUBSCRIPTION {
                     )
                     .addMessages(
                         messageSubscriptionBuilder -> messageSubscriptionBuilder
-                          .resourceTypeId(MessageSubscriptionResourceTypeId.ORDER) // https://docs.commercetools.com/api/types#referencetype
-                          .types("OrderCreated") // https://docs.commercetools.com/api/message-types
+                          .resourceTypeId(MessageSubscriptionResourceTypeId.CUSTOMER) // https://docs.commercetools.com/api/types#referencetype
+                          .types("CustomerCreated") // https://docs.commercetools.com/api/message-types
                             .build()
                     )
 

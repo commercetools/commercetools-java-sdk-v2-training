@@ -43,7 +43,7 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
-            .inStore(storeKey)
+//            .inStore(storeKey)
             .customers()
             .post(
                 customerDraftBuilder -> customerDraftBuilder

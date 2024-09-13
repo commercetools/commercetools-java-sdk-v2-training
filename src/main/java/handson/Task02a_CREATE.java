@@ -51,11 +51,11 @@ public class Task02a_CREATE {
         //
 
         customerService.createCustomer(
-                "michael@example.com",
+                "tester@example.com",
                 "password",
-                "customer-michael",
-                "michael",
+                "customer-tester",
                 "tester",
+                "last",
                 "DE"
         )
         .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
