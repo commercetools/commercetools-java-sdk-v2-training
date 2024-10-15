@@ -11,6 +11,7 @@ import io.vrap.rmf.base.client.oauth2.ClientCredentials;
 import io.vrap.rmf.base.client.oauth2.ClientCredentialsTokenSupplier;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class ClientService {
      */
     public static ProjectApiRoot createApiClient(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
         String clientId = props.getProperty(prefix + "clientId");
         String clientSecret = props.getProperty(prefix + "clientSecret");
@@ -55,34 +56,34 @@ public class ClientService {
 
     public static String getProjectKey(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
         return props.getProperty(prefix + "projectKey");
     }
 
     public static String getClientId(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
         return props.getProperty(prefix + "clientId");
     }
 
 
     public static String getClientSecret(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
         return props.getProperty(prefix + "clientSecret");
     }
 
 
     public static String getStoreKey(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
         return props.getProperty(prefix + "storeKey");
     }
 
 
     public static String getCustomerEmail(final String prefix) throws IOException {
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
         return props.getProperty(prefix + "customerEmail");
     }
 
@@ -117,7 +118,7 @@ public class ClientService {
     public static ProjectApiRoot createStoreMeApiClient(final String prefix) throws IOException {
 
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
         String projectKey = props.getProperty(prefix + "projectKey");
         String storeKey = props.getProperty(prefix + "storeKey");
@@ -143,7 +144,7 @@ public class ClientService {
     public static AuthenticationToken getTokenForClientCredentialsFlow(final String prefix) throws IOException {
 
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
         String clientId = props.getProperty(prefix + "clientId");
         String clientSecret = props.getProperty(prefix + "clientSecret");

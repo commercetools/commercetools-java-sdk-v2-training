@@ -6,6 +6,7 @@ import com.commercetools.graphql.api.GraphQL;
 import com.commercetools.graphql.api.GraphQLData;
 import com.commercetools.graphql.api.GraphQLRequest;
 import com.commercetools.graphql.api.GraphQLResponse;
+import com.commercetools.graphql.api.types.InStore;
 import com.commercetools.graphql.api.types.KeyReference;
 import com.commercetools.graphql.api.types.ProductAssignmentQueryResult;
 import handson.impl.ApiPrefixHelper;
@@ -69,21 +70,22 @@ public class Task06c_GRAPHQL {
         variables.put("storeKey", getStoreKey(apiClientPrefix));
 
 // Create the GraphQL request
-        GraphQLRequest<ProductAssignmentQueryResult> queryResultGraphQLRequest = GraphQL
+        GraphQLRequest<InStore> queryResultGraphQLRequest = GraphQL
                 .query(query)
                 .variables(graphQLVariablesMapBuilder -> graphQLVariablesMapBuilder.values(variables))
-                .dataMapper(GraphQLData::getProductSelectionAssignments)
+                .dataMapper(GraphQLData::getInStore)
                 .build();
 
 // Execute the query
-        ApiHttpResponse<GraphQLResponse<ProductAssignmentQueryResult>> response = client
+        ApiHttpResponse<ProductAssignmentQueryResult> response = client
                 .graphql()
                 .query(queryResultGraphQLRequest)
-                .executeBlocking();
+                .executeBlocking()
+                .withBody(inStoreGraphQLResponse -> inStoreGraphQLResponse.getData().getProductSelectionAssignments());
 
 // Log the product assignments
-        if (response.getBody() != null && response.getBody().getData() != null) {
-            logger.info("Product Assignments: {}", response.getBody().getData().getResults().get(0));
+        if (response.getBody() != null && response.getBody().getResults() != null) {
+            logger.info("Product Assignments: {}", response.getBody().getResults());
         } else {
             logger.warn("No product assignments found in the response.");
         }
