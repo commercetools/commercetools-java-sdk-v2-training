@@ -23,56 +23,54 @@ public class Task05c_ORDEREDITS {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        Logger logger = LoggerFactory.getLogger("commercetools");
+        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
+            final String storeKey = getStoreKey(apiClientPrefix);
+            OrderService orderService = new OrderService(client, storeKey);
+            final String supplyChannelKey = "sunrise-store-boston-1";
+            final String distChannelKey = "sunrise-store-boston-1";
 
-        final String storeKey = getStoreKey(apiClientPrefix);
-        OrderService orderService = new OrderService(client, storeKey);
-        final String supplyChannelKey = "sunrise-store-boston-1";
-        final String distChannelKey = "sunrise-store-boston-1";
+            final String orderNumber = "CT253979954003083";
+            final String orderEditKey = "CTOE-256247340086500";
 
-        final String orderNumber = "CT253979954003083";
-        final String orderEditKey = "CTOE-256247340086500";
+            // TODO: Create and Apply an Order Edit
 
-//        // TODO: Create and Apply an Order Edit
-//
-//        final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
-//                    .addLineItemBuilder()
-//                    .sku("M0E20000000FHAP")
-//                    .supplyChannel(channelResourceIdentifierBuilder ->
-//                            channelResourceIdentifierBuilder.key(supplyChannelKey))
-//                    .distributionChannel(channelResourceIdentifierBuilder ->
-//                            channelResourceIdentifierBuilder.key(distChannelKey))
-//                .build();
-//
-//        orderService.getOrderByOrderNumber(orderNumber)
-//            .thenComposeAsync(orderApiHttpResponse ->
-//                    orderService.createOrderEdit(
-//                        orderApiHttpResponse,
-//                        "CTOE-" + System.nanoTime(),
-//                        stagedOrderUpdateAction))
-//            .thenApply(ApiHttpResponse::getBody)
-//            .handle((orderEdit, exception) -> {
-//                    if (exception == null) {
-//                            logger.info("orderEdit {} created with {} type", orderEdit.getKey(), orderEdit.getResult().getType());
-//                            return orderEdit;
-//                    }
-//                    logger.error("Exception: " + exception.getMessage());
-//                    return null;
-//            }).thenRun(() -> client.close());
+            final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
+                    .addLineItemBuilder()
+                    .sku("M0E20000000FHAP")
+                    .supplyChannel(channelResourceIdentifierBuilder ->
+                            channelResourceIdentifierBuilder.key(supplyChannelKey))
+                    .distributionChannel(channelResourceIdentifierBuilder ->
+                            channelResourceIdentifierBuilder.key(distChannelKey))
+                    .build();
 
-           //  TODO: Apply OrderEdit
-            orderService.getOrderEditByKey(orderEditKey)
-                .thenComposeAsync(orderService::applyOrderEdit)
-                    .thenApply(ApiHttpResponse::getBody)
-                    .handle((orderEdit, exception) -> {
-                        if (exception == null) {
-                            logger.info("orderEdit applied {}", orderEdit.getResult().getType());
-                            return orderEdit;
-                        }
-                        logger.error("Exception: " + exception.getMessage());
+            orderService.getOrderByOrderNumber(orderNumber)
+                    .thenComposeAsync(orderApiHttpResponse ->
+                            orderService.createOrderEdit(
+                                    orderApiHttpResponse,
+                                    "CTOE-" + System.nanoTime(),
+                                    stagedOrderUpdateAction))
+                    .thenAccept(orderEditApiHttpResponse ->
+                            logger.info("orderEdit {} created with {} type", orderEditApiHttpResponse.getBody().getKey(), orderEditApiHttpResponse.getBody().getResult().getType())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
                         return null;
-                    }).thenRun(client::close);
+                    }).join();
+            // TODO update orderEditKey above
+
+//
+//            //  TODO: Apply OrderEdit
+//            orderService.getOrderEditByKey(orderEditKey)
+//                    .thenComposeAsync(orderService::applyOrderEdit)
+//                    .thenAccept(orderEditApiHttpResponse ->
+//                            logger.info("orderEdit {} applied", orderEditApiHttpResponse.getBody().getResult().getType())
+//                    )
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
+        }
     }
 }

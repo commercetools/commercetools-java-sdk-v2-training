@@ -95,7 +95,7 @@ public class ClientService {
     public static com.commercetools.importapi.client.ProjectApiRoot createImportApiClient(final String prefix) throws IOException {
 
         Properties props = new Properties();
-        props.load(Properties.class.getResourceAsStream("/dev.properties"));
+        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
         String clientId = props.getProperty(prefix + "clientId");
         String clientSecret = props.getProperty(prefix + "clientSecret");

@@ -1,6 +1,10 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.common.Address;
+import com.commercetools.api.models.common.AddressBuilder;
+import com.commercetools.api.models.common.AddressDraft;
+import com.commercetools.api.models.common.AddressDraftBuilder;
 import com.commercetools.api.models.customer.AnonymousCartSignInMode;
 import com.commercetools.api.models.order.OrderState;
 import handson.impl.*;
@@ -21,88 +25,81 @@ public class Task05b_ORDER {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger("commercetools");
-
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        final String storeKey = getStoreKey(apiClientPrefix);
+        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        CartService cartService = new CartService(client, storeKey);
-        CustomerService customerService = new CustomerService(client, storeKey);
-        OrderService orderService = new OrderService(client, storeKey);
-        PaymentService paymentService = new PaymentService(client, storeKey);
+            final String storeKey = getStoreKey(apiClientPrefix);
 
-        // TODO: Fetch a channel if your inventory mode will not be NONE
-        //
-        final String cartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
-        final String initialStateKey = "mhOrderPacked2";
-        final String customerEmail = "nd@example.de";
-        final String orderNumber = "CT253979954003083";
+            CartService cartService = new CartService(client, storeKey);
+            CustomerService customerService = new CustomerService(client, storeKey);
+            OrderService orderService = new OrderService(client, storeKey);
+            PaymentService paymentService = new PaymentService(client, storeKey);
 
-//        // TODO: ADD shipping address
-//        // TODO: SAVE in customer profile as default billing and shipping address
-//
-//        AddressDraft addressDraft = AddressDraftBuilder.of()
-//                .firstName("Jennifer")
-//                .lastName("Tester")
-//                .country("DE")
-//                .key(customerKey + "-default")
-//                .build();
-//
-//        logger.info("Customer address added and set as default billing and shipping address:"
-//                + customerService.addAddressToCustomer(customerKey, addressDraft)
-//                .get().getBody().getEmail()
-//        );
-//
-//        cartService.getCartById(anonymousCartId)
-//                .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, addressDraft))
-//                .thenComposeAsync(cartService::setShipping)
-//                .thenComposeAsync(cartService::recalculate)
-//                .thenApply(ApiHttpResponse::getBody)
-//                .handle((cart, exception) -> {
-//                    if (exception == null) {
-//                        logger.info("cart updated {}", cart.getId());
-//                        return cart;
-//                    }
-//                    logger.error("Exception updating cart shipping info: " + exception.getMessage());
-//                    return null;
-//                }).thenRun(() -> client.close());
+            // TODO: Fetch a channel if your inventory mode will not be NONE
+            //
+            final String cartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
+            final String initialStateKey = "mhOrderPacked2";
+            final String customerKey = "nd-customer";
+            final String customerEmail = "nd@example.de";
+            final String orderNumber = "CT253979954003083";
 
+            // TODO: ADD shipping address
+            // TODO: SAVE in customer profile as default billing and shipping address
 
-//        // TODO: Place the order
-//        // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
-//
-//        // customerService.loginCustomer(customerEmail, "password")
+            Address address = AddressBuilder.of()
+                    .firstName("Jennifer")
+                    .lastName("Tester")
+                    .country("DE")
+                    .key(customerKey + "-default")
+                    .build();
 
+            logger.info("Customer address added and set as default billing and shipping address:"
+                    + customerService.addAddressToCustomer(customerKey, address)
+                    .get().getBody().getEmail()
+            );
 
-        cartService.getCartById(cartId)
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((cart, exception) ->{
-                    if (exception == null) {
-                        logger.info("Cart ID {}", cart.getId());
-                        return cart;
-                    }
-                    logger.error("Exception in login: " + exception.getMessage());
-                    return null;
-                })
-                .thenComposeAsync(orderService::createOrder)
-              // orderService.getOrderByOrderNumber(orderNumber)
-                .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
-                        orderApiHttpResponse,
-                        OrderState.CONFIRMED
-                ))
-                .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
-                        orderApiHttpResponse,
-                        initialStateKey
-                ))
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((order, exception) -> {
-                        if (exception == null) {
-                            logger.info("Order placed {}", order.getOrderNumber());
-                            return order;
-                        }
-                        logger.error("Exception in order creation: " + exception.getMessage());
+            cartService.getCartById(cartId)
+                    .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, address))
+                    .thenComposeAsync(cartService::setShipping)
+                    .thenComposeAsync(cartService::recalculate)
+                    .thenAccept(cartApiHttpResponse ->
+                                logger.info("cart updated {}", cartApiHttpResponse.getBody().getId())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
                         return null;
-                }).thenRun(client::close);
+                    }).join();
+
+            // TODO: Place the order
+            // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
+
+            // customerService.loginCustomer(customerEmail, "password")
+
+
+            cartService.getCartById(cartId)
+                    .thenApply(cartApiHttpResponse -> {
+                            logger.info("Cart ID {}", cartApiHttpResponse.getBody().getId());
+                            return cartApiHttpResponse.getBody();
+                        }
+                    )
+                    .thenComposeAsync(orderService::createOrder)
+                    // orderService.getOrderByOrderNumber(orderNumber)
+                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
+                            orderApiHttpResponse,
+                            OrderState.CONFIRMED
+                    ))
+                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
+                            orderApiHttpResponse,
+                            initialStateKey
+                    ))
+                    .thenAccept(orderApiHttpResponse ->
+                            logger.info("Order placed {}", orderApiHttpResponse.getBody().getOrderNumber())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
+        }
     }
 }

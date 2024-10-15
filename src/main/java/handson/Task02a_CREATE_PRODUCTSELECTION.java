@@ -29,63 +29,60 @@ public class Task02a_CREATE_PRODUCTSELECTION {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
+        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
 
-        Logger logger = LoggerFactory.getLogger("commercetools");
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        final String storeKey = getStoreKey(apiClientPrefix);
+            final String storeKey = getStoreKey(apiClientPrefix);
 
-        // TODO: CREATE a Product Selection
-        //
-        final String productSelectionKey = "nd-boston-selection1";
-        Map<String, String> psName = new HashMap<String, String>() {
-            {
-                put("DE", "nd boston selection 1");
-                put("EN", "nd boston selection 1");
-            }
-        };
-
-
-        final ProductSelectionService productSelectionService = new ProductSelectionService(client);
-
-        productSelectionService.createProductSelection(productSelectionKey, psName)
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((productSelection, exception) -> {
-                    if (exception == null) {
-                        logger.info("Product Selection created: " + productSelection.getId()); return productSelection;
-                    };
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
+            // TODO: CREATE a Product Selection
+            //
+            final String productSelectionKey = "nd-boston-selection";
+            Map<String, String> psName = new HashMap<String, String>() {
+                {
+                    put("DE", "nd boston selection");
+                    put("EN", "nd boston selection");
                 }
-        );
+            };
+
+            final ProductSelectionService productSelectionService = new ProductSelectionService(client);
+
+            productSelectionService.createProductSelection(productSelectionKey, psName)
+                    .thenAccept(productSelectionApiHttpResponse ->
+                            logger.info("Product Selection created: "
+                                    + productSelectionApiHttpResponse.getBody().getId())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    });
 
 //        // TODO: ADD Products to Product Selection
 //        //
 //        productSelectionService.getProductSelectionByKey(productSelectionKey)
 //                .thenComposeAsync(productSelectionApiHttpResponse ->
 //                        productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse, "86935"))
-//                .thenApply(ApiHttpResponse::getBody)
-//                .handle((productSelection, exception) -> {
-//                        if (exception == null) {
-//                            logger.info("Product Selection updated: " + productSelection.getId()); return productSelection;
-//                        };
-//                        logger.error("Exception while adding product: " + exception.getMessage());
-//                        return null;
+//                .thenAccept(productSelectionApiHttpResponse ->
+//                        logger.info("Product Selection updated: " + productSelectionApiHttpResponse.getBody().getId())
+//                )
+//                .exceptionally(throwable -> {
+//                    logger.error("Exception: {}", throwable.getMessage());
+//                    return null;
 //                });
 
 //        // TODO Get products in a product selection
 //        productSelectionService.getProductsInProductSelection(productSelectionKey)
 //                .thenApply(ApiHttpResponse::getBody)
-//                .handle((productReferences, exception) -> {
-//                    if (exception == null) {
+//                .thenAccept(productReferences -> {
 //                        productReferences.getResults().forEach(assignedProductReference ->
 //                            logger.info(assignedProductReference.getProduct().getObj().getKey())
 //                        );
-//                        return null;
 //                    }
-//                    logger.error("Exception: " + exception.getMessage());
+//                )
+//                .exceptionally(throwable -> {
+//                    logger.error("Exception: {}", throwable.getMessage());
 //                    return null;
-//                }).thenRun(() -> client.close());
-
+//                }).join();
+        }
     }
 }

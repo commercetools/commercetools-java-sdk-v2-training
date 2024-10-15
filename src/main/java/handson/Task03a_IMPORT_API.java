@@ -2,6 +2,8 @@ package handson;
 
 
 import com.commercetools.importapi.client.ProjectApiRoot;
+import com.commercetools.importapi.models.common.Money;
+import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.commercetools.importapi.models.importsummaries.OperationStates;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ImportService;
@@ -24,105 +26,78 @@ public class Task03a_IMPORT_API {
         //  Provide a container key
         //
         final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
-        Logger logger = LoggerFactory.getLogger("commercetools");
+        try (ProjectApiRoot client = createImportApiClient(apiImportClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        final String containerKey = "nd-berlin-store-prices";
+            final String containerKey = "nd-berlin-store-prices";
 
+            final ImportService importService = new ImportService(client);
 
-        final ProjectApiRoot client = createImportApiClient(apiImportClientPrefix);
-        final ImportService importService = new ImportService(client);
+            // TODO
+            //  CREATE an import container
+            //  CREATE a customers import request
+            //  CHECK the status of your import requests
 
-
-        // TODO
-        //  CREATE an import container
-        //  CREATE a price import request
-        //  CHECK the status of your import requests
-
-//        importService.createImportContainer(containerKey)
-//            .thenApply(ApiHttpResponse::getBody)
-//            .handle((importContainer, exception) -> {
-//                if (exception == null) {
-//                    logger.info("Created import container {} ", importContainer.getKey());
-//                    return importContainer;
-//                };
-//                logger.error("Exception: " + exception.getMessage());
-//                return null;
-//            }).thenRun(() -> client.close());
-//
-
-//        importService.importCustomersFromCsv(
-//            containerKey,
-//            "customers.csv"
-//        )
-//            .thenApply(ApiHttpResponse::getBody)
-//            .handle((response, exception) -> {
-//                if (exception == null) {
-//                    logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
-//                    return response;
-//                };
-//                logger.error("Exception: " + exception.getMessage());
-//                return null;
-//            }).thenRun(() -> client.close());
+            importService.createImportContainer(containerKey)
+                .thenApply(ApiHttpResponse::getBody)
+                    .thenAccept(importContainer -> {
+                        logger.info("Created import container {} ", importContainer.getKey());
+                    }
+                )
+                .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
 
 
-
-//        client
-//            .importContainers()
-//            .get().execute()
-//            .thenApply(ApiHttpResponse::getBody)
-//            .handle((response, exception) -> {
-//                if (exception == null) {
-//                    logger.info("Total containers in our project: {}", response.getTotal());
-//                    return response;
-//                };
-//                logger.error("Exception: " + exception.getMessage());
-//                return null;
-//            }).thenRun(() -> client.close());
-
-        client
-            .importContainers().withImportContainerKeyValue(containerKey)
-            .importSummaries()
-            .get().execute()
-            .thenApply(ApiHttpResponse::getBody)
-            .handle((importSummary, exception) -> {
-                if (exception == null) {
-                    OperationStates states = importSummary.getStates();
-                    logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
-                        states.getProcessing(),
-                        states.getImported(),
-                        states.getUnresolved(),
-                        states.getRejected(),
-                        states.getValidationFailed()
-                    );
-                    return importSummary;
-                };
-                logger.error("Exception: " + exception.getMessage());
-                return null;
-            }).thenRun(() -> client.close());
+            importService.importCustomersFromCsv(
+                containerKey,
+                "customers.csv"
+            )
+                .thenApply(ApiHttpResponse::getBody)
+                .thenAccept(response -> {
+                            logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
+                        }
+                )
+                .exceptionally(throwable -> {
+                    logger.error("Exception: {}", throwable.getMessage());
+                    return null;
+                }).join();
 
 
-//        Money amount = MoneyBuilder.of()
-//            .currencyCode("EUR")
-//            .centAmount(3412L)
-//            .build();
-//
-//
-//        importService.createPriceImportRequest(
-//            containerKey,
-//            "tulip-seed-product",
-//            "tulip-seed-box",
-//            "TulipSeed01Price01",
-//            amount
-//        )
-//            .thenApply(ApiHttpResponse::getBody)
-//            .handle((response, exception) -> {
-//                if (exception == null) {
-//                    logger.info("Importing {} price(s) ", response.getOperationStatus().size());
-//                    return response;
-//                };
-//                logger.error("Exception: " + exception.getMessage());
-//                return null;
-//            }).thenRun(() -> client.close());
+            client
+                .importContainers()
+                .get().execute()
+                .thenAccept(responseApiHttpResponse -> {
+                        logger.info("Total containers in our project: {}", responseApiHttpResponse.getBody().getTotal());
+                    }
+                )
+                .exceptionally(throwable -> {
+                    logger.error("Exception: {}", throwable.getMessage());
+                    return null;
+                }).join();
+
+                client
+                        .importContainers().withImportContainerKeyValue(containerKey)
+                        .importSummaries()
+                        .get().execute()
+                        .thenAccept(importSummaryApiHttpResponse -> {
+                                OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
+                                logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
+                                        states.getProcessing(),
+                                        states.getImported(),
+                                        states.getUnresolved(),
+                                        states.getRejected(),
+                                        states.getValidationFailed()
+                                );
+                            }
+                        )
+                        .exceptionally(throwable -> {
+                            logger.error("Exception: {}", throwable.getMessage());
+                            return null;
+                        }).join();
+
+        }
     }
 }
 

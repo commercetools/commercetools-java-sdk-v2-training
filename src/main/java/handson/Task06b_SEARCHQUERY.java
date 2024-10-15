@@ -21,63 +21,74 @@ public class Task06b_SEARCHQUERY {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        Logger logger = LoggerFactory.getLogger("commercetools");
+            final String storeKey = getStoreKey(apiClientPrefix);
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-
-        final String storeKey = getStoreKey(apiClientPrefix);
-
-        logger.info("Today's orders: " +
-            client
-                .orders()
-                .search()
+            logger.info("Today's orders: " +
+                client
+                    .orders()
+                    .search()
                     .post(
-                            r -> r.withQuery(
-                                    q -> q.and(
-                                            a -> a.addAnd(pa -> pa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
-                                                    .addAnd(pa -> pa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3H")))
+                        orderSearchRequestBuilder -> orderSearchRequestBuilder
+                            .withQuery(
+                                orderSearchQueryBuilder -> orderSearchQueryBuilder
+                                    .dateRange(orderSearchDateRangeValueBuilder -> orderSearchDateRangeValueBuilder
+                                        .field("createdAt")
+                                        .gte(LocalDate.now(ZoneId.of("CET")).atStartOfDay(ZoneId.of("CET")))
                                     )
                             )
-
-
                     )
-                .executeBlocking()
-                .getBody().getTotal()
-        );
+                    .executeBlocking()
+                    .getBody().getTotal()
+            );
 
-        logger.info("Today's orders: " +
-                        client
-                                .orders()
-                                .search()
-                                .post(
-                                        r -> r.withQuery(
-                                                q -> q.and(
+            logger.info("Orders with a particular SKU: " +
+                    client
+                            .orders()
+                            .search()
+                            .post(
+                                    r -> r.withQuery(q -> q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
+                            )
+                            .executeBlocking()
+                            .getBody().getTotal()
+            );
+
+            logger.info("orders: " +
+                    client
+                            .orders()
+                            .search()
+                            .post(
+                                    r -> r.withQuery(
+                                            q -> q.and(
+                                                    a -> a.addAnd(aa -> aa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
+                                                        .addAnd(aa -> aa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3H")))
+                                            )
+                                    )
+
+
+                            )
+                            .executeBlocking()
+                            .getBody().getTotal()
+            );
+
+            logger.info("Orders with SKUs: " +
+                    client
+                            .orders()
+                            .search()
+                            .post(
+                                    r -> r.withQuery(
+                                            q -> q.and(
                                                     q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
-                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
-                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
-                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
-                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3H"))
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000FHAK")),
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000FHAL"))
                                                 )
-                                        )
-
-
-                                )
-                                .executeBlocking()
-                                .getBody().getTotal()
-        );
-
-        logger.info("Orders with a particular SKU: " +
-                client
-                        .orders()
-                        .search()
-                        .post(
-                                r -> r.withQuery(q -> q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
-                        )
-                        .executeBlocking()
-                        .getBody().getTotal()
-        );
-
-        client.close();
+                                    )
+                            )
+                            .executeBlocking()
+                            .getBody().getTotal()
+            );
+        }
     }
 }

@@ -23,72 +23,76 @@ public class Task04c_STATEMACHINE {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
+            final StateMachineService stateMachineService = new StateMachineService(client);
 
-        Logger logger = LoggerFactory.getLogger("commercetools");
+            // TODO Use StateMachineService.java to create your designed order state machine
+            //
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        final StateMachineService stateMachineService = new StateMachineService(client);
-
-        // TODO Use StateMachineService.java to create your designed order state machine
-        //
-
-        stateMachineService.createState(
-            "mhOrderPacked",
-            StateTypeEnum.ORDER_STATE,
-            true,
-            "MH Order Packed"
-        )
-        .exceptionally( throwable -> {
-            logger.error("Exception: " + throwable.getMessage());
-            try {
-                return stateMachineService.getStateByKey("mhOrderPacked1").get();
-            }
-            catch (Exception e){client.close();logger.error(e.getMessage());return null;}
-        })
-        .thenCombineAsync(
             stateMachineService.createState(
-                "mhOrderShipped",
-                StateTypeEnum.ORDER_STATE,
-                false,
-                "MH Order Shipped"
-            )
-            .exceptionally( throwable -> {
-                logger.error("Exception: " + throwable.getMessage());
-                try {
-                    return stateMachineService.getStateByKey("mhOrderShipped").get();
-                }
-                catch (Exception e){client.close();logger.error(e.getMessage());return null;}
-            }),
-            (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
-                stateMachineService.setStateTransitions(
-                    orderShippedStateApiResponse.getBody(),
-                    new ArrayList<>()
-                )
-                .thenComposeAsync(apiHttpResponse ->
-                    stateMachineService.setStateTransitions(
-                        orderPackedStateApiResponse.getBody(),
-                        Stream.of(
-                            StateResourceIdentifierBuilder.of().
-                                id(orderShippedStateApiResponse.getBody().getId())
-                                .build()
-                            )
-                            .collect(Collectors.toList())
+                            "mhOrderPacked",
+                            StateTypeEnum.ORDER_STATE,
+                            true,
+                            "MH Order Packed"
                     )
-                )
-        )
-        .get()
-        .thenApply(ApiHttpResponse::getBody)
-        .handle((state, exception) -> {
-            if (exception == null) {
-                logger.info("Initial state key {}", state.getKey());
-                return state;
-            };
-            logger.error("Exception: " + exception.getMessage());
-            return null;
-        })
-        .thenRun(() -> client.close());
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: " + throwable.getMessage());
+                        try {
+                            return stateMachineService.getStateByKey("mhOrderPacked1").get();
+                        } catch (Exception e) {
+                            client.close();
+                            logger.error(e.getMessage());
+                            return null;
+                        }
+                    })
+                    .thenCombineAsync(
+                            stateMachineService.createState(
+                                            "mhOrderShipped",
+                                            StateTypeEnum.ORDER_STATE,
+                                            false,
+                                            "MH Order Shipped"
+                                    )
+                                    .exceptionally(throwable -> {
+                                        logger.error("Exception: " + throwable.getMessage());
+                                        try {
+                                            return stateMachineService.getStateByKey("mhOrderShipped").get();
+                                        } catch (Exception e) {
+                                            client.close();
+                                            logger.error(e.getMessage());
+                                            return null;
+                                        }
+                                    }),
+                            (orderPackedStateApiResponse, orderShippedStateApiResponse) ->
+                                    stateMachineService.setStateTransitions(
+                                                    orderShippedStateApiResponse.getBody(),
+                                                    new ArrayList<>()
+                                            )
+                                            .thenComposeAsync(apiHttpResponse ->
+                                                    stateMachineService.setStateTransitions(
+                                                            orderPackedStateApiResponse.getBody(),
+                                                            Stream.of(
+                                                                            StateResourceIdentifierBuilder.of().
+                                                                                    id(orderShippedStateApiResponse.getBody().getId())
+                                                                                    .build()
+                                                                    )
+                                                                    .collect(Collectors.toList())
+                                                    )
+                                            )
+                    )
+                    .get()
+                    .thenApply(ApiHttpResponse::getBody)
+                    .thenAccept(state -> {
+                                logger.info("Initial state key {}", state.getKey());
+                            }
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
 
-        // TODO Create an order in the Merchant Center and verify that custom workflow states are available
-        //
+            // TODO Create an order in the Merchant Center and verify that custom workflow states are available
+            //
+        }
     }
 }
