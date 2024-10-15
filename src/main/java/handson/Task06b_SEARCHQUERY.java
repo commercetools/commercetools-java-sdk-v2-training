@@ -28,23 +28,44 @@ public class Task06b_SEARCHQUERY {
 
         final String storeKey = getStoreKey(apiClientPrefix);
 
-//        logger.info("Today's orders: " +
-//            client
-//                .orders()
-//                .search()
-//                .post(
-//                    orderSearchRequestBuilder -> orderSearchRequestBuilder
-//                        .withQuery(
-//                            orderSearchQueryBuilder -> orderSearchQueryBuilder
-//                                .dateRange(orderSearchDateRangeValueBuilder -> orderSearchDateRangeValueBuilder
-//                                    .field("createdAt")
-//                                    .gte(LocalDate.now(ZoneId.of("CET")).atStartOfDay(ZoneId.of("CET")))
-//                                )
-//                        )
-//                )
-//                .executeBlocking()
-//                .getBody().getTotal()
-//        );
+        logger.info("Today's orders: " +
+            client
+                .orders()
+                .search()
+                    .post(
+                            r -> r.withQuery(
+                                    q -> q.and(
+                                            a -> a.addAnd(pa -> pa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
+                                                    .addAnd(pa -> pa.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3H")))
+                                    )
+                            )
+
+
+                    )
+                .executeBlocking()
+                .getBody().getTotal()
+        );
+
+        logger.info("Today's orders: " +
+                        client
+                                .orders()
+                                .search()
+                                .post(
+                                        r -> r.withQuery(
+                                                q -> q.and(
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")),
+                                                    q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3H"))
+                                                )
+                                        )
+
+
+                                )
+                                .executeBlocking()
+                                .getBody().getTotal()
+        );
 
         logger.info("Orders with a particular SKU: " +
                 client
