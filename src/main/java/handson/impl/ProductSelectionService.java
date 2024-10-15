@@ -2,14 +2,10 @@ package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedStringBuilder;
-import com.commercetools.api.models.product.ProductResourceIdentifierBuilder;
-import com.commercetools.api.models.product_selection.*;
-import com.commercetools.api.models.store.*;
+import com.commercetools.api.models.product_selection.ProductSelection;
+import com.commercetools.api.models.product_selection.ProductSelectionProductPagedQueryResponse;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,38 +36,19 @@ public class ProductSelectionService {
     }
 
     /**
-     * Gets a store by key.
-     *
-     * @return the store completion stage
-     */
-    public CompletableFuture<ApiHttpResponse<Store>> getStoreByKey(final String storeKey) {
-        return
-            apiRoot
-                .stores()
-                .withKey(storeKey)
-                .get()
-                .execute();
-    }
-
-    /**
      * Creates a new product selection.
      *
      * @return the product selection creation completion stage
      */
-    public CompletableFuture<ApiHttpResponse<ProductSelection>> createProductSelection(final String productSelectionKey, final String name) {
-        Map<String, String> psNames = new HashMap<String, String>() {
-            {
-                put("DE", name);
-                put("EN", name);
-            }
-        };
+    public CompletableFuture<ApiHttpResponse<ProductSelection>> createProductSelection(final String productSelectionKey, Map<String, String> psName) {
+
         return
             apiRoot
                 .productSelections()
                 .post(
                     productSelectionDraftBuilder -> productSelectionDraftBuilder
                         .key(productSelectionKey)
-                        .name(LocalizedStringBuilder.of().values(psNames).build())
+                        .name(LocalizedStringBuilder.of().values(psName).build())
                 )
                 .execute();
     }
@@ -97,27 +74,7 @@ public class ProductSelectionService {
                     .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToStore(
-        final String storeKey,
-        final String productSelectionKey) {
 
-        return
-            getStoreByKey(storeKey).thenComposeAsync(storeApiHttpResponse ->
-                apiRoot
-                .stores()
-                .withKey(storeKey)
-                .post(
-                    storeUpdateBuilder -> storeUpdateBuilder
-                        .version(storeApiHttpResponse.getBody().getVersion())
-                        .plusActions(
-                            storeUpdateActionBuilder -> storeUpdateActionBuilder.addProductSelectionBuilder()
-                                .productSelection(productSelectionResourceIdentifierBuilder -> productSelectionResourceIdentifierBuilder.key(productSelectionKey))
-                                .active(true)
-                        )
-                )
-                .execute()
-            );
-    }
 
     public CompletableFuture<ApiHttpResponse<ProductSelectionProductPagedQueryResponse>> getProductsInProductSelection(
         final String productSelectionKey) {
@@ -132,16 +89,4 @@ public class ProductSelectionService {
                 .execute();
     }
 
-    public CompletableFuture<ApiHttpResponse<ProductsInStorePagedQueryResponse>> getProductsInStore(
-        final String storeKey) {
-
-        return
-            apiRoot
-                .inStore(storeKey)
-                .productSelectionAssignments()
-                .get()
-                .addExpand("product")
-                .addExpand("productSelection")
-                .execute();
-    }
 }

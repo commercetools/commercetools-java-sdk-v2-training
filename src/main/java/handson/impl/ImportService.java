@@ -1,18 +1,19 @@
 package handson.impl;
 
 import com.commercetools.importapi.client.ProjectApiRoot;
-import com.commercetools.importapi.models.common.Money;
-import com.commercetools.importapi.models.common.ProductKeyReferenceBuilder;
-import com.commercetools.importapi.models.common.ProductVariantKeyReferenceBuilder;
+import com.commercetools.importapi.models.common.StoreKeyReferenceBuilder;
+import com.commercetools.importapi.models.customers.CustomerAddressBuilder;
+import com.commercetools.importapi.models.customers.CustomerImport;
+import com.commercetools.importapi.models.customers.CustomerImportBuilder;
 import com.commercetools.importapi.models.importcontainers.ImportContainer;
-import com.commercetools.importapi.models.importcontainers.ImportContainerDraftBuilder;
 import com.commercetools.importapi.models.importrequests.ImportResponse;
-import com.commercetools.importapi.models.importrequests.PriceImportRequest;
-import com.commercetools.importapi.models.importrequests.PriceImportRequestBuilder;
-import com.commercetools.importapi.models.prices.PriceImportBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.Random;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -36,29 +37,56 @@ public class ImportService {
         }
 
 
-    public CompletableFuture<ApiHttpResponse<ImportResponse>> createPriceImportRequest(
+    public CompletableFuture<ApiHttpResponse<ImportResponse>> importCustomersFromCsv(
         final String containerKey,
-        final String productKey,
-        final String productVariantKey,
-        final String priceKey,
-        final Money amount) {
+        final String csvFile) {
 
         return
-            apiRoot
-                .prices()
-                .importContainers()
-                .withImportContainerKeyValue(containerKey)
-                .post(
-                    priceImportRequestBuilder -> priceImportRequestBuilder
-                        .plusResources(
-                            priceImportBuilder -> priceImportBuilder
-                                .key(priceKey)     // key for the Price record
-                                .country("DE")                              // TODO: adjust
-                                .product(productKeyReferenceBuilder -> productKeyReferenceBuilder.key(productKey))
-                                .productVariant(productVariantKeyReferenceBuilder -> productVariantKeyReferenceBuilder.key(productVariantKey))
-                                .value(amount)
+                apiRoot
+                        .customers()
+                        .importContainers()
+                        .withImportContainerKeyValue(containerKey)
+                        .post(
+                                priceImportRequestBuilder -> priceImportRequestBuilder
+                                        .resources(getCustomersImportFromCsv(csvFile))
                         )
-                )
-                .execute();
+                        .execute();
+    }
+
+    private List<CustomerImport> getCustomersImportFromCsv(final String csvFile) {
+        List<CustomerImport> customerImports = new ArrayList<>();
+
+        try {
+            InputStreamReader ioStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(csvFile));
+            BufferedReader br = new BufferedReader(ioStreamReader);
+            String line;
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                List<String> values = Arrays.asList(line.split(","));
+                CustomerImport customerImport = CustomerImportBuilder.of()
+                        .key(values.get(0))
+                        .email(values.get(1))
+                        .password(values.get(2))
+                        .firstName(values.get(3))
+                        .lastName(values.get(4))
+                        .isEmailVerified(Boolean.valueOf(values.get(5)))
+                        .addresses(
+                                CustomerAddressBuilder.of()
+                                        .firstName(values.get(3))
+                                        .lastName(values.get(4))
+                                        .key(values.get(0) + "-home")
+                                        .country(values.get(6))
+                                        .build()
+                        )
+                        .stores(StoreKeyReferenceBuilder.of().key(values.get(7)).build())
+                        .build();
+                customerImports.add(customerImport);
+            }
+            ioStreamReader.close();
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return customerImports;
     }
 }

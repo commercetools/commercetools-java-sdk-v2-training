@@ -9,159 +9,166 @@ import com.commercetools.api.models.order_edit.OrderEdit;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This class provides operations to work with {@link Order}s.
  */
 public class OrderService {
 
-    final ProjectApiRoot apiRoot;
-    final String storeKey;
+        final ProjectApiRoot apiRoot;
+        final String storeKey;
 
-    public OrderService(final ProjectApiRoot client, final String storeKey) {
-        this.apiRoot = client;
-        this.storeKey = storeKey;
-    }
+        public OrderService(final ProjectApiRoot client, final String storeKey) {
+            this.apiRoot = client;
+            this.storeKey = storeKey;
+        }
 
-    public CompletableFuture<ApiHttpResponse<Order>> getOrderById(final String orderId) {
-        return apiRoot
-                .inStore(storeKey)
-                .orders()
-                .withId(orderId)
-                .get()
-                .execute();
-    }
+        public CompletableFuture<ApiHttpResponse<Order>> getOrderById(final String orderId) {
+            return apiRoot
+                    .inStore(storeKey)
+                    .orders()
+                    .withId(orderId)
+                    .get()
+                    .execute();
+        }
+
+        public CompletableFuture<ApiHttpResponse<Order>> getOrderByOrderNumber(final String orderNumber) {
+            return apiRoot
+                    .inStore(storeKey)
+                    .orders()
+                    .withOrderNumber(orderNumber)
+                    .get()
+                    .execute();
+        }
 
         public CompletableFuture<ApiHttpResponse<Order>> createOrder(final Cart cart) {
 
-        return
-            apiRoot
-                .inStore(storeKey)
-                .orders()
-                .post(
-                    orderFromCartDraftBuilder -> orderFromCartDraftBuilder
-                        .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
-                        .version(cart.getVersion())
-                )
-                .execute();
-    }
+            return apiRoot
+                    .inStore(storeKey)
+                    .orders()
+                    .post(
+                            orderFromCartDraftBuilder -> orderFromCartDraftBuilder
+                                    .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
+                                    .version(cart.getVersion())
+                                    .orderNumber("CT" + System.nanoTime())
+                    )
+                    .execute();
+        }
 
 
-    public CompletableFuture<ApiHttpResponse<Order>> changeState(
-            final ApiHttpResponse<Order> orderApiHttpResponse,
-            final OrderState state) {
+        public CompletableFuture<ApiHttpResponse<Order>> changeState(
+                final ApiHttpResponse<Order> orderApiHttpResponse,
+                final OrderState state) {
 
-        Order order = orderApiHttpResponse.getBody();
+                Order order = orderApiHttpResponse.getBody();
 
-        return
-            apiRoot
-                .inStore(storeKey)
-                .orders()
-                .withId(order.getId())
-                .post(
-                    orderUpdateBuilder -> orderUpdateBuilder
-                        .version(order.getVersion())
-                        .plusActions(
-                            orderUpdateActionBuilder -> orderUpdateActionBuilder.changeOrderStateBuilder()
-                                .orderState(state)
-                        )
-                )
-                .execute();
-    }
-
-
-    public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
-            final ApiHttpResponse<Order> orderApiHttpResponse,
-            final String workflowStateKey) {
-
-        Order order = orderApiHttpResponse.getBody();
-
-        return
-            apiRoot
-                .inStore(storeKey)
-                .orders()
-                .withId(order.getId())
-                .post(
-                    orderUpdateBuilder -> orderUpdateBuilder
-                        .version(order.getVersion())
-                        .plusActions(
-                            orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
-                                .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
-                        )
-                )
-                .execute();
-    }
-
-    public CompletableFuture<ApiHttpResponse<OrderEdit>> getOrderEditByKey(
-            final String orderEditKey) {
-
-        return
-            apiRoot
-                .orders()
-                .edits()
-                .withKey(orderEditKey)
-                .get()
-                .withExpand("resource")
-                .execute();
-    }
-
-    public CompletableFuture<ApiHttpResponse<OrderEdit>> createOrderEdit(
-            final ApiHttpResponse<Order> orderApiHttpResponse,
-            final String orderEditKey,
-            final StagedOrderUpdateAction stagedOrderUpdateAction) {
-
-        Order order = orderApiHttpResponse.getBody();
-
-        return
-            apiRoot
-                .orders()
-                .edits()
-                .post(
-                    orderEditDraftBuilder -> orderEditDraftBuilder
-                        .stagedActions(stagedOrderUpdateAction)
-                        .key(orderEditKey)
-                        .resource(orderReferenceBuilder -> orderReferenceBuilder.id(order.getId()))
-                )
-                .execute();
-    }
-
-    public CompletableFuture<ApiHttpResponse<OrderEdit>> applyOrderEdit(
-            final ApiHttpResponse<OrderEdit> orderEditApiHttpResponse) {
-
-        OrderEdit orderEdit = orderEditApiHttpResponse.getBody();
-
-        return
-            apiRoot
-                .orders()
-                .edits()
-                .withId(orderEdit.getId())
-                .apply()
-                .post(
-                    orderEditApplyBuilder -> orderEditApplyBuilder
-                        .editVersion(orderEdit.getVersion())
-                        .resourceVersion(orderEdit.getResource().getObj().getVersion())
-                )
-                .execute();
-    }
-
-    public CompletableFuture<ApiHttpResponse<Order>> changeOrderNumber(
-            final ApiHttpResponse<Order> orderApiHttpResponse) {
-
-        Order order = orderApiHttpResponse.getBody();
-
-        return
-                apiRoot
+                return apiRoot
+                        .inStore(storeKey)
                         .orders()
                         .withId(order.getId())
                         .post(
                                 orderUpdateBuilder -> orderUpdateBuilder
                                         .version(order.getVersion())
-                                        .plusActions(orderUpdateActionBuilder -> orderUpdateActionBuilder
-                                                .setOrderNumberBuilder()
-                                                .orderNumber(""))
+                                        .plusActions(
+                                                orderUpdateActionBuilder -> orderUpdateActionBuilder.changeOrderStateBuilder()
+                                                        .orderState(state)
+                                )
                         )
                         .execute();
-    }
+        }
+
+
+        public CompletableFuture<ApiHttpResponse<Order>> changeWorkflowState(
+                final ApiHttpResponse<Order> orderApiHttpResponse,
+                final String workflowStateKey) {
+
+            Order order = orderApiHttpResponse.getBody();
+
+            return
+                apiRoot
+                    .inStore(storeKey)
+                    .orders()
+                    .withId(order.getId())
+                    .post(
+                        orderUpdateBuilder -> orderUpdateBuilder
+                            .version(order.getVersion())
+                            .plusActions(
+                                orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
+                                    .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
+                            )
+                    )
+                    .execute();
+        }
+
+        public CompletableFuture<ApiHttpResponse<OrderEdit>> getOrderEditByKey(
+                final String orderEditKey) {
+
+            return
+                apiRoot
+                    .orders()
+                    .edits()
+                    .withKey(orderEditKey)
+                    .get()
+                    .withExpand("resource")
+                    .execute();
+        }
+
+        public CompletableFuture<ApiHttpResponse<OrderEdit>> createOrderEdit(
+                final ApiHttpResponse<Order> orderApiHttpResponse,
+                final String orderEditKey,
+                final StagedOrderUpdateAction stagedOrderUpdateAction) {
+
+            Order order = orderApiHttpResponse.getBody();
+
+            return
+                apiRoot
+                    .orders()
+                    .edits()
+                    .post(
+                        orderEditDraftBuilder -> orderEditDraftBuilder
+                            .stagedActions(stagedOrderUpdateAction)
+                            .key(orderEditKey)
+                            .resource(orderReferenceBuilder -> orderReferenceBuilder.id(order.getId()))
+                    )
+                    .execute();
+        }
+
+        public CompletableFuture<ApiHttpResponse<OrderEdit>> applyOrderEdit(
+                final ApiHttpResponse<OrderEdit> orderEditApiHttpResponse) {
+
+            OrderEdit orderEdit = orderEditApiHttpResponse.getBody();
+
+            return
+                apiRoot
+                    .orders()
+                    .edits()
+                    .withId(orderEdit.getId())
+                    .apply()
+                    .post(
+                        orderEditApplyBuilder -> orderEditApplyBuilder
+                            .editVersion(orderEdit.getVersion())
+                            .resourceVersion(orderEdit.getResource().getObj().getVersion())
+                    )
+                    .execute();
+        }
+
+        public CompletableFuture<ApiHttpResponse<Order>> changeOrderNumber(
+                final ApiHttpResponse<Order> orderApiHttpResponse) {
+
+            Order order = orderApiHttpResponse.getBody();
+
+            return
+                    apiRoot
+                            .orders()
+                            .withId(order.getId())
+                            .post(
+                                    orderUpdateBuilder -> orderUpdateBuilder
+                                            .version(order.getVersion())
+                                            .plusActions(orderUpdateActionBuilder -> orderUpdateActionBuilder
+                                                    .setOrderNumberBuilder()
+                                                    .orderNumber(""))
+                            )
+                            .execute();
+        }
 
 }

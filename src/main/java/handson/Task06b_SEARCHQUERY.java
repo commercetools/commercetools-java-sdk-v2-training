@@ -1,6 +1,7 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.order.*;
 import handson.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
@@ -26,22 +28,33 @@ public class Task06b_SEARCHQUERY {
 
         final String storeKey = getStoreKey(apiClientPrefix);
 
-        logger.info("Today's orders: " +
-            client
-                .orders()
-                .search()
-                .post(
-                    orderSearchRequestBuilder -> orderSearchRequestBuilder
-                        .withQuery(
-                            orderSearchQueryBuilder -> orderSearchQueryBuilder
-                                .dateRange(orderSearchDateRangeValueBuilder -> orderSearchDateRangeValueBuilder
-                                    .field("createdAt")
-                                    .gte(LocalDate.now(ZoneId.of("CET")).atStartOfDay(ZoneId.of("CET")))
-                                )
+//        logger.info("Today's orders: " +
+//            client
+//                .orders()
+//                .search()
+//                .post(
+//                    orderSearchRequestBuilder -> orderSearchRequestBuilder
+//                        .withQuery(
+//                            orderSearchQueryBuilder -> orderSearchQueryBuilder
+//                                .dateRange(orderSearchDateRangeValueBuilder -> orderSearchDateRangeValueBuilder
+//                                    .field("createdAt")
+//                                    .gte(LocalDate.now(ZoneId.of("CET")).atStartOfDay(ZoneId.of("CET")))
+//                                )
+//                        )
+//                )
+//                .executeBlocking()
+//                .getBody().getTotal()
+//        );
+
+        logger.info("Orders with a particular SKU: " +
+                client
+                        .orders()
+                        .search()
+                        .post(
+                                r -> r.withQuery(q -> q.exact(e -> e.field("lineItems.variant.sku").value("M0E20000000DG3P")))
                         )
-                )
-                .executeBlocking()
-                .getBody().getTotal()
+                        .executeBlocking()
+                        .getBody().getTotal()
         );
 
         client.close();

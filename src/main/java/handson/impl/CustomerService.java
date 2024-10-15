@@ -1,14 +1,15 @@
 package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
+import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
+import com.commercetools.api.models.common.AddressDraft;
 import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.customer_group.CustomerGroup;
-import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
-import com.commercetools.api.models.store.StoreResourceIdentifier;
-import com.commercetools.api.models.store.StoreResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -32,6 +33,24 @@ public class CustomerService {
                         .withKey(customerKey)
                         .get()
                         .execute();
+    }
+
+    public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> createCustomer(
+            final String email,
+            final String password,
+            final String anonymousCartId) {
+
+        return apiRoot
+            .inStore(storeKey)
+                .customers()
+                .post(
+                        customerDraftBuilder -> customerDraftBuilder
+                                .email(email)
+                                .password(password)
+                                .key("ct-" + System.nanoTime())
+                                .anonymousCart(CartResourceIdentifierBuilder.of().id(anonymousCartId).build())
+                )
+                .execute();
     }
 
     public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> createCustomer(
@@ -63,6 +82,40 @@ public class CustomerService {
                     .defaultShippingAddress(0)
 //                    .stores(StoreResourceIdentifierBuilder.of().key(storeKey).build())
                 )
+                .execute();
+    }
+
+    public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> loginCustomer(
+            final String customerEmail,
+            final String password) {
+        CustomerSignin customerSignin = CustomerSigninBuilder.of()
+                .email(customerEmail)
+                .password(password)
+                .build();
+        return apiRoot
+                .inStore(storeKey)
+                .login()
+                .post(customerSignin)
+                .execute();
+    }
+
+    public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> loginCustomer(
+            final String customerEmail,
+            final String password,
+            final String anonymousCartId,
+            final AnonymousCartSignInMode anonymousCartSignInMode) {
+        CustomerSignin customerSignin = CustomerSigninBuilder.of()
+                .email(customerEmail)
+                .password(password)
+                .anonymousCart(CartResourceIdentifierBuilder.of()
+                        .id(anonymousCartId)
+                        .build())
+                .anonymousCartSignInMode(anonymousCartSignInMode)
+                .build();
+        return apiRoot
+                .inStore(storeKey)
+                .login()
+                .post(customerSignin)
                 .execute();
     }
 
@@ -162,6 +215,38 @@ public class CustomerService {
                     )
                     .execute()
             );
+    }
+
+    public CompletableFuture<ApiHttpResponse<Customer>> addAddressToCustomer(
+            final String customerKey,
+            final Address address) {
+
+        return getCustomerByKey(customerKey)
+                .thenComposeAsync(customerApiHttpResponse ->
+                        apiRoot
+                                .inStore(storeKey)
+                                .customers()
+                                .withKey(customerKey)
+                                .post(
+                                        CustomerUpdateBuilder.of()
+                                                .actions(
+                                                        Arrays.asList(
+                                                                CustomerAddAddressActionBuilder.of()
+                                                                        .address(address)
+                                                                        .build(),
+                                                                CustomerSetDefaultBillingAddressActionBuilder.of()
+                                                                        .addressKey(address.getKey())
+                                                                        .build(),
+                                                                CustomerSetDefaultShippingAddressActionBuilder.of()
+                                                                        .addressKey(address.getKey())
+                                                                        .build()
+                                                        )
+                                                )
+                                                .version(customerApiHttpResponse.getBody().getVersion())
+                                                .build()
+                                )
+                                .execute()
+                );
     }
 
 }

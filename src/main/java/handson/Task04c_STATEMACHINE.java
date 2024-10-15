@@ -1,7 +1,6 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.state.State;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import com.commercetools.api.models.state.StateTypeEnum;
 import handson.impl.ApiPrefixHelper;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,7 +18,7 @@ import java.util.stream.Stream;
 import static handson.impl.ClientService.createApiClient;
 
 
-public class Task04a_STATEMACHINE {
+public class Task04c_STATEMACHINE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 

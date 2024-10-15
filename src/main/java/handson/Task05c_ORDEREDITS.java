@@ -29,48 +29,50 @@ public class Task05c_ORDEREDITS {
 
         final String storeKey = getStoreKey(apiClientPrefix);
         OrderService orderService = new OrderService(client, storeKey);
-        final String supplyChannelKey = "inventory-channel";
-        final String distChannelKey = "distribution-channel";
+        final String supplyChannelKey = "sunrise-store-boston-1";
+        final String distChannelKey = "sunrise-store-boston-1";
 
-        final String orderId = "e85cd198-5254-4679-abaa-b6fc7b59abd1";
+        final String orderNumber = "CT253979954003083";
+        final String orderEditKey = "CTOE-256247340086500";
 
-        // TODO: Create and Apply an Order Edit
-
-        final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
-                    .addLineItemBuilder()
-                    .sku("CCM-089")
-                    .supplyChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(supplyChannelKey))
-                    .distributionChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(distChannelKey))
-                .build();
-
-        orderService.getOrderById(orderId)
-            .thenComposeAsync(orderApiHttpResponse -> orderService.createOrderEdit(
-                    orderApiHttpResponse,
-                    "mh-orderedit",
-                    stagedOrderUpdateAction))
-                .thenApply(ApiHttpResponse::getBody)
-                .handle((orderEdit, exception) -> {
-                    if (exception == null) {
-                        logger.info("orderEdit created {}", orderEdit.getResult().getType());
-                        return orderEdit;
-                    }
-                    logger.error("Exception: " + exception.getMessage());
-                    return null;
-                }).thenRun(() -> client.close());
-
-//           //  TODO: Apply OrderEdit
-//            orderService.getOrderEditByKey("mh-orderedit")
-//                .thenComposeAsync(orderEditApiHttpResponse -> orderService.applyOrderEdit(orderEditApiHttpResponse))
-//                    .thenApply(ApiHttpResponse::getBody)
-//                    .handle((orderEdit, exception) -> {
-//                        if (exception == null) {
-//                            logger.info("orderEdit created {}", orderEdit.getResult().getType());
+//        // TODO: Create and Apply an Order Edit
+//
+//        final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
+//                    .addLineItemBuilder()
+//                    .sku("M0E20000000FHAP")
+//                    .supplyChannel(channelResourceIdentifierBuilder ->
+//                            channelResourceIdentifierBuilder.key(supplyChannelKey))
+//                    .distributionChannel(channelResourceIdentifierBuilder ->
+//                            channelResourceIdentifierBuilder.key(distChannelKey))
+//                .build();
+//
+//        orderService.getOrderByOrderNumber(orderNumber)
+//            .thenComposeAsync(orderApiHttpResponse ->
+//                    orderService.createOrderEdit(
+//                        orderApiHttpResponse,
+//                        "CTOE-" + System.nanoTime(),
+//                        stagedOrderUpdateAction))
+//            .thenApply(ApiHttpResponse::getBody)
+//            .handle((orderEdit, exception) -> {
+//                    if (exception == null) {
+//                            logger.info("orderEdit {} created with {} type", orderEdit.getKey(), orderEdit.getResult().getType());
 //                            return orderEdit;
-//                        }
-//                        logger.error("Exception: " + exception.getMessage());
-//                        return null;
-//                    }).thenRun(() -> client.close());
+//                    }
+//                    logger.error("Exception: " + exception.getMessage());
+//                    return null;
+//            }).thenRun(() -> client.close());
+
+           //  TODO: Apply OrderEdit
+            orderService.getOrderEditByKey(orderEditKey)
+                .thenComposeAsync(orderService::applyOrderEdit)
+                    .thenApply(ApiHttpResponse::getBody)
+                    .handle((orderEdit, exception) -> {
+                        if (exception == null) {
+                            logger.info("orderEdit applied {}", orderEdit.getResult().getType());
+                            return orderEdit;
+                        }
+                        logger.error("Exception: " + exception.getMessage());
+                        return null;
+                    }).thenRun(client::close);
     }
 }

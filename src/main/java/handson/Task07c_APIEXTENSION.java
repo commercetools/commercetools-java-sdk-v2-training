@@ -27,18 +27,12 @@ public class Task07c_APIEXTENSION {
             .extensions()
             .post(
                 extensionDraftBuilder -> extensionDraftBuilder
-                    .key("mhCustomerBlocker")
+                    .key("mhExtension")
                     .destination(
                         // for GCP Cloud functions
                         HttpDestinationBuilder.of()
                             .url("https://europe-west3-ct-support.cloudfunctions.net/training-extensions-sample")
                             .build()
-                        //for AWS Lambda functions
-//                        ExtensionAWSLambdaDestinationBuilder.of()
-//                            .arn("arn:aws:lambda:eu-central-1:923270384842:function:training-customer-check")
-//                            .accessKey("AKIAJLJRDGBNBIPY2ZHQ")
-//                            .accessSecret("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")
-//                            .build()
                     )
                     .addTriggers(extensionTriggerBuilder -> extensionTriggerBuilder
                         .resourceTypeId(ExtensionResourceTypeId.ORDER)

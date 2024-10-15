@@ -2,8 +2,6 @@ package handson;
 
 
 import com.commercetools.importapi.client.ProjectApiRoot;
-import com.commercetools.importapi.models.common.Money;
-import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.commercetools.importapi.models.importsummaries.OperationStates;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ImportService;
@@ -17,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import static handson.impl.ClientService.createImportApiClient;
 
 
-public class Task03b_IMPORT_API {
+public class Task03a_IMPORT_API {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
@@ -28,7 +26,7 @@ public class Task03b_IMPORT_API {
         final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
         Logger logger = LoggerFactory.getLogger("commercetools");
 
-        final String containerKey = "mh-berlin-store-prices";
+        final String containerKey = "nd-berlin-store-prices";
 
 
         final ProjectApiRoot client = createImportApiClient(apiImportClientPrefix);
@@ -40,34 +38,26 @@ public class Task03b_IMPORT_API {
         //  CREATE a price import request
         //  CHECK the status of your import requests
 
-        importService.createImportContainer(containerKey)
-            .thenApply(ApiHttpResponse::getBody)
-            .handle((importContainer, exception) -> {
-                if (exception == null) {
-                    logger.info("Created import container {} ", importContainer.getKey());
-                    return importContainer;
-                };
-                logger.error("Exception: " + exception.getMessage());
-                return null;
-            }).thenRun(() -> client.close());
+//        importService.createImportContainer(containerKey)
+//            .thenApply(ApiHttpResponse::getBody)
+//            .handle((importContainer, exception) -> {
+//                if (exception == null) {
+//                    logger.info("Created import container {} ", importContainer.getKey());
+//                    return importContainer;
+//                };
+//                logger.error("Exception: " + exception.getMessage());
+//                return null;
+//            }).thenRun(() -> client.close());
+//
 
-//        Money amount = MoneyBuilder.of()
-//            .currencyCode("EUR")
-//            .centAmount(3412L)
-//            .build();
-//
-//
-//        importService.createPriceImportRequest(
+//        importService.importCustomersFromCsv(
 //            containerKey,
-//            "tulip-seed-product",
-//            "tulip-seed-box",
-//            "TulipSeed01Price01",
-//            amount
+//            "customers.csv"
 //        )
 //            .thenApply(ApiHttpResponse::getBody)
 //            .handle((response, exception) -> {
 //                if (exception == null) {
-//                    logger.info("Importing {} price(s) ", response.getOperationStatus().size());
+//                    logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
 //                    return response;
 //                };
 //                logger.error("Exception: " + exception.getMessage());
@@ -89,20 +79,46 @@ public class Task03b_IMPORT_API {
 //                return null;
 //            }).thenRun(() -> client.close());
 
-//        client
-//            .importContainers().withImportContainerKeyValue(containerKey)
-//            .importSummaries()
-//            .get().execute()
+        client
+            .importContainers().withImportContainerKeyValue(containerKey)
+            .importSummaries()
+            .get().execute()
+            .thenApply(ApiHttpResponse::getBody)
+            .handle((importSummary, exception) -> {
+                if (exception == null) {
+                    OperationStates states = importSummary.getStates();
+                    logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
+                        states.getProcessing(),
+                        states.getImported(),
+                        states.getUnresolved(),
+                        states.getRejected(),
+                        states.getValidationFailed()
+                    );
+                    return importSummary;
+                };
+                logger.error("Exception: " + exception.getMessage());
+                return null;
+            }).thenRun(() -> client.close());
+
+
+//        Money amount = MoneyBuilder.of()
+//            .currencyCode("EUR")
+//            .centAmount(3412L)
+//            .build();
+//
+//
+//        importService.createPriceImportRequest(
+//            containerKey,
+//            "tulip-seed-product",
+//            "tulip-seed-box",
+//            "TulipSeed01Price01",
+//            amount
+//        )
 //            .thenApply(ApiHttpResponse::getBody)
-//            .handle((importSummary, exception) -> {
+//            .handle((response, exception) -> {
 //                if (exception == null) {
-//                    OperationStates states = importSummary.getStates();
-//                    logger.info("Processing: {} Imported: {} Unresolved: {} ",
-//                        states.getProcessing(),
-//                        states.getImported(),
-//                        states.getUnresolved()
-//                    );
-//                    return importSummary;
+//                    logger.info("Importing {} price(s) ", response.getOperationStatus().size());
+//                    return response;
 //                };
 //                logger.error("Exception: " + exception.getMessage());
 //                return null;
