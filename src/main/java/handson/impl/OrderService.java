@@ -43,16 +43,7 @@ public class OrderService {
 
         public CompletableFuture<ApiHttpResponse<Order>> createOrder(final Cart cart) {
 
-            return apiRoot
-                    .inStore(storeKey)
-                    .orders()
-                    .post(
-                            orderFromCartDraftBuilder -> orderFromCartDraftBuilder
-                                    .cart(cartResourceIdentifierBuilder -> cartResourceIdentifierBuilder.id(cart.getId()))
-                                    .version(cart.getVersion())
-                                    .orderNumber("CT" + System.nanoTime())
-                    )
-                    .execute();
+            return null;
         }
 
 
@@ -82,22 +73,7 @@ public class OrderService {
                 final ApiHttpResponse<Order> orderApiHttpResponse,
                 final String workflowStateKey) {
 
-            Order order = orderApiHttpResponse.getBody();
-
-            return
-                apiRoot
-                    .inStore(storeKey)
-                    .orders()
-                    .withId(order.getId())
-                    .post(
-                        orderUpdateBuilder -> orderUpdateBuilder
-                            .version(order.getVersion())
-                            .plusActions(
-                                orderUpdateActionBuilder -> orderUpdateActionBuilder.transitionStateBuilder()
-                                    .state(stateResourceIdentifierBuilder -> stateResourceIdentifierBuilder.key(workflowStateKey))
-                            )
-                    )
-                    .execute();
+            return null;
         }
 
         public CompletableFuture<ApiHttpResponse<OrderEdit>> getOrderEditByKey(
@@ -136,23 +112,10 @@ public class OrderService {
         public CompletableFuture<ApiHttpResponse<OrderEdit>> applyOrderEdit(
                 final ApiHttpResponse<OrderEdit> orderEditApiHttpResponse) {
 
-            OrderEdit orderEdit = orderEditApiHttpResponse.getBody();
-
-            return
-                apiRoot
-                    .orders()
-                    .edits()
-                    .withId(orderEdit.getId())
-                    .apply()
-                    .post(
-                        orderEditApplyBuilder -> orderEditApplyBuilder
-                            .editVersion(orderEdit.getVersion())
-                            .resourceVersion(orderEdit.getResource().getObj().getVersion())
-                    )
-                    .execute();
+            return null;
         }
 
-        public CompletableFuture<ApiHttpResponse<Order>> changeOrderNumber(
+        public CompletableFuture<ApiHttpResponse<Order>> setOrderNumber(
                 final ApiHttpResponse<Order> orderApiHttpResponse) {
 
             Order order = orderApiHttpResponse.getBody();
@@ -166,7 +129,7 @@ public class OrderService {
                                             .version(order.getVersion())
                                             .plusActions(orderUpdateActionBuilder -> orderUpdateActionBuilder
                                                     .setOrderNumberBuilder()
-                                                    .orderNumber(""))
+                                                    .orderNumber("CT" + System.nanoTime()))
                             )
                             .execute();
         }

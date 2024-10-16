@@ -31,15 +31,15 @@ public class Task04c_STATEMACHINE {
             //
 
             stateMachineService.createState(
-                            "mhOrderPacked",
+                            "OrderPacked",
                             StateTypeEnum.ORDER_STATE,
                             true,
-                            "MH Order Packed"
+                            "Order Packed"
                     )
                     .exceptionally(throwable -> {
                         logger.error("Exception: " + throwable.getMessage());
                         try {
-                            return stateMachineService.getStateByKey("mhOrderPacked1").get();
+                            return stateMachineService.getStateByKey("OrderPacked").get();
                         } catch (Exception e) {
                             client.close();
                             logger.error(e.getMessage());
@@ -48,15 +48,15 @@ public class Task04c_STATEMACHINE {
                     })
                     .thenCombineAsync(
                             stateMachineService.createState(
-                                            "mhOrderShipped",
+                                            "OrderShipped",
                                             StateTypeEnum.ORDER_STATE,
                                             false,
-                                            "MH Order Shipped"
+                                            "Order Shipped"
                                     )
                                     .exceptionally(throwable -> {
                                         logger.error("Exception: " + throwable.getMessage());
                                         try {
-                                            return stateMachineService.getStateByKey("mhOrderShipped").get();
+                                            return stateMachineService.getStateByKey("OrderShipped").get();
                                         } catch (Exception e) {
                                             client.close();
                                             logger.error(e.getMessage());

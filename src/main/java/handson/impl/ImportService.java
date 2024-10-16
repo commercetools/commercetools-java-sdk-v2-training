@@ -42,15 +42,7 @@ public class ImportService {
         final String csvFile) {
 
         return
-                apiRoot
-                        .customers()
-                        .importContainers()
-                        .withImportContainerKeyValue(containerKey)
-                        .post(
-                                priceImportRequestBuilder -> priceImportRequestBuilder
-                                        .resources(getCustomersImportFromCsv(csvFile))
-                        )
-                        .execute();
+                null;
     }
 
     private List<CustomerImport> getCustomersImportFromCsv(final String csvFile) {

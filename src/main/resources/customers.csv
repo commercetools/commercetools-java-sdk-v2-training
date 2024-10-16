@@ -1,4 +1,4 @@
 customerKey,email,password,firstName,lastName,isEmailVerified,country,store
-jen-example-uk,jen@example.uk,password,Jennifer,Jones,true,UK,nd-boston-store
-seb-example-com,seb@example.com,password,Sebastian,Franklin,false,US,nd-boston-store
-seb-example-com,seb@example.com,password,Sebastian,Franklin,false,DE,dach
+jen-example-uk,jen@example.uk,password,Jennifer,Jones,true,UK,store1
+seb-example-com,seb@example.com,password,Sebastian,Franklin,false,US,store1
+seb-example-de,seb@example.de,password,Sebastian,Franklin,false,DE,dach

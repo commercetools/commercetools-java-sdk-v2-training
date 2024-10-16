@@ -19,13 +19,6 @@ import java.util.stream.Collectors;
 import static handson.impl.ClientService.createApiClient;
 
 
-/**
- * Configure client and get project information.
- *
- * See:
- *  TODO dev.properties
- *  TODO {@link ClientService#createApiClient(String prefix)}
- */
 public class Task01a_GET_QUERY {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
@@ -35,42 +28,20 @@ public class Task01a_GET_QUERY {
             try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
 
                 Logger logger = LoggerFactory.getLogger("commercetools");
-
+                // TODO: UPDATE API Client in dev.properties
+                // TODO {@link ClientService#createApiClient(String prefix)}
                 // TODO: GET project info
                 //
 
                 Project project = client.get().executeBlocking().getBody();
                 logger.info("Project key: {}", project.getKey());
 
-//                // TODO: GET tax categories
-//                //
-//
-//                TaxCategoryPagedQueryResponse taxCategoryPagedQueryResponse = client.taxCategories().get().executeBlocking().getBody();
-//                if (taxCategoryPagedQueryResponse != null && taxCategoryPagedQueryResponse.getResults() != null) {
-//                    logger.info("Tax categories: {}",
-//                            taxCategoryPagedQueryResponse.getResults().stream().map(TaxCategory::getKey).collect(Collectors.toList())
-//                    );
-//                } else {
-//                    logger.warn("No tax categories found.");
-//                }
-//
-//                // TODO Get Tax category by Key
-//                //
-//                client.taxCategories()
-//                        .withKey("standard")
-//                        .get()
-//                        .execute()
-//                        .thenApply(ApiHttpResponse::getBody)
-//                        .thenAccept(taxCategory -> {
-//                            logger.info("Tax category ID: {}", taxCategory.getId());
-//                            try {
-//                                System.out.println(JsonUtils.prettyPrint(JsonUtils.toJsonString(taxCategory)));
-//                            } catch (JsonProcessingException ignored) { }
-//                        })
-//                        .exceptionally(throwable -> {
-//                            logger.error("Exception: {}", throwable.getMessage());
-//                            return null;
-//                        });
+                // TODO: GET tax categories
+                //
+
+                // TODO Get Tax category by Key
+                //
+
             }
     }
 }

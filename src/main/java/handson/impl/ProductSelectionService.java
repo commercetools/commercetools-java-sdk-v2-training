@@ -5,6 +5,7 @@ import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.product_selection.ProductSelection;
 import com.commercetools.api.models.product_selection.ProductSelectionProductPagedQueryResponse;
 import io.vrap.rmf.base.client.ApiHttpResponse;
+import jdk.jshell.spi.ExecutionControl;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -42,15 +43,7 @@ public class ProductSelectionService {
      */
     public CompletableFuture<ApiHttpResponse<ProductSelection>> createProductSelection(final String productSelectionKey, Map<String, String> psName) {
 
-        return
-            apiRoot
-                .productSelections()
-                .post(
-                    productSelectionDraftBuilder -> productSelectionDraftBuilder
-                        .key(productSelectionKey)
-                        .name(LocalizedStringBuilder.of().values(psName).build())
-                )
-                .execute();
+        return null;
     }
 
 
@@ -59,19 +52,7 @@ public class ProductSelectionService {
         final String productKey) {
 
         final ProductSelection productSelection = productSelectionApiHttpResponse.getBody();
-        return
-            apiRoot
-                .productSelections()
-                .withId(productSelection.getId())
-                .post(
-                    productSelectionUpdateBuilder -> productSelectionUpdateBuilder
-                        .version(productSelection.getVersion())
-                        .plusActions(
-                            productSelectionUpdateActionBuilder -> productSelectionUpdateActionBuilder.addProductBuilder()
-                                .product(productResourceIdentifierBuilder -> productResourceIdentifierBuilder.key(productKey))
-                        )
-                )
-                    .execute();
+        return null;
     }
 
 
@@ -79,14 +60,7 @@ public class ProductSelectionService {
     public CompletableFuture<ApiHttpResponse<ProductSelectionProductPagedQueryResponse>> getProductsInProductSelection(
         final String productSelectionKey) {
 
-        return
-            apiRoot
-                .productSelections()
-                .withKey(productSelectionKey)
-                .products()
-                .get()
-                .addExpand("product")
-                .execute();
+        return null;
     }
 
 }

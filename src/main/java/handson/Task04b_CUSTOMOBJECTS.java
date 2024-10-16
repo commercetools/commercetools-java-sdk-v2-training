@@ -32,29 +32,13 @@ public class Task04b_CUSTOMOBJECTS {
 
             Map<String, Object> jsonObject = new HashMap<>();
             jsonObject.put("crossSell", Arrays.asList(
-                (Reference.productBuilder().id("6cb809eb-b12f-460b-9ac9-f356cc445f17").build()),
-                Reference.productBuilder().id("2a6c7d6e-ac0c-479f-8eba-c7613027b830").build()));
+                (Reference.productBuilder().id("").build()),
+                Reference.productBuilder().id("").build()));
             jsonObject.put("upSell", Arrays.asList(
-                Reference.productBuilder().id("31c70b1a-d309-4e15-a5d8-3c3a0f02e866").build(),
-                Reference.productBuilder().id("66eb1ec0-50e1-43ad-a491-7970361dc884").build()));
+                Reference.productBuilder().id("").build(),
+                Reference.productBuilder().id("").build()));
 
-            client
-                .customObjects()
-                .post(
-                    customObjectDraftBuilder -> customObjectDraftBuilder
-                        .container("cross-sell-upsell-info")
-                        .key("86651")
-                        .value(jsonObject)
-                ).execute()
-                .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(customObject -> {
-                            logger.info("Custom Object ID: " + customObject.getId());
-                        }
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
+            // client.customObjects().post().execute()
 
 
             // TODO: CREATE a custom object

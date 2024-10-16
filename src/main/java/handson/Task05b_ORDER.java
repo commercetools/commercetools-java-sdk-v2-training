@@ -34,72 +34,16 @@ public class Task05b_ORDER {
             CartService cartService = new CartService(client, storeKey);
             CustomerService customerService = new CustomerService(client, storeKey);
             OrderService orderService = new OrderService(client, storeKey);
-            PaymentService paymentService = new PaymentService(client, storeKey);
 
-            // TODO: Fetch a channel if your inventory mode will not be NONE
+            // TODO: UPDATE the cart ID from the previous task
             //
-            final String cartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
-            final String initialStateKey = "mhOrderPacked2";
-            final String customerKey = "nd-customer";
-            final String customerEmail = "nd@example.de";
-            final String orderNumber = "CT253979954003083";
+            final String cartId = "";
+            final String initialStateKey = "OrderPacked";
+            final String orderNumber = "";
 
-            // TODO: ADD shipping address
-            // TODO: SAVE in customer profile as default billing and shipping address
-
-            Address address = AddressBuilder.of()
-                    .firstName("Jennifer")
-                    .lastName("Tester")
-                    .country("DE")
-                    .key(customerKey + "-default")
-                    .build();
-
-            logger.info("Customer address added and set as default billing and shipping address:"
-                    + customerService.addAddressToCustomer(customerKey, address)
-                    .get().getBody().getEmail()
-            );
-
-            cartService.getCartById(cartId)
-                    .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, address))
-                    .thenComposeAsync(cartService::setShipping)
-                    .thenComposeAsync(cartService::recalculate)
-                    .thenAccept(cartApiHttpResponse ->
-                                logger.info("cart updated {}", cartApiHttpResponse.getBody().getId())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
-
-            // TODO: Place the order
+            // TODO: Place the order for the cartId above
             // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
 
-            // customerService.loginCustomer(customerEmail, "password")
-
-
-            cartService.getCartById(cartId)
-                    .thenApply(cartApiHttpResponse -> {
-                            logger.info("Cart ID {}", cartApiHttpResponse.getBody().getId());
-                            return cartApiHttpResponse.getBody();
-                        }
-                    )
-                    .thenComposeAsync(orderService::createOrder)
-                    // orderService.getOrderByOrderNumber(orderNumber)
-                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
-                            orderApiHttpResponse,
-                            OrderState.CONFIRMED
-                    ))
-                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
-                            orderApiHttpResponse,
-                            initialStateKey
-                    ))
-                    .thenAccept(orderApiHttpResponse ->
-                            logger.info("Order placed {}", orderApiHttpResponse.getBody().getOrderNumber())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
         }
     }
 }

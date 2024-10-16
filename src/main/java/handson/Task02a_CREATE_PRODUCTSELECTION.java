@@ -37,13 +37,16 @@ public class Task02a_CREATE_PRODUCTSELECTION {
 
             // TODO: CREATE a Product Selection
             //
-            final String productSelectionKey = "nd-boston-selection";
+            final String productSelectionKey = "";
             Map<String, String> psName = new HashMap<String, String>() {
                 {
-                    put("DE", "nd boston selection");
-                    put("EN", "nd boston selection");
+                    put("DE", "product selection");
+                    put("EN", "product selection");
                 }
             };
+
+            // TODO: CREATE a new product selection
+            //
 
             final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
@@ -57,32 +60,14 @@ public class Task02a_CREATE_PRODUCTSELECTION {
                         return null;
                     });
 
-//        // TODO: ADD Products to Product Selection
-//        //
-//        productSelectionService.getProductSelectionByKey(productSelectionKey)
-//                .thenComposeAsync(productSelectionApiHttpResponse ->
-//                        productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse, "86935"))
-//                .thenAccept(productSelectionApiHttpResponse ->
-//                        logger.info("Product Selection updated: " + productSelectionApiHttpResponse.getBody().getId())
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                });
+            // TODO: ADD Products to Product Selection
+            //
+            // productSelectionService.addProductToProductSelection(productSelectionKey)
 
-//        // TODO Get products in a product selection
-//        productSelectionService.getProductsInProductSelection(productSelectionKey)
-//                .thenApply(ApiHttpResponse::getBody)
-//                .thenAccept(productReferences -> {
-//                        productReferences.getResults().forEach(assignedProductReference ->
-//                            logger.info(assignedProductReference.getProduct().getObj().getKey())
-//                        );
-//                    }
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                }).join();
+            // TODO Get products in a product selection
+            //
+            // productSelectionService.getProductsInProductSelection(productSelectionKey)
+
         }
     }
 }

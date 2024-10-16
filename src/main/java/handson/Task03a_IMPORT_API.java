@@ -29,73 +29,40 @@ public class Task03a_IMPORT_API {
         try (ProjectApiRoot client = createImportApiClient(apiImportClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
-            final String containerKey = "nd-berlin-store-prices";
+            final String containerKey = "nd-berlin-store-customers";
 
             final ImportService importService = new ImportService(client);
 
-            // TODO
-            //  CREATE an import container
-            //  CREATE a customers import request
-            //  CHECK the status of your import requests
+            // TODO CREATE an import container
+            //
+            // importService.createImportContainer(containerKey)
 
-            importService.createImportContainer(containerKey)
-                .thenApply(ApiHttpResponse::getBody)
-                    .thenAccept(importContainer -> {
-                        logger.info("Created import container {} ", importContainer.getKey());
-                    }
-                )
-                .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+            //  TODO CREATE a customers import request
+            //
+            // importService.importCustomersFromCsv(containerKey, "customers.csv")
 
-
-            importService.importCustomersFromCsv(
-                containerKey,
-                "customers.csv"
-            )
-                .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(response -> {
-                            logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
-                        }
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
-
-
-            client
-                .importContainers()
-                .get().execute()
-                .thenAccept(responseApiHttpResponse -> {
-                        logger.info("Total containers in our project: {}", responseApiHttpResponse.getBody().getTotal());
-                    }
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
-
-                client
-                        .importContainers().withImportContainerKeyValue(containerKey)
-                        .importSummaries()
-                        .get().execute()
-                        .thenAccept(importSummaryApiHttpResponse -> {
-                                OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
-                                logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
-                                        states.getProcessing(),
-                                        states.getImported(),
-                                        states.getUnresolved(),
-                                        states.getRejected(),
-                                        states.getValidationFailed()
-                                );
-                            }
-                        )
-                        .exceptionally(throwable -> {
-                            logger.error("Exception: {}", throwable.getMessage());
-                            return null;
-                        }).join();
+            // TODO CHECK the status of your import requests
+            //
+//            client
+//                    .importContainers()
+//                    .withImportContainerKeyValue(containerKey)
+//                    .importSummaries()
+//                    .get().execute()
+//                    .thenAccept(importSummaryApiHttpResponse -> {
+//                            OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
+//                            logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
+//                                    states.getProcessing(),
+//                                    states.getImported(),
+//                                    states.getUnresolved(),
+//                                    states.getRejected(),
+//                                    states.getValidationFailed()
+//                            );
+//                        }
+//                    )
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
         }
     }

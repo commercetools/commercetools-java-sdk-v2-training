@@ -33,41 +33,7 @@ public class Task04a_CUSTOMTYPES {
 
             final String customerKey = "nd-customer";
 
-            Map<String, String> labelsForFieldInstructions = new HashMap<String, String>() {
-                {
-                    put("de-DE", "Instructions");
-                    put("en-US", "Instructions");
-                }
-            };
-            Map<String, String> labelsForFieldCode = new HashMap<String, String>() {
-                {
-                    put("de-DE", "Buzz code");
-                    put("en-US", "Buzz code");
-                }
-            };
-
-            // Which fields will be used?
-            List<FieldDefinition> definitions = Arrays.asList(
-                FieldDefinitionBuilder.of()
-                    .name("instructions")
-                    .required(true)
-                    .label(LocalizedStringBuilder.of()
-                        .values(labelsForFieldInstructions)
-                        .build()
-                    )
-                    .type(CustomFieldStringType.of())
-                    .build(),
-                FieldDefinitionBuilder.of()
-                    .name("code")
-                    .required(true)
-                    .label(LocalizedStringBuilder.of()
-                        .values(labelsForFieldCode)
-                        .build()
-                    )
-                    .type(CustomFieldNumberType.of())
-                    .build()
-            );
-
+            // TODO CREATE labels for the type and fields
             Map<String, String> namesForType = new HashMap<String, String>() {
                 {
                     put("de-DE", "Delivery instructions");
@@ -75,25 +41,14 @@ public class Task04a_CUSTOMTYPES {
                 }
             };
 
-            client
-                .types()
-                .post(
-                    typeDraftBuilder -> typeDraftBuilder
-                        .key("delivery-instructions")
-                        .name(LocalizedStringBuilder.of().values(namesForType).build())
-                        .resourceTypeIds(
-                            ResourceTypeId.CUSTOMER,
-                            ResourceTypeId.ORDER
-                        )
-                        .fieldDefinitions(definitions)
-                ).execute()
-                .thenAccept(typeApiHttpResponse ->
-                        logger.info("Custom Type ID: " + typeApiHttpResponse.getBody().getId())
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
+
+            // TODO DEFINE fields
+            //
+            // List<FieldDefinition> definitions = Arrays.asList()
+
+            // TODO CREATE type
+            //
+            // client.types.post().execute()
 
             Customer customer = client
                 .customers()
@@ -101,43 +56,10 @@ public class Task04a_CUSTOMTYPES {
                 .get()
                 .executeBlocking().getBody();
 
-            client
-                .customers()
-                .withKey(customerKey)
-                .post(
-                    customerUpdateBuilder -> customerUpdateBuilder
-                        .version(customer.getVersion())
-                        .actions(
-                            Arrays.asList(
-                                CustomerSetCustomTypeActionBuilder.of()
-                                    .type(typeResourceIdentifierBuilder -> typeResourceIdentifierBuilder.key("mh-delivery-instructions"))
-                                    .fields(fieldContainerBuilder -> fieldContainerBuilder.values(
-                                        new HashMap<String, Object>() {
-                                            {
-                                                put("instructions", "Leave at door");
-                                                put("code", 1223);
-                                            }
-                                        }
-                                    ))
-                                    .build(),
-                                CustomerSetCustomFieldActionBuilder.of()
-                                    .name("code")
-                                    .value(1221)
-                                    .build(),
-                                CustomerSetCustomFieldActionBuilder.of()
-                                    .name("instructions")
-                                    .value("Leave at door")
-                                    .build()
-                            )
-                        )
-                ).execute()
-                .thenAccept(customerApiHttpResponse ->
-                        logger.info("Custom Type ID: " + customerApiHttpResponse.getBody().getKey())
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
+            //TODO UPDATE the customer with custom type
+            //
+            // client.customers().withKey(customerKey).post().execute()
+
         }
     }
 }

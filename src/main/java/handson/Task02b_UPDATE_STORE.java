@@ -24,34 +24,27 @@ public class Task02b_UPDATE_STORE {
             final String storeKey = getStoreKey(apiClientPrefix);
             StoreService storeService = new StoreService(client, storeKey);
 
-            final String productSelectionKey = "nd-boston-selection1";
+            final String productSelectionKey = "product-selection";
 
-//          // TODO: Assign Product Selection to your store
-//          //
+            // TODO: Assign Product Selection to your store
+            //
+            // storeService.addProductSelectionToCurrentStore(productSelectionKey)
 
-//            storeService.addProductSelectionToCurrentStore(productSelectionKey)
-//                .thenAccept(storeApiHttpResponse ->
-//                            logger.info("Store Updated: " + storeApiHttpResponse.getBody().getId())
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                }).join();
 
-//            // TODO: GET the products in the store
-//            storeService.getProductsInCurrentStore()
-//                    .thenApply(ApiHttpResponse::getBody)
-//                    .thenAccept(productsInStorePagedQueryResponse -> {
-//                            logger.info("{} products in the store", productsInStorePagedQueryResponse.getResults().size());
-//                            productsInStorePagedQueryResponse.getResults().forEach(productsInStore ->
-//                                    logger.info(productsInStore.getProduct().getObj().getKey())
-//                            );
-//                        }
-//                    )
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
+            // TODO: GET the products in the store
+            storeService.getProductsInCurrentStore()
+                    .thenApply(ApiHttpResponse::getBody)
+                    .thenAccept(productsInStorePagedQueryResponse -> {
+                            logger.info("{} products in the store", productsInStorePagedQueryResponse.getResults().size());
+                            productsInStorePagedQueryResponse.getResults().forEach(productsInStore ->
+                                    logger.info(productsInStore.getProduct().getObj().getKey())
+                            );
+                        }
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
         }
     }
 }

@@ -28,39 +28,21 @@ public class Task05c_ORDEREDITS {
 
             final String storeKey = getStoreKey(apiClientPrefix);
             OrderService orderService = new OrderService(client, storeKey);
-            final String supplyChannelKey = "sunrise-store-boston-1";
-            final String distChannelKey = "sunrise-store-boston-1";
 
-            final String orderNumber = "CT253979954003083";
-            final String orderEditKey = "CTOE-256247340086500";
+            final String orderNumber = "";
+            final String orderEditKey = "";
 
-            // TODO: Create and Apply an Order Edit
+            // TODO: CREATE staged order update action for OrderEdit
 
-            final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
-                    .addLineItemBuilder()
-                    .sku("M0E20000000FHAP")
-                    .supplyChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(supplyChannelKey))
-                    .distributionChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(distChannelKey))
-                    .build();
+            // final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
+            //        .build();
 
-            orderService.getOrderByOrderNumber(orderNumber)
-                    .thenComposeAsync(orderApiHttpResponse ->
-                            orderService.createOrderEdit(
-                                    orderApiHttpResponse,
-                                    "CTOE-" + System.nanoTime(),
-                                    stagedOrderUpdateAction))
-                    .thenAccept(orderEditApiHttpResponse ->
-                            logger.info("orderEdit {} created with {} type", orderEditApiHttpResponse.getBody().getKey(), orderEditApiHttpResponse.getBody().getResult().getType())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+            // TODO: GET order and Create an Order Edit to update it
+
+
             // TODO update orderEditKey above
 
-//
+
 //            //  TODO: Apply OrderEdit
 //            orderService.getOrderEditByKey(orderEditKey)
 //                    .thenComposeAsync(orderService::applyOrderEdit)

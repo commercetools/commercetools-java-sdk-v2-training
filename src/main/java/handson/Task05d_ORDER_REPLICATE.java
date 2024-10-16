@@ -28,13 +28,13 @@ public class Task05d_ORDER_REPLICATE {
             final String storeKey = getStoreKey(apiClientPrefix);
             CartService cartService = new CartService(client, storeKey);
 
-            final String orderNumber = "CT253979954003083";
+            final String orderNumber = "";
 
             // TODO: REPLICATE your last order
 
             cartService.replicateOrderByOrderNumber(orderNumber)
                     .thenAccept(cartApiHttpResponse ->
-                            logger.info("cart {} created", cartApiHttpResponse.getBody().getId())
+                            logger.info("cart {} created from last order", cartApiHttpResponse.getBody().getId())
                     )
                     .exceptionally(throwable -> {
                         logger.error("Exception: {}", throwable.getMessage());
