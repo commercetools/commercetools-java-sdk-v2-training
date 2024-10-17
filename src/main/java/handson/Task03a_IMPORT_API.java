@@ -25,19 +25,16 @@ public class Task03a_IMPORT_API {
         //  Update your prefix for an Import Api Client in the PrefixHelper
         //  Provide a container key
         //
-        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
+        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createImportApiClient(apiImportClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
-            final String containerKey = "boston-store-customers";
-
             final ImportService importService = new ImportService(client);
 
-            // TODO
-            //  CREATE an import container
-            //  CREATE a customers import request
-            //  CHECK the status of your import requests
+            final String containerKey = "boston-store-customers";
 
+            // TODO:  CREATE an import container
+            //
             importService.createImportContainer(containerKey)
                     .thenAccept(importContainerApiHttpResponse ->
                         logger.info("Created import container {} ", importContainerApiHttpResponse.getBody().getKey())
@@ -47,54 +44,40 @@ public class Task03a_IMPORT_API {
                             return null;
                         }).join();
 
+//            // TODO: CREATE a customers import request
+//            //
+//            importService.importCustomersFromCsv(
+//                containerKey,
+//                "customers.csv"
+//            )
+//                .thenApply(ApiHttpResponse::getBody)
+//                .thenAccept(response -> {
+//                            logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
+//                        }
+//                )
+//                .exceptionally(throwable -> {
+//                    logger.error("Exception: {}", throwable.getMessage());
+//                    return null;
+//                }).join();
 
-            importService.importCustomersFromCsv(
-                containerKey,
-                "customers.csv"
-            )
-                .thenApply(ApiHttpResponse::getBody)
-                .thenAccept(response -> {
-                            logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
-                        }
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
-
-
-            client
-                .importContainers()
-                .get().execute()
-                .thenAccept(responseApiHttpResponse -> {
-                        logger.info("Total containers in our project: {}", responseApiHttpResponse.getBody().getTotal());
-                    }
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
-
-                client
-                        .importContainers().withImportContainerKeyValue(containerKey)
-                        .importSummaries()
-                        .get().execute()
-                        .thenAccept(importSummaryApiHttpResponse -> {
-                                OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
-                                logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
-                                        states.getProcessing(),
-                                        states.getImported(),
-                                        states.getUnresolved(),
-                                        states.getRejected(),
-                                        states.getValidationFailed()
-                                );
-                            }
-                        )
-                        .exceptionally(throwable -> {
-                            logger.error("Exception: {}", throwable.getMessage());
-                            return null;
-                        }).join();
-
+//            // TODO:  CHECK the status of your import requests
+//            //
+//            importService.getImportContainerSummary(containerKey)
+//                    .thenAccept(importSummaryApiHttpResponse -> {
+//                            OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
+//                            logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",
+//                                    states.getProcessing(),
+//                                    states.getImported(),
+//                                    states.getUnresolved(),
+//                                    states.getRejected(),
+//                                    states.getValidationFailed()
+//                            );
+//                        }
+//                    )
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
         }
     }
 }

@@ -27,14 +27,14 @@ public class Task05a_CHECKOUT {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String supplyChannelKey = "sunrise-store-boston-1";
-        final String distChannelKey = "sunrise-store-boston-1";
+        final String supplyChannelKey = "boston-store-channel";
+        final String distChannelKey = "boston-store-channel";
         final String initialStateKey = "OrderPacked";
-        final String customerKey = "ct-208557168810166";
-        final String customerEmail = "ct@example.de";
+        final String customerKey = "ct-customer";
+        final String customerEmail = "ct@test.com";
         final String anonymousCartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
@@ -44,6 +44,7 @@ public class Task05a_CHECKOUT {
             StoreService storeService = new StoreService(client, storeKey);
 
             // TODO: GET the products in the store
+            //
             storeService.getProductsInCurrentStore()
                     .thenApply(ApiHttpResponse::getBody)
                     .thenAccept(productsInStorePagedQueryResponse -> {
@@ -62,57 +63,60 @@ public class Task05a_CHECKOUT {
                         return null;
                     }).join();
 
-            // TODO: Perform cart operations: add products to a new customer cart
-            //
-            customerService.getCustomerByKey(customerKey)
-                    .thenCombineAsync(storeService.getCurrentStore(), ((customerApiHttpResponse, storeApiHttpResponse) ->
-                            cartService.createCustomerCart(customerApiHttpResponse, storeApiHttpResponse, "M0E20000000FHA2", 1L, supplyChannelKey, distChannelKey)))
-                    .get()
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+//            // TODO: Perform cart operations: add products to a new customer cart
+//            //
+//            customerService.getCustomerByKey(customerKey)
+//                    .thenCombineAsync(storeService.getCurrentStore(), ((customerApiHttpResponse, storeApiHttpResponse) ->
+//                            cartService.createCustomerCart(customerApiHttpResponse, storeApiHttpResponse, "RB-01", 2L, supplyChannelKey, distChannelKey)))
+//                    .get()
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
 
-            // TODO: Perform cart operations: add products to a new anonymous cart
-            //
-            storeService.getCurrentStore()
-                    .thenComposeAsync(storeApiHttpResponse ->
-                            cartService.createAnonymousCart(storeApiHttpResponse, "M0E20000000FHAO", 3L, supplyChannelKey, distChannelKey))
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+//            // TODO: Perform cart operations: add products to a new anonymous cart
+//            //
+//            storeService.getCurrentStore()
+//                    .thenComposeAsync(storeApiHttpResponse ->
+//                            cartService.createAnonymousCart(storeApiHttpResponse, "RB-01", 3L, supplyChannelKey, distChannelKey))
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
 
-            // TODO Freeze cart
-            cartService.getCartById(anonymousCartId)
-                    .thenComposeAsync(cartService::freezeCart)
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in frozen state {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+//            // TODO Freeze cart
+//            //
+//            cartService.getCartById(anonymousCartId)
+//                    .thenComposeAsync(cartService::freezeCart)
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in frozen state {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
-            // TODO Unfreeze cart
-            cartService.getCartById(anonymousCartId)
-                    .thenComposeAsync(cartService::unfreezeCart)
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in active state {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+//            // TODO Unfreeze cart
+//            //
+//            cartService.getCartById(anonymousCartId)
+//                    .thenComposeAsync(cartService::unfreezeCart)
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in active state {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
-            // TODO Recalculate cart
-            cartService.getCartById(anonymousCartId)
-                    .thenComposeAsync(cartService::recalculate)
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart has been recalculated {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+//            // TODO Recalculate cart
+//            //
+//            cartService.getCartById(anonymousCartId)
+//                    .thenComposeAsync(cartService::recalculate)
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart has been recalculated {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
         }
     }
 }

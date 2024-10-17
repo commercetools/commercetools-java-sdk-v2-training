@@ -7,6 +7,7 @@ import com.commercetools.importapi.models.customers.CustomerImport;
 import com.commercetools.importapi.models.customers.CustomerImportBuilder;
 import com.commercetools.importapi.models.importcontainers.ImportContainer;
 import com.commercetools.importapi.models.importrequests.ImportResponse;
+import com.commercetools.importapi.models.importsummaries.ImportSummary;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.io.BufferedReader;
@@ -88,5 +89,15 @@ public class ImportService {
             System.out.println(e);
         }
         return customerImports;
+    }
+
+    public CompletableFuture<ApiHttpResponse<ImportSummary>> getImportContainerSummary(final String containerKey) {
+        return
+                apiRoot
+                        .importContainers()
+                        .withImportContainerKeyValue(containerKey)
+                        .importSummaries()
+                        .get()
+                        .execute();
     }
 }

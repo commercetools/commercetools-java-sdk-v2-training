@@ -39,8 +39,8 @@ public class Task01a_GET_QUERY {
                 // TODO: GET project info
                 //
 
-                Project project = client.get().executeBlocking().getBody();
-                logger.info("Project key: {}", project.getKey());
+//                Project project = client.get().executeBlocking().getBody();
+//                logger.info("Project key: {}", project.getKey());
 
 //                // TODO: GET tax categories
 //                //
@@ -54,23 +54,23 @@ public class Task01a_GET_QUERY {
 //                    logger.warn("No tax categories found.");
 //                }
 //
-//                // TODO Get Tax category by Key
-//                //
-//                client.taxCategories()
-//                        .withKey("standard")
-//                        .get()
-//                        .execute()
-//                        .thenApply(ApiHttpResponse::getBody)
-//                        .thenAccept(taxCategory -> {
-//                            logger.info("Tax category ID: {}", taxCategory.getId());
-//                            try {
-//                                System.out.println(JsonUtils.prettyPrint(JsonUtils.toJsonString(taxCategory)));
-//                            } catch (JsonProcessingException ignored) { }
-//                        })
-//                        .exceptionally(throwable -> {
-//                            logger.error("Exception: {}", throwable.getMessage());
-//                            return null;
-//                        });
+                // TODO Get Tax category by Key
+                //
+                client.taxCategories()
+                        .withKey("standard-tax")
+                        .get()
+                        .execute()
+                        .thenApply(ApiHttpResponse::getBody)
+                        .thenAccept(taxCategory -> {
+                            logger.info("Tax category ID: {}", taxCategory.getId());
+                            try {
+                                System.out.println(JsonUtils.prettyPrint(JsonUtils.toJsonString(taxCategory)));
+                            } catch (JsonProcessingException ignored) { }
+                        })
+                        .exceptionally(throwable -> {
+                            logger.error("Exception: {}", throwable.getMessage());
+                            return null;
+                        }).join();
             }
     }
 }

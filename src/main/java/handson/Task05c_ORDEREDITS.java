@@ -21,24 +21,24 @@ public class Task05c_ORDEREDITS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
             OrderService orderService = new OrderService(client, storeKey);
-            final String supplyChannelKey = "sunrise-store-boston-1";
-            final String distChannelKey = "sunrise-store-boston-1";
+            final String supplyChannelKey = "boston-store-channel";
+            final String distChannelKey = "boston-store-channel";
 
-            final String orderNumber = "CT253979954003083";
-            final String orderEditKey = "CTOE-256247340086500";
+            final String orderNumber = "CT463742039052500";
+            final String orderEditKey = "CTOE-464185882118958";
 
             // TODO: Create and Apply an Order Edit
-
+            //
             final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
                     .addLineItemBuilder()
-                    .sku("M0E20000000FHAP")
+                    .sku("RCC-09")
                     .supplyChannel(channelResourceIdentifierBuilder ->
                             channelResourceIdentifierBuilder.key(supplyChannelKey))
                     .distributionChannel(channelResourceIdentifierBuilder ->
@@ -60,12 +60,13 @@ public class Task05c_ORDEREDITS {
                     }).join();
             // TODO update orderEditKey above
 
-//
+
 //            //  TODO: Apply OrderEdit
+//            //
 //            orderService.getOrderEditByKey(orderEditKey)
 //                    .thenComposeAsync(orderService::applyOrderEdit)
 //                    .thenAccept(orderEditApiHttpResponse ->
-//                            logger.info("orderEdit {} applied", orderEditApiHttpResponse.getBody().getResult().getType())
+//                            logger.info("orderEdit {} ", orderEditApiHttpResponse.getBody().getResult().getType())
 //                    )
 //                    .exceptionally(throwable -> {
 //                        logger.error("Exception: {}", throwable.getMessage());

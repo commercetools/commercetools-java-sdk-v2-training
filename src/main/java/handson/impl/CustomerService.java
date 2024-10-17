@@ -62,7 +62,7 @@ public class CustomerService {
             final String country) {
 
         return apiRoot
-//            .inStore(storeKey)
+            .inStore(storeKey)
             .customers()
             .post(
                 customerDraftBuilder -> customerDraftBuilder
@@ -171,7 +171,6 @@ public class CustomerService {
     }
 
     public CompletableFuture<ApiHttpResponse<Customer>> verifyEmail(final CustomerToken customerToken) {
-
 
         return
             apiRoot

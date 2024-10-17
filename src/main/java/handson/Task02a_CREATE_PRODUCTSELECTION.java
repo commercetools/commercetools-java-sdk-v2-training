@@ -28,24 +28,23 @@ public class Task02a_CREATE_PRODUCTSELECTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
+            final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
-            final String storeKey = getStoreKey(apiClientPrefix);
+            final String productSelectionKey = "boston-selection";
 
             // TODO: CREATE a Product Selection
             //
-            final String productSelectionKey = "boston-selection";
+
             Map<String, String> psName = new HashMap<String, String>() {
                 {
                     put("DE", "boston selection");
                     put("EN", "boston selection");
                 }
             };
-
-            final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
             productSelectionService.createProductSelection(productSelectionKey, psName)
                     .thenAccept(productSelectionApiHttpResponse ->
@@ -55,20 +54,20 @@ public class Task02a_CREATE_PRODUCTSELECTION {
                     .exceptionally(throwable -> {
                         logger.error("Exception: {}", throwable.getMessage());
                         return null;
-                    });
+                    }).join();
 
 //        // TODO: ADD Products to Product Selection
 //        //
 //        productSelectionService.getProductSelectionByKey(productSelectionKey)
 //                .thenComposeAsync(productSelectionApiHttpResponse ->
-//                        productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse, "86935"))
+//                        productSelectionService.addProductToProductSelection(productSelectionApiHttpResponse, "rustic-bowl"))
 //                .thenAccept(productSelectionApiHttpResponse ->
 //                        logger.info("Product Selection updated: " + productSelectionApiHttpResponse.getBody().getId())
 //                )
 //                .exceptionally(throwable -> {
 //                    logger.error("Exception: {}", throwable.getMessage());
 //                    return null;
-//                });
+//                }).join();
 
 //        // TODO Get products in a product selection
 //        productSelectionService.getProductsInProductSelection(productSelectionKey)

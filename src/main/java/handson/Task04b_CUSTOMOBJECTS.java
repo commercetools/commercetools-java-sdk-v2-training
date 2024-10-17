@@ -20,7 +20,7 @@ public class Task04b_CUSTOMOBJECTS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
@@ -32,18 +32,18 @@ public class Task04b_CUSTOMOBJECTS {
 
             Map<String, Object> jsonObject = new HashMap<>();
             jsonObject.put("crossSell", Arrays.asList(
-                (Reference.productBuilder().id("6cb809eb-b12f-460b-9ac9-f356cc445f17").build()),
-                Reference.productBuilder().id("2a6c7d6e-ac0c-479f-8eba-c7613027b830").build()));
+                (Reference.productBuilder().id("72e5463f-b8e6-4d9f-8712-696650d37302").build()),
+                Reference.productBuilder().id("c1cb54ce-166d-40d9-96d6-cc989298b932").build()));
             jsonObject.put("upSell", Arrays.asList(
-                Reference.productBuilder().id("31c70b1a-d309-4e15-a5d8-3c3a0f02e866").build(),
-                Reference.productBuilder().id("66eb1ec0-50e1-43ad-a491-7970361dc884").build()));
+                Reference.productBuilder().id("c1cb54ce-166d-40d9-96d6-cc989298b932").build(),
+                Reference.productBuilder().id("72e5463f-b8e6-4d9f-8712-696650d37302").build()));
 
             client
                 .customObjects()
                 .post(
                     customObjectDraftBuilder -> customObjectDraftBuilder
                         .container("cross-sell-upsell-info")
-                        .key("86651")
+                        .key("rustic-bowl")
                         .value(jsonObject)
                 ).execute()
                 .thenApply(ApiHttpResponse::getBody)
