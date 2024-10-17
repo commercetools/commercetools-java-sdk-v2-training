@@ -29,9 +29,9 @@ public class Task05a_CHECKOUT {
 
         final String supplyChannelKey = "sunrise-store-boston-1";
         final String distChannelKey = "sunrise-store-boston-1";
-        final String initialStateKey = "mhOrderPacked2";
+        final String initialStateKey = "OrderPacked";
         final String customerKey = "ct-208557168810166";
-        final String customerEmail = "nd@example.de";
+        final String customerEmail = "ct@example.de";
         final String anonymousCartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
@@ -41,15 +41,13 @@ public class Task05a_CHECKOUT {
 
             CustomerService customerService = new CustomerService(client, storeKey);
             CartService cartService = new CartService(client, storeKey);
-            OrderService orderService = new OrderService(client, storeKey);
-            PaymentService paymentService = new PaymentService(client, storeKey);
             StoreService storeService = new StoreService(client, storeKey);
 
             // TODO: GET the products in the store
             storeService.getProductsInCurrentStore()
                     .thenApply(ApiHttpResponse::getBody)
                     .thenAccept(productsInStorePagedQueryResponse -> {
-                            logger.info("{} products in the store", +productsInStorePagedQueryResponse.getResults().size());
+                            logger.info("{} products in the store", productsInStorePagedQueryResponse.getResults().size());
                             productsInStorePagedQueryResponse.getResults().forEach(productsInStore -> {
                                 logger.info(productsInStore.getProduct().getObj().getKey());
                                 logger.info("MasterVariant Sku {}", productsInStore.getProduct().getObj().getMasterData().getCurrent().getMasterVariant().getSku());
@@ -88,82 +86,6 @@ public class Task05a_CHECKOUT {
                         return null;
                     }).join();
 
-            //  TODO: LOGIN customer or signup, if not found
-            //  TODO: add discount codes, perform a recalculation
-            //  TODO: add payment
-            //  TODO additionally: add custom line items, add shipping method
-            customerService.loginCustomer(
-                            customerEmail,
-                            "password",
-                            anonymousCartId,
-                            AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART
-                    )
-                    .exceptionally(ex -> {
-                        logger.info("exception: {}", ex.getMessage());
-                        try {
-                            return customerService.createCustomer(
-                                    customerEmail,
-                                    "password",
-                                    anonymousCartId
-                            ).get();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .thenAccept(customerSignInResult -> {
-                        logger.info("cart updated {}", customerSignInResult.getBody().getCart().getId());
-                    }).join();
-
-            // TODO: ADD shipping address
-            //
-            customerService
-                    .getCustomerByKey(customerKey)
-                    .thenApply(ApiHttpResponse::getBody)
-                    .thenApply(customer -> customer.getAddresses().stream()
-                            .filter(address -> address.getId().equals(customer.getDefaultShippingAddressId()))
-                            .findFirst()
-                    )
-                    .thenAccept(optionalAddress -> {
-                        Address shippingAddress = optionalAddress.orElseGet(() -> AddressBuilder.of()
-                                .firstName("First")
-                                .lastName("Tester")
-                                .country("DE")
-                                .key(customerKey + "-default")
-                                .build()
-                        );
-
-                        cartService.getCartById(anonymousCartId)
-                                .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, shippingAddress))
-                                .thenComposeAsync(cartService::setShipping)
-                                .thenComposeAsync(cartService::recalculate)
-                                .thenAccept(cartApiHttpResponse -> {
-                                    logger.info("cart updated with shipping address {}", cartApiHttpResponse.getBody().getId());
-                                })
-                                .exceptionally(throwable -> {
-                                    logger.error("Exception: {}", throwable.getMessage());
-                                    return null;
-                                }).join();
-                    })
-                    .exceptionally(ex -> {
-                        logger.error("Error retrieving customer: {}", ex.getMessage());
-                        return null;
-                    });
-
-            // TODO ADD Payment to the cart
-            cartService.getCartById(anonymousCartId)
-                    .thenComposeAsync(cartApiHttpResponse ->
-                            paymentService.createPaymentAndAddToCart(
-                                    cartApiHttpResponse.getBody(),
-                                    "We_Do_Payments",
-                                    "CREDIT_CARD",
-                                    "we_pay_73636" + Math.random(),    // Must be unique.
-                                    "pay82626" + Math.random())                    // Must be unique.
-                    )
-                    .thenAccept(cartApiHttpResponse -> logger.info("cart updated with payment {}", cartApiHttpResponse.getBody().getId()))
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
 
             // TODO Freeze cart
             cartService.getCartById(anonymousCartId)

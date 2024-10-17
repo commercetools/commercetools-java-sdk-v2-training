@@ -31,7 +31,7 @@ public class Task04a_CUSTOMTYPES {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
 
-            final String customerKey = "nd-customer";
+            final String customerKey = "ct-customer";
 
             Map<String, String> labelsForFieldInstructions = new HashMap<String, String>() {
                 {

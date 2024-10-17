@@ -29,7 +29,7 @@ public class Task03a_IMPORT_API {
         try (ProjectApiRoot client = createImportApiClient(apiImportClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
-            final String containerKey = "nd-berlin-store-prices";
+            final String containerKey = "boston-store-customers";
 
             final ImportService importService = new ImportService(client);
 
@@ -39,15 +39,13 @@ public class Task03a_IMPORT_API {
             //  CHECK the status of your import requests
 
             importService.createImportContainer(containerKey)
-                .thenApply(ApiHttpResponse::getBody)
-                    .thenAccept(importContainer -> {
-                        logger.info("Created import container {} ", importContainer.getKey());
-                    }
-                )
-                .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
+                    .thenAccept(importContainerApiHttpResponse ->
+                        logger.info("Created import container {} ", importContainerApiHttpResponse.getBody().getKey())
+                    )
+                    .exceptionally(throwable -> {
+                            logger.error("Exception: {}", throwable.getMessage());
+                            return null;
+                        }).join();
 
 
             importService.importCustomersFromCsv(

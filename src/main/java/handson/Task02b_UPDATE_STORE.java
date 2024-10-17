@@ -24,7 +24,7 @@ public class Task02b_UPDATE_STORE {
             final String storeKey = getStoreKey(apiClientPrefix);
             StoreService storeService = new StoreService(client, storeKey);
 
-            final String productSelectionKey = "nd-boston-selection1";
+            final String productSelectionKey = "boston-selection";
 
 //          // TODO: Assign Product Selection to your store
 //          //

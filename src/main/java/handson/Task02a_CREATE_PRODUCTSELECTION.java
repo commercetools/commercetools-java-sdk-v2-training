@@ -37,11 +37,11 @@ public class Task02a_CREATE_PRODUCTSELECTION {
 
             // TODO: CREATE a Product Selection
             //
-            final String productSelectionKey = "nd-boston-selection";
+            final String productSelectionKey = "boston-selection";
             Map<String, String> psName = new HashMap<String, String>() {
                 {
-                    put("DE", "nd boston selection");
-                    put("EN", "nd boston selection");
+                    put("DE", "boston selection");
+                    put("EN", "boston selection");
                 }
             };
 
