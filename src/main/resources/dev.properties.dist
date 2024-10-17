@@ -1,41 +1,44 @@
 ## API Client for Dev Admin
 
-dev-admin.projectKey=
-dev-admin.clientId=
-dev-admin.clientSecret=
-dev-admin.authUrl=
-dev-admin.apiUrl=
-dev-admin.scopes=
-dev-admin.storeKey=
+ctp.projectKey=
+ctp.clientId=
+ctp.clientSecret=
+ctp.authUrl=
+ctp.apiUrl=
+
+## API Client for store
+
+ctp-store.projectKey=
+ctp-store.clientId=
+ctp-store.clientSecret=
+ctp-store.authUrl=
+ctp-store.apiUrl=
+ctp-store.scopes
+ctp-store.storeKey
 
 ## SUGGESTED SCOPE for DEV ADMIN:
-    ## manage_product_selections:project-key
-    ## manage_states:project-key
-    ## manage_order_edits:project-key
-    ## manage_cart_discounts:project-key:the-good-store
-    ## view_project_settings:project-key
-    ## view_published_products:project-key
-    ## view_categories:project-key
-    ## manage_shopping_lists:project-key:the-good-store
-    ## manage_stores:project-key
-    ## manage_orders:project-key:the-good-store
-    ## manage_customers:project-key:the-good-store
-    ## view_cart_discounts:project-key
-    ## view_discount_codes:project-key
-    ## manage_payments:project-key
-    ## create_anonymous_token:project-key
-    ## view_tax_categories:project-key
-    ## manage_standalone_prices:project-key
-    ## view_shipping_methods:project-key
-    ## manage_types:project-key
-    ## view_customer_groups:project-key
+    ##     manage_categories:project-key
+    ##     view_shipping_methods:project-key
+    ##     manage_types:project-key
+    ##     view_published_products:project-key
+    ##     manage_payments:project-key
+    ##     manage_states:project-key
+    ##     manage_tax_categories:project-key
+    ##     view_standalone_prices:project-key
+    ##     manage_import_containers:project-key
+    ##     view_project_settings:project-key
+    ##     manage_discount_codes:project-key
+    ##     manage_subscriptions:project-key
+    ##     manage_order_edits:project-key
+    ##     manage_customer_groups:project-key
+    ##     manage_extensions:project-key
+    ##     manage_connectors:project-key
+    ##     manage_product_selections:project-key
+    ##     manage_stores:project-key
+    ##     manage_connectors_deployments:project-key
+
+    ##     manage_orders:project-key:boston-store
+    ##     manage_customers:project-key:boston-store
+    ##     manage_cart_discounts:project-key:boston-store
 
 
-## API Client for importing Products/Prices
-
-
-## mh-test-admin
-##
-
-## API Client for MyAPI
-##
