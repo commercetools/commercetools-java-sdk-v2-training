@@ -25,7 +25,7 @@ public class Task05b_ORDER {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
@@ -34,13 +34,100 @@ public class Task05b_ORDER {
             CartService cartService = new CartService(client, storeKey);
             CustomerService customerService = new CustomerService(client, storeKey);
             OrderService orderService = new OrderService(client, storeKey);
+            PaymentService paymentService = new PaymentService(client, storeKey);
 
             // TODO: UPDATE the cart ID from the previous task
             //
             final String cartId = "";
             final String initialStateKey = "OrderPacked";
+            final String customerKey = "";
+            final String customerEmail = "";
             final String orderNumber = "";
 
+            //  TODO: LOGIN customer or signup, if not found
+            //
+            customerService.loginCustomer(
+                            customerEmail,
+                            "password",
+                            cartId,
+                            AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART
+                    )
+                    .exceptionally(ex -> {
+                        logger.info("exception: {}", ex.getMessage());
+                        try {
+                            return customerService.createCustomer(
+                                    customerEmail,
+                                    "password",
+                                    cartId
+                            ).get();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .thenAccept(customerSignInResult -> {
+                        logger.info("cart updated {}", customerSignInResult.getBody().getCart().getId());
+                    }).join();
+
+//            // TODO: ADD shipping address from customer profile
+//            // TODO Add a new address if no default shipping address found
+//            //
+//            customerService
+//                    .getCustomerByKey(customerKey)
+//                    .thenApply(ApiHttpResponse::getBody)
+//                    .thenApply(customer -> customer.getAddresses().stream()
+//                            .filter(address -> address.getId().equals(customer.getDefaultShippingAddressId()))
+//                            .findFirst()
+//                    )
+//                    .thenAccept(optionalAddress -> {
+//                        Address shippingAddress = optionalAddress.orElseGet(() -> AddressBuilder.of()
+//                                .firstName("First")
+//                                .lastName("Tester")
+//                                .country("DE")
+//                                .key(customerKey + "-default")
+//                                .build()
+//                        );
+//                        if(!optionalAddress.isPresent()) {
+//                            try {
+//                                logger.info("Customer address added and set as default billing and shipping address:"
+//                                        + customerService.addAddressToCustomer(customerKey, shippingAddress)
+//                                        .get().getBody().getEmail()
+//                                );
+//                            } catch (Exception e) {throw new RuntimeException(e);}
+//                        }
+//
+//                        cartService.getCartById(cartId)
+//                                .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, shippingAddress))
+//                                .thenComposeAsync(cartService::setShipping)
+//                                .thenComposeAsync(cartService::recalculate)
+//                                .thenAccept(cartApiHttpResponse -> {
+//                                    logger.info("cart updated with shipping info {}", cartApiHttpResponse.getBody().getId());
+//                                })
+//                                .exceptionally(throwable -> {
+//                                    logger.error("Exception: {}", throwable.getMessage());
+//                                    return null;
+//                                }).join();
+//                    })
+//                    .exceptionally(ex -> {
+//                        logger.error("Error retrieving customer: {}", ex.getMessage());
+//                        return null;
+//                    }).join();
+
+//            // TODO ADD Payment to the cart
+//            //
+//            cartService.getCartById(cartId)
+//                    .thenComposeAsync(cartApiHttpResponse ->
+//                            paymentService.createPaymentAndAddToCart(
+//                                    cartApiHttpResponse.getBody(),
+//                                    "We_Do_Payments",
+//                                    "CREDIT_CARD",
+//                                    "we_pay_73636" + Math.random(),    // Must be unique.
+//                                    "pay82626" + Math.random())                  // Must be unique.
+//                    )
+//                    .thenAccept(cartApiHttpResponse -> logger.info("cart updated with payment {}", cartApiHttpResponse.getBody().getId()))
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
             // TODO: Place the order for the cartId above
             // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
 

@@ -29,7 +29,7 @@ public class Task01a_GET_QUERY {
 
                 Logger logger = LoggerFactory.getLogger("commercetools");
                 // TODO: UPDATE API Client in dev.properties
-                // TODO {@link ClientService#createApiClient(String prefix)}
+                // TODO: {@link ClientService#createApiClient(String prefix)}
                 // TODO: GET project info
                 //
 
@@ -39,7 +39,7 @@ public class Task01a_GET_QUERY {
                 // TODO: GET tax categories
                 //
 
-                // TODO Get Tax category by Key
+                // TODO: GET a Tax category by Key
                 //
 
             }

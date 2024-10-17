@@ -20,7 +20,7 @@ public class Task05d_ORDER_REPLICATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");

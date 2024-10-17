@@ -28,16 +28,17 @@ public class Task02a_CREATE_PRODUCTSELECTION {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
+            final ProductSelectionService productSelectionService = new ProductSelectionService(client);
 
-            final String storeKey = getStoreKey(apiClientPrefix);
+            final String productSelectionKey = "";
 
             // TODO: CREATE a Product Selection
             //
-            final String productSelectionKey = "";
+
             Map<String, String> psName = new HashMap<String, String>() {
                 {
                     put("DE", "product selection");
@@ -48,8 +49,6 @@ public class Task02a_CREATE_PRODUCTSELECTION {
             // TODO: CREATE a new product selection
             //
 
-            final ProductSelectionService productSelectionService = new ProductSelectionService(client);
-
             productSelectionService.createProductSelection(productSelectionKey, psName)
                     .thenAccept(productSelectionApiHttpResponse ->
                             logger.info("Product Selection created: "
@@ -58,7 +57,7 @@ public class Task02a_CREATE_PRODUCTSELECTION {
                     .exceptionally(throwable -> {
                         logger.error("Exception: {}", throwable.getMessage());
                         return null;
-                    });
+                    }).join();
 
             // TODO: ADD Products to Product Selection
             //

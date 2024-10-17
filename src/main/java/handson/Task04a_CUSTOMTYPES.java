@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 public class Task04a_CUSTOMTYPES {
@@ -26,21 +27,21 @@ public class Task04a_CUSTOMTYPES {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
+            final String storeKey = getStoreKey(apiClientPrefix);
 
             final String customerKey = "nd-customer";
 
             // TODO CREATE labels for the type and fields
-            Map<String, String> namesForType = new HashMap<String, String>() {
+            Map<String, String> nameForType = new HashMap<String, String>() {
                 {
                     put("de-DE", "Delivery instructions");
                     put("en-US", "Delivery instructions");
                 }
             };
-
 
             // TODO DEFINE fields
             //
@@ -50,7 +51,7 @@ public class Task04a_CUSTOMTYPES {
             //
             // client.types.post().execute()
 
-            Customer customer = client
+            Customer customer = client.inStore(storeKey)
                 .customers()
                 .withKey(customerKey)
                 .get()
@@ -58,7 +59,7 @@ public class Task04a_CUSTOMTYPES {
 
             //TODO UPDATE the customer with custom type
             //
-            // client.customers().withKey(customerKey).post().execute()
+            // client.inStore(storeKey).customers().withKey(customerKey).post().execute()
 
         }
     }

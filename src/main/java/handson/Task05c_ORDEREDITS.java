@@ -21,7 +21,7 @@ public class Task05c_ORDEREDITS {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
@@ -47,7 +47,7 @@ public class Task05c_ORDEREDITS {
 //            orderService.getOrderEditByKey(orderEditKey)
 //                    .thenComposeAsync(orderService::applyOrderEdit)
 //                    .thenAccept(orderEditApiHttpResponse ->
-//                            logger.info("orderEdit {} applied", orderEditApiHttpResponse.getBody().getResult().getType())
+//                            logger.info("orderEdit {}", orderEditApiHttpResponse.getBody().getResult().getType())
 //                    )
 //                    .exceptionally(throwable -> {
 //                        logger.error("Exception: {}", throwable.getMessage());

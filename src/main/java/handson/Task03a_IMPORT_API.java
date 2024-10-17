@@ -25,13 +25,12 @@ public class Task03a_IMPORT_API {
         //  Update your prefix for an Import Api Client in the PrefixHelper
         //  Provide a container key
         //
-        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_IMPORT_PREFIX.getPrefix();
+        final String apiImportClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createImportApiClient(apiImportClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
-
-            final String containerKey = "nd-berlin-store-customers";
-
             final ImportService importService = new ImportService(client);
+
+            final String containerKey = "berlin-store-customers";
 
             // TODO CREATE an import container
             //
@@ -41,13 +40,9 @@ public class Task03a_IMPORT_API {
             //
             // importService.importCustomersFromCsv(containerKey, "customers.csv")
 
-            // TODO CHECK the status of your import requests
-            //
-//            client
-//                    .importContainers()
-//                    .withImportContainerKeyValue(containerKey)
-//                    .importSummaries()
-//                    .get().execute()
+//            // TODO CHECK the status of your import requests
+//            //
+//            importService.getImportContainerSummary(containerKey)
 //                    .thenAccept(importSummaryApiHttpResponse -> {
 //                            OperationStates states = importSummaryApiHttpResponse.getBody().getStates();
 //                            logger.info("Processing: {} Imported: {} Unresolved: {} Rejected: {} Validation Failed: {}",

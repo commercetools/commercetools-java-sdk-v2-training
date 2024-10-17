@@ -17,14 +17,14 @@ public class Task02b_UPDATE_STORE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
             StoreService storeService = new StoreService(client, storeKey);
 
-            final String productSelectionKey = "product-selection";
+            final String productSelectionKey = "";
 
             // TODO: Assign Product Selection to your store
             //
