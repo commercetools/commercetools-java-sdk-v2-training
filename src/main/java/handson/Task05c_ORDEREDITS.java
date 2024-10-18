@@ -23,11 +23,11 @@ public class Task05c_ORDEREDITS {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
 
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
-            OrderService orderService = new OrderService(client, storeKey);
+            OrderService orderService = new OrderService(apiRoot, storeKey);
             final String supplyChannelKey = "boston-store-channel";
             final String distChannelKey = "boston-store-channel";
 

@@ -30,7 +30,7 @@ public class Task06c_GRAPHQL {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             // TODO:
@@ -38,7 +38,7 @@ public class Task06c_GRAPHQL {
             //
 
             GraphQLResponse<ProductQueryResult> responseEntity =
-                    client
+                    apiRoot
                             .graphql()
                             .query(GraphQL.products(q -> q.limit(3).sort(Collections.singletonList("masterData.current.name.en desc")))
                                     .projection(p -> p.total().results().id().masterData().current().name("en", null)))
@@ -77,7 +77,7 @@ public class Task06c_GRAPHQL {
 //                    .build();
 //
 //            // Execute the query
-//            ApiHttpResponse<ProductAssignmentQueryResult> response = client
+//            ApiHttpResponse<ProductAssignmentQueryResult> response = apiRoot
 //                    .graphql()
 //                    .query(queryResultGraphQLRequest)
 //                    .executeBlocking()

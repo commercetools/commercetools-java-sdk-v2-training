@@ -22,82 +22,81 @@ public class Task06a_SEARCH {
 // TODO UPDATE: Product projection in Store
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger("commercetools");
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        Category seedCategory = client
-            .categories()
-            .withKey("plant-seeds")
-            .get()
-            .execute()
-            .get()
-            .getBody();
+            Category seedCategory = apiRoot
+                    .categories()
+                    .withKey("plant-seeds")
+                    .get()
+                    .execute()
+                    .get()
+                    .getBody();
 
-        // to get categoryReference
-        CategoryReference seedCategoryReference =
-            CategoryReferenceBuilder.of()
-                .id(seedCategory.getId())
-                .build();
+            // to get categoryReference
+            CategoryReference seedCategoryReference =
+                    CategoryReferenceBuilder.of()
+                            .id(seedCategory.getId())
+                            .build();
 
-        // filter from product projection query response
+            // filter from product projection query response
 
-        // the effective filter from the search response
-        // params found in the product projection search https://docs.commercetools.com/api/projects/products-search#search-productprojections
-        ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = client
-            // TODO Get all products
-            .productProjections()
-            .search()
-            .get()
-            .withStaged(false)
+            // the effective filter from the search response
+            // params found in the product projection search https://docs.commercetools.com/api/projects/products-search#search-productprojections
+            ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = apiRoot
+                    // TODO Get all products
+                    .productProjections()
+                    .search()
+                    .get()
+                    .withStaged(false)
 
-            // TODO Restrict on category plant-seeds
-            .withMarkMatchingVariants(true)
-            .withFilterQuery("categories.id:\"" + seedCategoryReference.getId() + "\"")
+                    // TODO Restrict on category plant-seeds
+                    .withMarkMatchingVariants(true)
+                    .withFilterQuery("categories.id:\"" + seedCategoryReference.getId() + "\"")
 
-            // TODO Get all Facets for Enum size and Number weight_in_kg
+                    // TODO Get all Facets for Enum size and Number weight_in_kg
 
-            .withFacet("variants.attributes.packing")
-            .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
-
-
-            // TODO Give price range on products with no effect on facets
-            // .withFilter("variants.price.centAmount:range (100 to 100000)")
-            // TODO: with effect on facets
-//                 .addFilterQuery("variants.price.centAmount:range (100 to 100000)")
-
-            // TODO: Simulate click on facet box from attribute size
-            //.withFilterFacets("variants.attributes.size:\"box\"")
-            .executeBlocking()
-            .getBody();
+                    .withFacet("variants.attributes.packing")
+                    .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
 
 
+                    // TODO Give price range on products with no effect on facets
+                    // .withFilter("variants.price.centAmount:range (100 to 100000)")
+                    // TODO: with effect on facets
+                    //                 .addFilterQuery("variants.price.centAmount:range (100 to 100000)")
 
-        int size = productProjectionPagedSearchResponse.getResults().size();
-        logger.info("No. of products: " + size);
-        List<ProductProjection> result =  productProjectionPagedSearchResponse.getResults().subList(0, size);
-        System.out.println("products searched: ");
-        result.forEach((r) -> System.out.println(r.getKey()));
-
-        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
-        logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values().toString());
-        Map<String, FacetResult> facetResults= productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
-        facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
-        logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
+                    // TODO: Simulate click on facet box from attribute size
+                    //.withFilterFacets("variants.attributes.size:\"box\"")
+                    .executeBlocking()
+                    .getBody();
 
 
-        logger.info("Facet Weight (kg): ");
-        FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg");
-        if (weightRangeFacetResult instanceof RangeFacetResult) {
-            logger.info("No. of Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().size());
-            logger.info("Weight Terms: {}", ((RangeFacetResult)weightRangeFacetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFrom().intValue() + " to " + facetResultRange.getTo().intValue() + " - " + facetResultRange.getCount()).collect(Collectors.toList()));
+            int size = productProjectionPagedSearchResponse.getResults().size();
+            logger.info("No. of products: " + size);
+            List<ProductProjection> result = productProjectionPagedSearchResponse.getResults().subList(0, size);
+            System.out.println("products searched: ");
+            result.forEach((r) -> System.out.println(r.getKey()));
+
+            logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
+            logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values().toString());
+            Map<String, FacetResult> facetResults = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
+            facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
+            logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
+
+
+            logger.info("Facet Weight (kg): ");
+            FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg");
+            if (weightRangeFacetResult instanceof RangeFacetResult) {
+                logger.info("No. of Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().size());
+                logger.info("Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFrom().intValue() + " to " + facetResultRange.getTo().intValue() + " - " + facetResultRange.getCount()).collect(Collectors.toList()));
+            }
+            logger.info("Facet Packing Type: ");
+            FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.packing");
+            if (sizeBoxFacetResult instanceof TermFacetResult) {
+                logger.info("No. of Packing Terms: {}", ((TermFacetResult) sizeBoxFacetResult).getTerms().size());
+                logger.info("Packing Type Facet Result: {}", ((TermFacetResult) sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
+            }
+
         }
-        logger.info("Facet Packing Type: ");
-        FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.packing");
-        if (sizeBoxFacetResult instanceof TermFacetResult) {
-            logger.info("No. of Packing Terms: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().size());
-            logger.info("Packing Type Facet Result: {}", ((TermFacetResult)sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
-        }
-
-        client.close();
     }
 }

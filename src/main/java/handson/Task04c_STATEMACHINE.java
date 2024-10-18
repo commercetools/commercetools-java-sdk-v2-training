@@ -23,9 +23,9 @@ public class Task04c_STATEMACHINE {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
-            final StateMachineService stateMachineService = new StateMachineService(client);
+            final StateMachineService stateMachineService = new StateMachineService(apiRoot);
 
             // TODO Use StateMachineService.java to create your designed order state machine
             //
@@ -41,7 +41,6 @@ public class Task04c_STATEMACHINE {
                         try {
                             return stateMachineService.getStateByKey("OrderPacked").get();
                         } catch (Exception e) {
-                            client.close();
                             logger.error(e.getMessage());
                             return null;
                         }
@@ -58,7 +57,6 @@ public class Task04c_STATEMACHINE {
                                         try {
                                             return stateMachineService.getStateByKey("OrderShipped").get();
                                         } catch (Exception e) {
-                                            client.close();
                                             logger.error(e.getMessage());
                                             return null;
                                         }

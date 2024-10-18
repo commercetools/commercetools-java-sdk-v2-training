@@ -26,15 +26,15 @@ public class Task05b_ORDER {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
 
-            CartService cartService = new CartService(client, storeKey);
-            CustomerService customerService = new CustomerService(client, storeKey);
-            OrderService orderService = new OrderService(client, storeKey);
-            PaymentService paymentService = new PaymentService(client, storeKey);
+            CartService cartService = new CartService(apiRoot, storeKey);
+            CustomerService customerService = new CustomerService(apiRoot, storeKey);
+            OrderService orderService = new OrderService(apiRoot, storeKey);
+            PaymentService paymentService = new PaymentService(apiRoot, storeKey);
 
             // TODO: Fetch a channel if your inventory mode will not be NONE
             //

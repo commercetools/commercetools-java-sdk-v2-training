@@ -24,10 +24,10 @@ public class Task09a_ERROR_HANDLING {
 
         Logger logger = LoggerFactory.getLogger("commercetools");
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
+        final ProjectApiRoot apiRoot = createApiClient(apiClientPrefix);
 
         final String storeKey = getStoreKey(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client, storeKey);
+        CustomerService customerService = new CustomerService(apiRoot, storeKey);
 
         // TODO:
         //  Provide a WRONG or CORRECT customer key

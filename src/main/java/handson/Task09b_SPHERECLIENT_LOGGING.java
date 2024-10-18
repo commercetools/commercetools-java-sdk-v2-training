@@ -30,7 +30,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         Logger logger = LoggerFactory.getLogger("commercetools");
 
         final String projectKey = getProjectKey(apiClientPrefix);
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
+        final ProjectApiRoot apiRoot = createApiClient(apiClientPrefix);
         final String clientId = getClientId(apiClientPrefix);
         final String clientSecret = getClientSecret(apiClientPrefix);
 
@@ -51,7 +51,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
 
         // 3: List of UpdateActions
         //      Compare the following three code snippets for updating a customer
-        client
+        apiRoot
             .customers()
             .withKey("myCustomerKey")
             .post(CustomerUpdateBuilder.of()
@@ -64,7 +64,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .build())
             .execute();
 
-        client
+        apiRoot
             .customers()
             .withKey("myCustomerKey")
             .post(CustomerUpdateBuilder.of()
@@ -78,7 +78,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
             .execute();
 
 
-        client
+        apiRoot
             .customers()
             .withKey("myCustomerKey")
             .post(CustomerUpdateBuilder.of()
@@ -100,7 +100,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
             //      Be careful!!
             //      Run GET Project and inspect x-correlation-id in the headers
 
-        ProjectApiRoot correlationIdClient = ApiRootBuilder.of()
+        ProjectApiRoot correlationIdApiRoot = ApiRootBuilder.of()
             .defaultClient(
                 ClientCredentials.of()
                     .withClientId(clientId)
@@ -124,7 +124,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
         // Or, per request
 
         logger.info("Get project information with pre-set correlation id: " +
-            client
+            correlationIdApiRoot
                 .get()
                 .withHeader(ApiHttpHeaders.X_CORRELATION_ID, "MyServer15" + UUID.randomUUID())
                 .execute()
@@ -138,7 +138,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
 //                  new RetryMiddleware(20, Arrays.asList(404, 500, 503))
 //                  and query for wrong customer, inspect then logging about the re-tries
 
-        ProjectApiRoot retryClient = ApiRootBuilder.of()
+        ProjectApiRoot retryApiRoot = ApiRootBuilder.of()
             .defaultClient(
                ClientCredentials.of()
                 .withClientId(clientId)
@@ -151,14 +151,14 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .statusCodes(Arrays.asList(502, 503, 504, 404, 400))))
             .build(projectKey);
         logger.info("Get project information via retryClient " +
-            retryClient
+            retryApiRoot
                 .get()
                 .execute()
                 .get()
                 .getBody().getKey()
         );
 
-        ProjectApiRoot concurrentClient = ApiRootBuilder.of()
+        ProjectApiRoot concurrentApiRoot = ApiRootBuilder.of()
             .defaultClient(
                 ClientCredentials.of()
                     .withClientId(clientId)
@@ -170,7 +170,7 @@ public class Task09b_SPHERECLIENT_LOGGING {
             .addConcurrentModificationMiddleware(3)
             .build(projectKey);
         logger.info("Update customer via concurrentClient " +
-            concurrentClient
+                concurrentApiRoot
                 .customers()
                 .withKey("customer-michael15")
                 .post(CustomerUpdateBuilder.of()
@@ -183,6 +183,6 @@ public class Task09b_SPHERECLIENT_LOGGING {
                 .get()
                 .getBody().getLastName()
         );
-        concurrentClient.close();
+        concurrentApiRoot.close();
     }
 }

@@ -35,13 +35,13 @@ public class Task05a_CHECKOUT {
         final String anonymousCartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
 
-            CustomerService customerService = new CustomerService(client, storeKey);
-            CartService cartService = new CartService(client, storeKey);
-            StoreService storeService = new StoreService(client, storeKey);
+            CustomerService customerService = new CustomerService(apiRoot, storeKey);
+            CartService cartService = new CartService(apiRoot, storeKey);
+            StoreService storeService = new StoreService(apiRoot, storeKey);
 
             // TODO: GET the products in the store
             //

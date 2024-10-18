@@ -1,11 +1,9 @@
 package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.order.StagedOrderUpdateAction;
-import com.commercetools.api.models.order.StagedOrderUpdateActionBuilder;
 import handson.impl.ApiPrefixHelper;
-import handson.impl.CartService;
-import handson.impl.OrderService;
+import handson.impl.ClientService;
+import handson.impl.StoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,25 +14,31 @@ import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getStoreKey;
 
 
-public class Task05d_ORDER_REPLICATE {
+/**
+ * Configure sphere client and get project information.
+ *
+ * See:
+ *  TODO dev.properties
+ *  TODO {@link ClientService#createApiClient(String prefix)}
+ */
+public class Task02a_CREATE_STORE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
+
             Logger logger = LoggerFactory.getLogger("commercetools");
-
             final String storeKey = getStoreKey(apiClientPrefix);
-            CartService cartService = new CartService(apiRoot, storeKey);
+            final StoreService storeService = new StoreService(apiRoot, storeKey);
 
-            final String orderNumber = "CT253979954003083";
+            // TODO: CREATE a store
+            //
 
-            // TODO: REPLICATE your last order
-
-            cartService.replicateOrderByOrderNumber(orderNumber)
-                    .thenAccept(cartApiHttpResponse ->
-                            logger.info("cart {} created", cartApiHttpResponse.getBody().getId())
+            storeService.createStore()
+                    .thenAccept(storeApiHttpResponse ->
+                            logger.info("Store created: {}",
+                                    storeApiHttpResponse.getBody().getId())
                     )
                     .exceptionally(throwable -> {
                         logger.error("Exception: {}", throwable.getMessage());

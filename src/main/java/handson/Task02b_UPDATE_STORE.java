@@ -18,11 +18,11 @@ public class Task02b_UPDATE_STORE {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
-            StoreService storeService = new StoreService(client, storeKey);
+            StoreService storeService = new StoreService(apiRoot, storeKey);
 
             final String productSelectionKey = "boston-selection";
 
@@ -30,7 +30,7 @@ public class Task02b_UPDATE_STORE {
           //
             storeService.addProductSelectionToCurrentStore(productSelectionKey)
                 .thenAccept(storeApiHttpResponse ->
-                            logger.info("Store Updated: " + storeApiHttpResponse.getBody().getId())
+                            logger.info("Store Updated: {}", storeApiHttpResponse.getBody().getId())
                 )
                 .exceptionally(throwable -> {
                     logger.error("Exception: {}", throwable.getMessage());

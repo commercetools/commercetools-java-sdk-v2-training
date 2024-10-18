@@ -20,8 +20,8 @@ public class CustomerService {
     final ProjectApiRoot apiRoot;
     final String storeKey;
 
-    public CustomerService(final ProjectApiRoot client, final String storeKey) {
-        this.apiRoot = client;
+    public CustomerService(final ProjectApiRoot apiRoot, final String storeKey) {
+        this.apiRoot = apiRoot;
         this.storeKey = storeKey;
     }
 

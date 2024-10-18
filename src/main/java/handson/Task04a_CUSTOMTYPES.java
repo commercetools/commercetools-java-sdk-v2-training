@@ -28,7 +28,7 @@ public class Task04a_CUSTOMTYPES {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
@@ -82,7 +82,7 @@ public class Task04a_CUSTOMTYPES {
                 }
             };
 
-            client
+            apiRoot
                 .types()
                 .post(
                     typeDraftBuilder -> typeDraftBuilder

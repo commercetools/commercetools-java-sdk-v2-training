@@ -20,14 +20,14 @@ public class Task06b_SEARCHQUERY {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             final String storeKey = getStoreKey(apiClientPrefix);
 
             logger.info("Today's orders: " +
-                client
+                    apiRoot
                     .orders()
                     .search()
                     .post(
@@ -45,7 +45,7 @@ public class Task06b_SEARCHQUERY {
             );
 
             logger.info("Orders with a particular SKU: " +
-                    client
+                    apiRoot
                             .orders()
                             .search()
                             .post(
@@ -56,7 +56,7 @@ public class Task06b_SEARCHQUERY {
             );
 
             logger.info("orders: " +
-                    client
+                    apiRoot
                             .orders()
                             .search()
                             .post(
@@ -74,7 +74,7 @@ public class Task06b_SEARCHQUERY {
             );
 
             logger.info("Orders with SKUs: " +
-                    client
+                    apiRoot
                             .orders()
                             .search()
                             .post(

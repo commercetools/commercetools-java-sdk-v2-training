@@ -28,8 +28,8 @@ public class PaymentService {
     final ProjectApiRoot apiRoot;
     final String storeKey;
 
-    public PaymentService(final ProjectApiRoot client, final String storeKey) {
-        this.apiRoot = client;
+    public PaymentService(final ProjectApiRoot apiRoot, final String storeKey) {
+        this.apiRoot = apiRoot;
         this.storeKey = storeKey;
     }
 

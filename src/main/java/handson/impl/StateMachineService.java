@@ -15,8 +15,8 @@ public class StateMachineService {
 
     final ProjectApiRoot apiRoot;
 
-    public StateMachineService(final ProjectApiRoot client) {
-        this.apiRoot = client;
+    public StateMachineService(final ProjectApiRoot apiRoot) {
+        this.apiRoot = apiRoot;
     }
 
     public CompletableFuture<ApiHttpResponse<State>> getStateByKey(final String key) {

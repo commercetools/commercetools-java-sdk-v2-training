@@ -24,8 +24,8 @@ public class CartService {
     final ProjectApiRoot apiRoot;
     final String storeKey;
 
-    public CartService(final ProjectApiRoot client, final String storeKey) {
-        this.apiRoot = client;
+    public CartService(final ProjectApiRoot apiRoot, final String storeKey) {
+        this.apiRoot = apiRoot;
         this.storeKey = storeKey;
     }
 

@@ -19,8 +19,8 @@ public class StoreService {
     final ProjectApiRoot apiRoot;
     final String storeKey;
 
-    public StoreService(final ProjectApiRoot client, final String storeKey) {
-        this.apiRoot = client;
+    public StoreService(final ProjectApiRoot apiRoot, final String storeKey) {
+        this.apiRoot = apiRoot;
         this.storeKey = storeKey;
     }
 
@@ -35,6 +35,18 @@ public class StoreService {
                         .withKey(storeKey)
                         .get()
                         .execute();
+    }
+
+    /**
+     * Creates a store by key.
+     *
+     * @return the store completion stage
+     */
+    public CompletableFuture<ApiHttpResponse<Store>> createStore() {
+            return apiRoot
+                    .stores()
+                    .post(storeDraftBuilder -> storeDraftBuilder.key(storeKey))
+                    .execute();
     }
 
     /**

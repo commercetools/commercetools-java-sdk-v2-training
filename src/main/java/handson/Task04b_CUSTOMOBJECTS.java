@@ -21,7 +21,7 @@ public class Task04b_CUSTOMOBJECTS {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
-        try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
             // TODO: CREATE a custom object
@@ -38,7 +38,7 @@ public class Task04b_CUSTOMOBJECTS {
                 Reference.productBuilder().id("c1cb54ce-166d-40d9-96d6-cc989298b932").build(),
                 Reference.productBuilder().id("72e5463f-b8e6-4d9f-8712-696650d37302").build()));
 
-            client
+            apiRoot
                 .customObjects()
                 .post(
                     customObjectDraftBuilder -> customObjectDraftBuilder

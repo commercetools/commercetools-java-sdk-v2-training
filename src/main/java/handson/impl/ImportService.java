@@ -24,8 +24,8 @@ public class ImportService {
 
     final ProjectApiRoot apiRoot;
 
-    public ImportService(final ProjectApiRoot client) {
-        this.apiRoot = client;
+    public ImportService(final ProjectApiRoot apiRoot) {
+        this.apiRoot = apiRoot;
     }
 
     public CompletableFuture<ApiHttpResponse<ImportContainer>> createImportContainer(final String containerKey) {

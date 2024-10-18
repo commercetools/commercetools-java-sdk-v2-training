@@ -32,7 +32,7 @@ public class Task01a_GET_QUERY {
 
             final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-            try (ProjectApiRoot client = createApiClient(apiClientPrefix)) {
+            try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
 
                 Logger logger = LoggerFactory.getLogger("commercetools");
 
@@ -56,7 +56,7 @@ public class Task01a_GET_QUERY {
 //
                 // TODO Get Tax category by Key
                 //
-                client.taxCategories()
+                apiRoot.taxCategories()
                         .withKey("standard-tax")
                         .get()
                         .execute()
