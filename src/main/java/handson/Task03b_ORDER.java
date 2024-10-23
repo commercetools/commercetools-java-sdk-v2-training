@@ -3,8 +3,6 @@ package handson;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
-import com.commercetools.api.models.common.AddressDraft;
-import com.commercetools.api.models.common.AddressDraftBuilder;
 import com.commercetools.api.models.customer.AnonymousCartSignInMode;
 import com.commercetools.api.models.order.OrderState;
 import handson.impl.*;
@@ -19,9 +17,9 @@ import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getStoreKey;
 
 
-public class Task05b_ORDER {
+public class Task03b_ORDER {
 
-    private static final Logger log = LoggerFactory.getLogger(Task05b_ORDER.class);
+    private static final Logger log = LoggerFactory.getLogger(Task03b_ORDER.class);
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
@@ -38,11 +36,10 @@ public class Task05b_ORDER {
 
             // TODO: Fetch a channel if your inventory mode will not be NONE
             //
-            final String cartId = "159d47a1-3bec-42b5-bb5d-6a94bebe58ab";
-            final String initialStateKey = "OrderPacked";
+            final String cartId = "";
             final String customerKey = "ct-customer";
-            final String customerEmail = "ct@test.com";
-            final String orderNumber = "CT463742039052500";
+            final String customerEmail = "ct@example.com";
+            final String orderNumber = "";
 
             //  TODO: LOGIN customer or signup, if not found
             //
@@ -65,7 +62,7 @@ public class Task05b_ORDER {
                         }
                     })
                     .thenAccept(customerSignInResult -> {
-                        logger.info("cart updated {}", customerSignInResult.getBody().getCart().getId());
+                        logger.info("Login successful {}", customerSignInResult.getBody().getCustomer().getEmail());
                     }).join();
 
 //            // TODO: ADD shipping address from customer profile
@@ -144,10 +141,6 @@ public class Task05b_ORDER {
 //                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
 //                            orderApiHttpResponse,
 //                            OrderState.CONFIRMED
-//                    ))
-//                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
-//                            orderApiHttpResponse,
-//                            initialStateKey
 //                    ))
 //                    .thenAccept(orderApiHttpResponse ->
 //                            logger.info("Order placed {}", orderApiHttpResponse.getBody().getOrderNumber())

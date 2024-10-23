@@ -2,8 +2,6 @@ package handson;
 
 
 import com.commercetools.importapi.client.ProjectApiRoot;
-import com.commercetools.importapi.models.common.Money;
-import com.commercetools.importapi.models.common.MoneyBuilder;
 import com.commercetools.importapi.models.importsummaries.OperationStates;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ImportService;
@@ -17,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import static handson.impl.ClientService.createImportApiClient;
 
 
-public class Task03a_IMPORT_API {
+public class Task07a_IMPORT_API {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 

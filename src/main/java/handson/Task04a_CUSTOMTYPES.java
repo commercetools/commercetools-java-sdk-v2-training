@@ -5,6 +5,9 @@ import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerSetCustomFieldActionBuilder;
 import com.commercetools.api.models.customer.CustomerSetCustomTypeActionBuilder;
+import com.commercetools.api.models.order.Order;
+import com.commercetools.api.models.order.OrderSetCustomFieldActionBuilder;
+import com.commercetools.api.models.order.OrderSetCustomTypeActionBuilder;
 import com.commercetools.api.models.type.*;
 import handson.impl.ApiPrefixHelper;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -32,8 +35,6 @@ public class Task04a_CUSTOMTYPES {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
-
-            final String customerKey = "ct-customer";
 
             // TODO CREATE labels for the type and fields
             //
@@ -102,45 +103,76 @@ public class Task04a_CUSTOMTYPES {
                     return null;
                 }).join();
 
-//            //TODO UPDATE the customer with custom type
+//            //TODO UPDATE the Order with custom type
 //            //
-//            Customer customer = client
+//            Order order = apiRoot
 //                    .inStore(storeKey)
-//                    .customers()
-//                    .withKey(customerKey)
+//                    .orders()
+//                    .withOrderNumber("")
 //                    .get()
 //                    .executeBlocking().getBody();
 //
-//            client
+//            apiRoot
 //                .inStore(storeKey)
-//                .customers()
-//                .withKey(customerKey)
+//                .orders()
+//                .withId(order.getId())
 //                .post(
-//                    customerUpdateBuilder -> customerUpdateBuilder
-//                        .version(customer.getVersion())
+//                    updateBuilder -> updateBuilder
+//                        .version(order.getVersion())
 //                        .actions(
 //                            Arrays.asList(
-//                                CustomerSetCustomTypeActionBuilder.of()
+//                                OrderSetCustomTypeActionBuilder.of()
 //                                    .type(typeResourceIdentifierBuilder -> typeResourceIdentifierBuilder.key("delivery-instructions"))
-//                                    .fields(fieldContainerBuilder -> fieldContainerBuilder.values(
-//                                        new HashMap<String, Object>() {
-//                                            {
-//                                                put("instructions", "Leave at door");
-//                                                put("code", 1223);
-//                                            }
-//                                        }
-//                                    ))
 //                                    .build(),
-//                                CustomerSetCustomFieldActionBuilder.of()
+//                                OrderSetCustomFieldActionBuilder.of()
 //                                    .name("code")
 //                                    .value(1221)
 //                                    .build(),
-//                                CustomerSetCustomFieldActionBuilder.of()
+//                                OrderSetCustomFieldActionBuilder.of()
 //                                    .name("instructions")
 //                                    .value("Leave at door")
 //                                    .build()
 //                            )
 //                        )
+//                ).execute()
+//                .thenAccept(orderApiHttpResponse ->
+//                        logger.info("Order updated {}", orderApiHttpResponse.getBody().getOrderNumber())
+//                )
+//                .exceptionally(throwable -> {
+//                    logger.error("Exception: {}", throwable.getMessage());
+//                    return null;
+//                }).join();
+//
+//
+//            //TODO UPDATE the customer with custom type
+//            //
+//            Customer customer = apiRoot
+//                    .inStore(storeKey)
+//                    .customers()
+//                    .withKey("")
+//                    .get()
+//                    .executeBlocking().getBody();
+//
+//            apiRoot
+//                .inStore(storeKey)
+//                .customers()
+//                .withId(customer.getId())
+//                .post(
+//                    customerUpdateBuilder -> customerUpdateBuilder
+//                        .version(customer.getVersion())
+//                        .actions(
+//                            CustomerSetCustomTypeActionBuilder.of()
+//                                .type(typeResourceIdentifierBuilder -> typeResourceIdentifierBuilder.key("delivery-instructions"))
+//                                .fields(fieldContainerBuilder -> fieldContainerBuilder.values(
+//                                    new HashMap<String, Object>() {
+//                                        {
+//                                            put("instructions", "Leave at door");
+//                                            put("code", 1223);
+//                                        }
+//                                    }
+//                                ))
+//                                .build()
+//                            )
 //                ).execute()
 //                .thenAccept(customerApiHttpResponse ->
 //                        logger.info("Customer updated {}", customerApiHttpResponse.getBody().getKey())

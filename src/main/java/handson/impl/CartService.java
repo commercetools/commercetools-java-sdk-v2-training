@@ -3,8 +3,6 @@ package handson.impl;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.*;
 import com.commercetools.api.models.common.Address;
-import com.commercetools.api.models.common.AddressDraft;
-import com.commercetools.api.models.common.ReferenceBuilder;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.shipping_method.ShippingMethod;
 import com.commercetools.api.models.store.Store;
@@ -12,7 +10,6 @@ import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -142,22 +139,16 @@ public class CartService {
     public CompletableFuture<ApiHttpResponse<Cart>> replicateOrderByOrderNumber(
             final String orderNumber) {
 
-        try {
-            final String cartId = apiRoot.orders().withOrderNumber(orderNumber).get().execute()
-                    .get().getBody().getCart().getId();
-
-            return apiRoot
-                    .inStore(storeKey)
-                    .carts()
-                    .replicate()
-                    .post(
-                            replicaCartDraftBuilder -> replicaCartDraftBuilder
-                                    .reference(referenceBuilder -> referenceBuilder.cartBuilder().id(cartId))
-                    )
-                    .execute();
-        } catch (Exception ignored) {
-            throw new RuntimeException("Error replicating order");
-        }
+        return apiRoot.inStore(storeKey).orders().withOrderNumber(orderNumber).get().execute()
+            .thenComposeAsync(orderApiHttpResponse -> apiRoot
+            .inStore(storeKey)
+            .carts()
+            .replicate()
+            .post(
+                    replicaCartDraftBuilder -> replicaCartDraftBuilder
+                            .reference(referenceBuilder -> referenceBuilder.cartBuilder().id(orderApiHttpResponse.getBody().getCart().getId()))
+            )
+            .execute());
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(

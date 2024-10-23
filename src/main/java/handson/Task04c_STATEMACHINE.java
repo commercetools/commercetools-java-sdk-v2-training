@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.state.StateResourceIdentifierBuilder;
 import com.commercetools.api.models.state.StateTypeEnum;
 import handson.impl.ApiPrefixHelper;
+import handson.impl.OrderService;
 import handson.impl.StateMachineService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 public class Task04c_STATEMACHINE {
@@ -25,7 +27,10 @@ public class Task04c_STATEMACHINE {
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
+            final String storeKey = getStoreKey(apiClientPrefix);
+
             final StateMachineService stateMachineService = new StateMachineService(apiRoot);
+            OrderService orderService = new OrderService(apiRoot, storeKey);
 
             // TODO Use StateMachineService.java to create your designed order state machine
             //
@@ -89,8 +94,20 @@ public class Task04c_STATEMACHINE {
                         return null;
                     }).join();
 
-            // TODO Create an order in the Merchant Center and verify that custom workflow states are available
-            //
+//            // TODO Create an order in the Merchant Center and verify that custom workflow states are available
+//            //
+//             orderService.getOrderByOrderNumber("")
+//                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(
+//                            orderApiHttpResponse,
+//                            ""
+//                    ))
+//                    .thenAccept(orderApiHttpResponse ->
+//                            logger.info("Order state updated {}", orderApiHttpResponse.getBody().getOrderNumber())
+//                    )
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
         }
     }
 }

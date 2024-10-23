@@ -4,7 +4,6 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
-import com.commercetools.api.models.common.AddressDraft;
 import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.customer_group.CustomerGroup;
 import io.vrap.rmf.base.client.ApiHttpResponse;

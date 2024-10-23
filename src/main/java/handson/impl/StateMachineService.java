@@ -1,11 +1,14 @@
 package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.common.LocalizedStringBuilder;
-import com.commercetools.api.models.state.*;
+import com.commercetools.api.models.state.State;
+import com.commercetools.api.models.state.StateResourceIdentifier;
+import com.commercetools.api.models.state.StateTypeEnum;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**

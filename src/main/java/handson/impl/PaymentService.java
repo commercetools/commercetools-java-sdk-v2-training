@@ -2,10 +2,7 @@ package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
-import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
-import com.commercetools.api.models.cart.CartUpdateBuilder;
-import com.commercetools.api.models.common.MoneyBuilder;
-import com.commercetools.api.models.payment.*;
+import com.commercetools.api.models.payment.TransactionType;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.time.ZonedDateTime;

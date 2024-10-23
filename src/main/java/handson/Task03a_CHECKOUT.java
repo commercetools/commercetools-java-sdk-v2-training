@@ -3,43 +3,33 @@ package handson;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
-import com.commercetools.api.models.common.AddressDraft;
-import com.commercetools.api.models.common.AddressDraftBuilder;
-import com.commercetools.api.models.customer.AnonymousCartSignInMode;
-import com.commercetools.api.models.customer.Customer;
 import handson.impl.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
 import static handson.impl.ClientService.getStoreKey;
 
 
-public class Task05a_CHECKOUT {
+public class Task03a_CHECKOUT {
 
-    private static final Logger log = LoggerFactory.getLogger(Task05a_CHECKOUT.class);
+    private static final Logger log = LoggerFactory.getLogger(Task03a_CHECKOUT.class);
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String supplyChannelKey = "boston-store-channel";
         final String distChannelKey = "boston-store-channel";
-        final String initialStateKey = "OrderPacked";
-        final String customerKey = "ct-customer";
-        final String customerEmail = "ct@test.com";
-        final String anonymousCartId = "992ceff9-6994-4e78-aa76-aa6ccaab7636";
+        final String cartId = "";
 
         final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
 
-            CustomerService customerService = new CustomerService(apiRoot, storeKey);
             CartService cartService = new CartService(apiRoot, storeKey);
             StoreService storeService = new StoreService(apiRoot, storeKey);
 
@@ -65,7 +55,7 @@ public class Task05a_CHECKOUT {
 
 //            // TODO: Perform cart operations: add products to a new customer cart
 //            //
-//            customerService.getCustomerByKey(customerKey)
+//            customerService.getCustomerByKey("")
 //                    .thenCombineAsync(storeService.getCurrentStore(), ((customerApiHttpResponse, storeApiHttpResponse) ->
 //                            cartService.createCustomerCart(customerApiHttpResponse, storeApiHttpResponse, "RB-01", 2L, supplyChannelKey, distChannelKey)))
 //                    .get()
@@ -80,17 +70,35 @@ public class Task05a_CHECKOUT {
 //            //
 //            storeService.getCurrentStore()
 //                    .thenComposeAsync(storeApiHttpResponse ->
-//                            cartService.createAnonymousCart(storeApiHttpResponse, "RB-01", 3L, supplyChannelKey, distChannelKey))
+//                            cartService.createAnonymousCart(storeApiHttpResponse, "AAR-34", 3L, supplyChannelKey, distChannelKey))
 //                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
 //                    .exceptionally(throwable -> {
 //                        logger.error("Exception: {}", throwable.getMessage());
 //                        return null;
 //                    }).join();
 
+//            // TODO Add a new address if no default shipping address found
+//            //
+//            Address shippingAddress = AddressBuilder.of()
+//                    .firstName("commercetools")
+//                    .lastName("Customer")
+//                    .country("DE")
+//                    .key("default-address")
+//                    .build();
+//
+//            cartService.getCartById(cartId)
+//                    .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, shippingAddress))
+//                    .thenAccept(cartApiHttpResponse -> {
+//                        logger.info("cart updated with shipping info {}", cartApiHttpResponse.getBody().getId());
+//                    })
+//                    .exceptionally(throwable -> {
+//                        logger.error("Exception: {}", throwable.getMessage());
+//                        return null;
+//                    }).join();
 
 //            // TODO Freeze cart
 //            //
-//            cartService.getCartById(anonymousCartId)
+//            cartService.getCartById(cartId)
 //                    .thenComposeAsync(cartService::freezeCart)
 //                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in frozen state {}", cartApiHttpResponse.getBody().getId()))
 //                    .exceptionally(throwable -> {
@@ -100,7 +108,7 @@ public class Task05a_CHECKOUT {
 
 //            // TODO Unfreeze cart
 //            //
-//            cartService.getCartById(anonymousCartId)
+//            cartService.getCartById(cartId)
 //                    .thenComposeAsync(cartService::unfreezeCart)
 //                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in active state {}", cartApiHttpResponse.getBody().getId()))
 //                    .exceptionally(throwable -> {
@@ -110,7 +118,7 @@ public class Task05a_CHECKOUT {
 
 //            // TODO Recalculate cart
 //            //
-//            cartService.getCartById(anonymousCartId)
+//            cartService.getCartById(cartId)
 //                    .thenComposeAsync(cartService::recalculate)
 //                    .thenAccept(cartApiHttpResponse -> logger.info("cart has been recalculated {}", cartApiHttpResponse.getBody().getId()))
 //                    .exceptionally(throwable -> {

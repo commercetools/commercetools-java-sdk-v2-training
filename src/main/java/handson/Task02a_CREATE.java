@@ -35,7 +35,7 @@ public class Task02a_CREATE {
 
             apiRoot.categories()
                     .create(
-                            categoryDraftBuilder -> categoryDraftBuilder
+                            cb -> cb
                                     .key("clearance")
                                     .name(lsb -> lsb.addValue("en-US", "Clearance"))
                                     .slug(lsb -> lsb.addValue("en-US", "clearance-sale-summer"))

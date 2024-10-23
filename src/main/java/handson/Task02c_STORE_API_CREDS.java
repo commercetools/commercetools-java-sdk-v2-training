@@ -23,7 +23,7 @@ public class Task02c_STORE_API_CREDS {
 
             final String projectKey = getProjectKey(apiClientPrefix);
             
-            final String storeKey = "nagesh-store";
+            final String storeKey = "boston-store";
             
             final String scopeString = "manage_discount_codes:projectKey manage_states:projectKey manage_customers:projectKey:storeKey manage_categories:projectKey manage_cart_discounts:projectKey:storeKey manage_import_containers:projectKey manage_tax_categories:projectKey manage_product_selections:projectKey manage_payments:projectKey view_project_settings:projectKey manage_types:projectKey manage_customer_groups:projectKey view_shipping_methods:projectKey manage_connectors_deployments:projectKey manage_stores:projectKey view_published_products:projectKey manage_order_edits:projectKey manage_connectors:projectKey manage_extensions:projectKey manage_orders:projectKey:storeKey manage_subscriptions:projectKey";
 
@@ -55,28 +55,3 @@ public class Task02c_STORE_API_CREDS {
         }
     }
 }
-
-// SUGGESTED SCOPE for DEV ADMIN:
-    //     manage_categories:project-key
-    //     view_shipping_methods:project-key
-    //     manage_types:project-key
-    //     view_published_products:project-key
-    //     manage_payments:project-key
-    //     manage_states:project-key
-    //     manage_tax_categories:project-key
-    //     view_standalone_prices:project-key
-    //     manage_import_containers:project-key
-    //     view_project_settings:project-key
-    //     manage_discount_codes:project-key
-    //     manage_subscriptions:project-key
-    //     manage_order_edits:project-key
-    //     manage_customer_groups:project-key
-    //     manage_extensions:project-key
-    //     manage_connectors:project-key
-    //     manage_product_selections:project-key
-    //     manage_stores:project-key
-    //     manage_connectors_deployments:project-key
-
-    //     manage_orders:project-key:boston-store
-    //     manage_customers:project-key:boston-store
-    //     manage_cart_discounts:project-key:boston-store

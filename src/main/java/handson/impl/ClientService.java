@@ -11,7 +11,6 @@ import io.vrap.rmf.base.client.oauth2.ClientCredentials;
 import io.vrap.rmf.base.client.oauth2.ClientCredentialsTokenSupplier;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;

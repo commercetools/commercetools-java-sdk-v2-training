@@ -31,47 +31,47 @@ public class Task05c_ORDEREDITS {
             final String supplyChannelKey = "boston-store-channel";
             final String distChannelKey = "boston-store-channel";
 
-            final String orderNumber = "CT463742039052500";
-            final String orderEditKey = "CTOE-464185882118958";
+            final String orderNumber = "CT620421735518958";
+            final String orderEditKey = "CTOE-621471466982375";
 
-            // TODO: Create and Apply an Order Edit
-            //
-            final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
-                    .addLineItemBuilder()
-                    .sku("RCC-09")
-                    .supplyChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(supplyChannelKey))
-                    .distributionChannel(channelResourceIdentifierBuilder ->
-                            channelResourceIdentifierBuilder.key(distChannelKey))
-                    .build();
-
-            orderService.getOrderByOrderNumber(orderNumber)
-                    .thenComposeAsync(orderApiHttpResponse ->
-                            orderService.createOrderEdit(
-                                    orderApiHttpResponse,
-                                    "CTOE-" + System.nanoTime(),
-                                    stagedOrderUpdateAction))
-                    .thenAccept(orderEditApiHttpResponse ->
-                            logger.info("orderEdit {} created with {} type", orderEditApiHttpResponse.getBody().getKey(), orderEditApiHttpResponse.getBody().getResult().getType())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
-            // TODO update orderEditKey above
-
-
-//            //  TODO: Apply OrderEdit
+//            // TODO: Create and Apply an Order Edit
 //            //
-//            orderService.getOrderEditByKey(orderEditKey)
-//                    .thenComposeAsync(orderService::applyOrderEdit)
+//            final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
+//                    .addLineItemBuilder()
+//                    .sku("RCC-09")
+//                    .supplyChannel(channelResourceIdentifierBuilder ->
+//                            channelResourceIdentifierBuilder.key(supplyChannelKey))
+//                    .distributionChannel(channelResourceIdentifierBuilder ->
+//                            channelResourceIdentifierBuilder.key(distChannelKey))
+//                    .build();
+//
+//            orderService.getOrderByOrderNumber(orderNumber)
+//                    .thenComposeAsync(orderApiHttpResponse ->
+//                            orderService.createOrderEdit(
+//                                    orderApiHttpResponse,
+//                                    "CTOE-" + System.nanoTime(),
+//                                    stagedOrderUpdateAction))
 //                    .thenAccept(orderEditApiHttpResponse ->
-//                            logger.info("orderEdit {} ", orderEditApiHttpResponse.getBody().getResult().getType())
+//                            logger.info("orderEdit {} created with {} type", orderEditApiHttpResponse.getBody().getKey(), orderEditApiHttpResponse.getBody().getResult().getType())
 //                    )
 //                    .exceptionally(throwable -> {
 //                        logger.error("Exception: {}", throwable.getMessage());
 //                        return null;
 //                    }).join();
+//            // TODO update orderEditKey above
+
+
+            //  TODO: Apply OrderEdit
+            //
+            orderService.getOrderEditByKey(orderEditKey)
+                    .thenComposeAsync(orderService::applyOrderEdit)
+                    .thenAccept(orderEditApiHttpResponse ->
+                            logger.info("orderEdit {} ", orderEditApiHttpResponse.getBody().getResult().getType())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
         }
     }
 }
