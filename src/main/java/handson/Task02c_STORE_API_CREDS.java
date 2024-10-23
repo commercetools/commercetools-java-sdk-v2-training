@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getProjectKey;
 
 public class Task02c_STORE_API_CREDS {
 
@@ -20,14 +21,23 @@ public class Task02c_STORE_API_CREDS {
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
+            final String projectKey = getProjectKey(apiClientPrefix);
+            
+            final String storeKey = "nagesh-store";
+            
+            final String scopeString = "manage_discount_codes:projectKey manage_states:projectKey manage_customers:projectKey:storeKey manage_categories:projectKey manage_cart_discounts:projectKey:storeKey manage_import_containers:projectKey manage_tax_categories:projectKey manage_product_selections:projectKey manage_payments:projectKey view_project_settings:projectKey manage_types:projectKey manage_customer_groups:projectKey view_shipping_methods:projectKey manage_connectors_deployments:projectKey manage_stores:projectKey view_published_products:projectKey manage_order_edits:projectKey manage_connectors:projectKey manage_extensions:projectKey manage_orders:projectKey:storeKey manage_subscriptions:projectKey";
+
+            final String scope = scopeString.replaceAll("projectKey", projectKey)
+                    .replaceAll("storeKey", storeKey);
+
 
           // TODO: Create store api client
           //
             apiRoot.apiClients()
                     .post(
                             apiClientDraftBuilder -> apiClientDraftBuilder
-                                    .name("nagesh store client test")
-                                    .scope("manage_discount_codes:training-dev-dryrun1-20241017 manage_states:training-dev-dryrun1-20241017 manage_customers:training-dev-dryrun1-20241017:nagesh-store manage_categories:training-dev-dryrun1-20241017 manage_cart_discounts:training-dev-dryrun1-20241017:nagesh-store manage_import_containers:training-dev-dryrun1-20241017 manage_tax_categories:training-dev-dryrun1-20241017 manage_product_selections:training-dev-dryrun1-20241017 manage_payments:training-dev-dryrun1-20241017 view_project_settings:training-dev-dryrun1-20241017 manage_types:training-dev-dryrun1-20241017 manage_customer_groups:training-dev-dryrun1-20241017 view_shipping_methods:training-dev-dryrun1-20241017 manage_connectors_deployments:training-dev-dryrun1-20241017 manage_stores:training-dev-dryrun1-20241017 view_published_products:training-dev-dryrun1-20241017 manage_order_edits:training-dev-dryrun1-20241017 manage_connectors:training-dev-dryrun1-20241017 manage_extensions:training-dev-dryrun1-20241017 manage_orders:training-dev-dryrun1-20241017:nagesh-store manage_subscriptions:training-dev-dryrun1-20241017")
+                                    .name("store client " + System.nanoTime())
+                                    .scope(scope)
                     )
                     .execute()
                     .thenAccept(
@@ -46,3 +56,27 @@ public class Task02c_STORE_API_CREDS {
     }
 }
 
+// SUGGESTED SCOPE for DEV ADMIN:
+    //     manage_categories:project-key
+    //     view_shipping_methods:project-key
+    //     manage_types:project-key
+    //     view_published_products:project-key
+    //     manage_payments:project-key
+    //     manage_states:project-key
+    //     manage_tax_categories:project-key
+    //     view_standalone_prices:project-key
+    //     manage_import_containers:project-key
+    //     view_project_settings:project-key
+    //     manage_discount_codes:project-key
+    //     manage_subscriptions:project-key
+    //     manage_order_edits:project-key
+    //     manage_customer_groups:project-key
+    //     manage_extensions:project-key
+    //     manage_connectors:project-key
+    //     manage_product_selections:project-key
+    //     manage_stores:project-key
+    //     manage_connectors_deployments:project-key
+
+    //     manage_orders:project-key:boston-store
+    //     manage_customers:project-key:boston-store
+    //     manage_cart_discounts:project-key:boston-store

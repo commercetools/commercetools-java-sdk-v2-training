@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static handson.impl.ClientService.createApiClient;
 
-public class Task06a_SEARCH {
+public class Task01b_PRODUCT_SEARCH {
 
     public static void main(String[] args) throws Exception {
 
@@ -27,7 +26,7 @@ public class Task06a_SEARCH {
 
             Category seedCategory = apiRoot
                     .categories()
-                    .withKey("plant-seeds")
+                    .withKey("home-decor")
                     .get()
                     .execute()
                     .get()
@@ -56,8 +55,10 @@ public class Task06a_SEARCH {
 
                     // TODO Get all Facets for Enum size and Number weight_in_kg
 
-                    .withFacet("variants.attributes.packing")
-                    .addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
+                    .withFacet("variants.attributes.color.en-US")
+                    .addFacet("variants.attributes.color.de-DE")
+                    .addFacet("variants.attributes.finish.en-US")
+                    .addFacet("variants.attributes.finish.de-DE")
 
 
                     // TODO Give price range on products with no effect on facets
@@ -73,28 +74,22 @@ public class Task06a_SEARCH {
 
             int size = productProjectionPagedSearchResponse.getResults().size();
             logger.info("No. of products: " + size);
-            List<ProductProjection> result = productProjectionPagedSearchResponse.getResults().subList(0, size);
+            List<ProductProjection> result =  productProjectionPagedSearchResponse.getResults().subList(0, size);
             System.out.println("products searched: ");
             result.forEach((r) -> System.out.println(r.getKey()));
 
-            logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().size());
-            logger.info("Facet Values" + productProjectionPagedSearchResponse.getFacets().values().toString());
-            Map<String, FacetResult> facetResults = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::new).facets();
-            facetResults.forEach((s, facet) -> System.out.println(s + " " + facet.toString()));
-            logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().toString());
-
-
-            logger.info("Facet Weight (kg): ");
-            FacetResult weightRangeFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.weight_in_kg");
-            if (weightRangeFacetResult instanceof RangeFacetResult) {
-                logger.info("No. of Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().size());
-                logger.info("Weight Terms: {}", ((RangeFacetResult) weightRangeFacetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFrom().intValue() + " to " + facetResultRange.getTo().intValue() + " - " + facetResultRange.getCount()).collect(Collectors.toList()));
-            }
-            logger.info("Facet Packing Type: ");
-            FacetResult sizeBoxFacetResult = productProjectionPagedSearchResponse.getFacets().values().get("variants.attributes.packing");
-            if (sizeBoxFacetResult instanceof TermFacetResult) {
-                logger.info("No. of Packing Terms: {}", ((TermFacetResult) sizeBoxFacetResult).getTerms().size());
-                logger.info("Packing Type Facet Result: {}", ((TermFacetResult) sizeBoxFacetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm().toString() + " - " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
+            logger.info("Facet count: " + productProjectionPagedSearchResponse.getFacets().values().size());
+            logger.info("Facets: " + productProjectionPagedSearchResponse.getFacets().values().keySet());
+            for (String facet: productProjectionPagedSearchResponse.getFacets().values().keySet()){
+                FacetResult facetResult = productProjectionPagedSearchResponse.getFacets().withFacetResults(FacetResultsAccessor::asFacetResultMap).get(facet);
+                if (facetResult instanceof RangeFacetResult) {
+                    logger.info("No. of Ranges: {}", ((RangeFacetResult)facetResult).getRanges().size());
+                    logger.info("Facet Result: {}", ((RangeFacetResult)facetResult).getRanges().stream().map(facetResultRange -> facetResultRange.getFromStr() + " to " + facetResultRange.getToStr() + ": " + facetResultRange.getCount()).collect(Collectors.toList()));
+                }
+                else if (facetResult instanceof TermFacetResult) {
+                    logger.info("No. of Terms: {}", ((TermFacetResult)facetResult).getTerms().size());
+                    logger.info("Facet Result: {}", ((TermFacetResult)facetResult).getTerms().stream().map(facetResultTerm -> facetResultTerm.getTerm() + ": " + facetResultTerm.getCount()).collect(Collectors.joining(", ")));
+                }
             }
 
         }

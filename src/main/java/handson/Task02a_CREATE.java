@@ -21,24 +21,29 @@ import static handson.impl.ClientService.getStoreKey;
  *  TODO dev.properties
  *  TODO {@link ClientService#createApiClient(String prefix)}
  */
-public class Task02a_CREATE_STORE {
+public class Task02a_CREATE {
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        final String apiClientPrefix = ApiPrefixHelper.API_STORE_CLIENT_PREFIX.getPrefix();
+        final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
 
             Logger logger = LoggerFactory.getLogger("commercetools");
-            final String storeKey = getStoreKey(apiClientPrefix);
-            final StoreService storeService = new StoreService(apiRoot, storeKey);
 
-            // TODO: CREATE a store
+            // TODO: CREATE a Category
             //
 
-            storeService.createStore()
-                    .thenAccept(storeApiHttpResponse ->
-                            logger.info("Store created: {}",
-                                    storeApiHttpResponse.getBody().getId())
+            apiRoot.categories()
+                    .create(
+                            categoryDraftBuilder -> categoryDraftBuilder
+                                    .key("clearance")
+                                    .name(lsb -> lsb.addValue("en-US", "Clearance"))
+                                    .slug(lsb -> lsb.addValue("en-US", "clearance-sale-summer"))
+                    )
+                    .execute()
+                    .thenAccept(categoryApiHttpResponse ->
+                            logger.info("Category created: {}",
+                                    categoryApiHttpResponse.getBody().getId())
                     )
                     .exceptionally(throwable -> {
                         logger.error("Exception: {}", throwable.getMessage());
