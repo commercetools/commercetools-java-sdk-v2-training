@@ -2,10 +2,7 @@ package handson.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
-import com.commercetools.api.models.cart.CartAddPaymentActionBuilder;
-import com.commercetools.api.models.cart.CartUpdateBuilder;
-import com.commercetools.api.models.common.MoneyBuilder;
-import com.commercetools.api.models.payment.*;
+import com.commercetools.api.models.payment.TransactionType;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.time.ZonedDateTime;
@@ -26,97 +23,85 @@ import java.util.concurrent.CompletableFuture;
 public class PaymentService {
 
     final ProjectApiRoot apiRoot;
+    final String storeKey;
 
-    public PaymentService(final ProjectApiRoot client) {
-        this.apiRoot = client;
+    public PaymentService(final ProjectApiRoot apiRoot, final String storeKey) {
+        this.apiRoot = apiRoot;
+        this.storeKey = storeKey;
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> createPaymentAndAddToCart(
-            final ApiHttpResponse<Cart> cartApiHttpResponse,
+            final Cart cart,
             String psp_Name,
             String psp_Method,
             String interfaceId,
             String interactionId) {
 
-        final Cart cart = cartApiHttpResponse.getBody();
-
         return
-                apiRoot
+            apiRoot
+                .payments()
+                .post(
+                    paymentDraftBuilder -> paymentDraftBuilder
+                        .amountPlanned(
+                            moneyBuilder -> moneyBuilder
+                                .centAmount(cart.getTotalPrice().getCentAmount())
+                                .currencyCode(cart.getTotalPrice().getCurrencyCode())
+                        )
+                        .paymentMethodInfo(
+                            paymentMethodInfoBuilder -> paymentMethodInfoBuilder
+                                .paymentInterface(psp_Name)        // PSP Provider Name: WireCard, ....
+                                .method(psp_Method)                // PSP Provider Method: CreditCard
+                        )
+                        .interfaceId(interfaceId)                          // ID of the payment, important !!!
+                )
+                .execute()
+                .thenComposeAsync(paymentApiHttpResponse ->
+                    apiRoot
                         .payments()
+                        .withId(paymentApiHttpResponse.getBody().getId())
                         .post(
-                                PaymentDraftBuilder.of()
-                                        .amountPlanned(
-                                                MoneyBuilder.of()
-                                                    .centAmount(cart.getTotalPrice().getCentAmount())
-                                                    .currencyCode(cart.getTotalPrice().getCurrencyCode())
-                                                    .build()
+                            paymentUpdateBuilder -> paymentUpdateBuilder
+                                .version(paymentApiHttpResponse.getBody().getVersion())
+                                .plusActions(
+                                    paymentUpdateActionBuilder -> paymentUpdateActionBuilder.addTransactionBuilder()
+                                        .transaction(
+                                            transactionDraftBuilder -> transactionDraftBuilder
+                                                .amount(
+                                                    moneyBuilder -> moneyBuilder
+                                                        .centAmount(cart.getTotalPrice().getCentAmount())
+                                                        .currencyCode(cart.getTotalPrice().getCurrencyCode())
+                                                )
+                                                .timestamp(ZonedDateTime.now())
+                                                .type(TransactionType.CHARGE)
+                                                .interactionId(interactionId)
                                         )
-                                        .paymentMethodInfo(
-                                                PaymentMethodInfoBuilder.of()
-                                                        .paymentInterface(psp_Name)        // PSP Provider Name: WireCard, ....
-                                                        .method(psp_Method)                // PSP Provider Method: CreditCard
-                                                        .build())
-                                        .interfaceId(interfaceId)                          // ID of the payment, important !!!
-                                        .build()
+                               )
+                                .plusActions(
+                                    paymentUpdateActionBuilder -> paymentUpdateActionBuilder.setStatusInterfaceCodeBuilder()
+                                        .interfaceCode("SUCCESS")
+                                )
+                                .plusActions(
+                                    paymentUpdateActionBuilder -> paymentUpdateActionBuilder.setStatusInterfaceTextBuilder()
+                                        .interfaceText("We got the money.")
+                                )
                         )
                         .execute()
-                        .thenComposeAsync(paymentApiHttpResponse ->
-                                    apiRoot
-                                            .payments()
-                                            .withId(paymentApiHttpResponse.getBody().getId())
-                                            .post(
-                                                    PaymentUpdateBuilder.of()
-                                                            .version(paymentApiHttpResponse.getBody().getVersion())
-                                                            .actions(
-                                                                PaymentAddTransactionActionBuilder.of()
-                                                                        .transaction(
-                                                                                TransactionDraftBuilder.of()
-                                                                                        .amount(
-                                                                                                MoneyBuilder.of()
-                                                                                                        .centAmount(cart.getTotalPrice().getCentAmount())
-                                                                                                        .currencyCode(cart.getTotalPrice().getCurrencyCode())
-                                                                                                        .build()
-                                                                                        )
-                                                                                    .timestamp(ZonedDateTime.now())
-                                                                                    .type(TransactionType.CHARGE)
-                                                                                    .interactionId(interactionId)
-                                                                                    .build()
-                                                                        )
-                                                                        .build(),
-
-                                                                // PaymentAddInterfaceInteractionActionBuilder.of()                 // Requires custom fields
-
-                                                                PaymentSetStatusInterfaceCodeActionBuilder.of()
-                                                                        .interfaceCode("SUCCESS")
-                                                                        .build(),
-                                                                PaymentSetStatusInterfaceTextActionBuilder.of()
-                                                                        .interfaceText("We got the money.")
-                                                                        .build()
-                                                            )
-                                                            .build()
-                                            )
-                                            .execute()
-                                            )
-                        .thenComposeAsync(paymentApiHttpResponse ->
-                                    apiRoot
-                                            .carts()
-                                            .withId(cart.getId())
-                                            .post(
-                                                    CartUpdateBuilder.of()
-                                                            .version(cart.getVersion())
-                                                            .actions(
-                                                                CartAddPaymentActionBuilder.of()
-                                                                    .payment(
-                                                                            PaymentResourceIdentifierBuilder.of()
-                                                                                .id(paymentApiHttpResponse.getBody().getId())
-                                                                                .build()
-                                                                    )
-                                                                    .build()
-                                                            )
-                                                            .build()
-                                            )
-                                            .execute()
-                                );
+                )
+                .thenComposeAsync(paymentApiHttpResponse ->
+                    apiRoot
+                        .inStore(storeKey)
+                        .carts()
+                        .withId(cart.getId())
+                        .post(
+                            cartUpdateBuilder -> cartUpdateBuilder
+                                .version(cart.getVersion())
+                                .plusActions(
+                                    cartUpdateActionBuilder -> cartUpdateActionBuilder.addPaymentBuilder()
+                                        .payment(paymentResourceIdentifierBuilder -> paymentResourceIdentifierBuilder.id(paymentApiHttpResponse.getBody().getId()))
+                                )
+                        )
+                        .execute()
+                    );
     }
 
 }

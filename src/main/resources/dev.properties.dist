@@ -1,27 +1,19 @@
-## mh-dev-admin
-mh-dev-admin.projectKey=
-mh-dev-admin.clientId=
-mh-dev-admin.clientSecret=
-mh-dev-admin.authUrl=
-mh-dev-admin.apiUrl=
-mh-dev-admin.scopes=
+## API Client for Dev Admin
 
+dev-admin.projectKey=
+dev-admin.clientId=
+dev-admin.clientSecret=
+dev-admin.authUrl=
+dev-admin.apiUrl=
+dev-admin.scopes=
+dev-admin.storeKey=
 
-## mh-import-admin
-##
+## API Client for store
 
-## mh-test-admin
-##
-
-## mh-berlin-store-admin
-##
-
-## aws-plantcheck-read
-##
-
-## mh-me-client
-##
-
-
-## mh-store-me-client
-##
+ctp-store.projectKey=training-dev-dryrun1-20241017
+ctp-store.clientId=ANtERkXHOg0XXBFMhcL2pBzx
+ctp-store.clientSecret=6lVbdgiS0ONT_eSeKNL3Kmrh3DgO5JJj
+ctp-store.authUrl=https://auth.europe-west1.gcp.commercetools.com
+ctp-store.apiUrl=https://api.europe-west1.gcp.commercetools.com
+ctp-store.scopes=manage_discount_codes:training-dev-dryrun1-20241017 manage_states:training-dev-dryrun1-20241017 manage_customers:training-dev-dryrun1-20241017:nagesh-store manage_categories:training-dev-dryrun1-20241017 manage_cart_discounts:training-dev-dryrun1-20241017:nagesh-store manage_import_containers:training-dev-dryrun1-20241017 manage_tax_categories:training-dev-dryrun1-20241017 manage_product_selections:training-dev-dryrun1-20241017 manage_payments:training-dev-dryrun1-20241017 view_project_settings:training-dev-dryrun1-20241017 manage_types:training-dev-dryrun1-20241017 manage_customer_groups:training-dev-dryrun1-20241017 view_shipping_methods:training-dev-dryrun1-20241017 manage_connectors_deployments:training-dev-dryrun1-20241017 manage_stores:training-dev-dryrun1-20241017 view_published_products:training-dev-dryrun1-20241017 manage_order_edits:training-dev-dryrun1-20241017 manage_connectors:training-dev-dryrun1-20241017 manage_extensions:training-dev-dryrun1-20241017 manage_orders:training-dev-dryrun1-20241017:nagesh-store manage_subscriptions:training-dev-dryrun1-20241017
+ctp-store.storeKey=store-key

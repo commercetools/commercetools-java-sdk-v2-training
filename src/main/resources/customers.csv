@@ -1,0 +1,4 @@
+customerKey,email,password,firstName,lastName,isEmailVerified,country,store
+jen-example-uk,jen@example.uk,password,Jennifer,Jones,true,UK,b2c-retail-store
+seb-example-com,seb@example.com,password,Sebastian,Franklin,false,US,b2c-retail-store
+ct-customer,ct@example.com,password,commercetools,customer,false,DE,nagesh-store

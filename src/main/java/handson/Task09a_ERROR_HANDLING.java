@@ -2,7 +2,6 @@ package handson;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.customer.Customer;
-import com.commercetools.api.models.customer.CustomerBuilder;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.CustomerService;
 import io.vrap.rmf.base.client.ApiHttpResponse;
@@ -14,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 public class Task09a_ERROR_HANDLING {
@@ -22,10 +22,12 @@ public class Task09a_ERROR_HANDLING {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
 
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        Logger logger = LoggerFactory.getLogger(Task09a_ERROR_HANDLING.class.getName());
+        Logger logger = LoggerFactory.getLogger("commercetools");
 
-        CustomerService customerService = new CustomerService(client);
+        final ProjectApiRoot apiRoot = createApiClient(apiClientPrefix);
+
+        final String storeKey = getStoreKey(apiClientPrefix);
+        CustomerService customerService = new CustomerService(apiRoot, storeKey);
 
         // TODO:
         //  Provide a WRONG or CORRECT customer key
@@ -35,31 +37,27 @@ public class Task09a_ERROR_HANDLING {
         // TODO: Handle 4XX errors, exceptions
         //  Use CompletionStage
         //
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey(customerKeyMayOrMayNotExist)
-                        .thenApply(ApiHttpResponse::getBody) // unpack response body
-                        .exceptionally(throwable -> {
-                            logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
-                            // handle it
-                            return
-                                    CustomerBuilder.of()
-                                            .email("anonymous@example.org")
-                                            .build();                               // e.g. return anon customer
-                        })
-                        .toCompletableFuture().get().getEmail()
-        );
+
+        customerService
+            .getCustomerByKey(customerKeyMayOrMayNotExist)
+            .thenApply(ApiHttpResponse::getBody) // unpack response body
+            .thenAccept(customer -> logger.info("Customer fetch: " + customer.get().getEmail()))
+            .exceptionally(throwable -> {
+                logger.info("Customer " + customerKeyMayOrMayNotExist + " does not exist.");
+                // handle it
+                return null; // e.g. return anon customer
+            });
 
 
         // TODO: Handle 4XX errors, exceptions
         //  Use Optionals, Either (Java 9+)
         //
         Optional<Customer> optionalCustomer = Optional.ofNullable(
-                customerService
-                        .getCustomerByKey("customer-michele-WRONG-KEY")
-                        .thenApply(ApiHttpResponse::getBody)
-                        .exceptionally(throwable -> null)
-                        .toCompletableFuture().get()
+            customerService
+                .getCustomerByKey("customer-michele-WRONG-KEY")
+                .thenApply(ApiHttpResponse::getBody)
+                .exceptionally(throwable -> null)
+                .get()
         );
 
         if (!optionalCustomer.isPresent()) {
@@ -71,10 +69,10 @@ public class Task09a_ERROR_HANDLING {
             logger.info("Customer: " + customerKeyMayOrMayNotExist + "exists.");
             try {
                 customerService.createEmailVerificationToken(customer, 5)
-                        .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
-                                customerTokenApiHttpResponse.getBody()
-                        ))
-                        .toCompletableFuture().get();
+                    .thenComposeAsync(customerTokenApiHttpResponse -> customerService.verifyEmail(
+                            customerTokenApiHttpResponse.getBody()
+                    ))
+                    .get();
             }
             catch (Exception e) {
                 e.printStackTrace();

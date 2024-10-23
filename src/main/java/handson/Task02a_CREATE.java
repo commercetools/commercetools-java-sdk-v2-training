@@ -3,7 +3,7 @@ package handson;
 import com.commercetools.api.client.ProjectApiRoot;
 import handson.impl.ApiPrefixHelper;
 import handson.impl.ClientService;
-import handson.impl.CustomerService;
+import handson.impl.StoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static handson.impl.ClientService.createApiClient;
+import static handson.impl.ClientService.getStoreKey;
 
 
 /**
@@ -25,39 +26,29 @@ public class Task02a_CREATE {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
         final String apiClientPrefix = ApiPrefixHelper.API_DEV_CLIENT_PREFIX.getPrefix();
+        try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
 
-        Logger logger = LoggerFactory.getLogger(Task02a_CREATE.class.getName());
-        final ProjectApiRoot client = createApiClient(apiClientPrefix);
-        CustomerService customerService = new CustomerService(client);
+            Logger logger = LoggerFactory.getLogger("commercetools");
 
-        logger.info("Customer fetch: " +
-                customerService
-                        .getCustomerByKey("customer-alex-242281870")
-                        .toCompletableFuture().get()
-                        .getBody().getEmail()
-        );
+            // TODO: CREATE a Category
+            //
 
-        // TODO:
-        //  CREATE a customer
-        //  CREATE a email verification token
-        //  Verify customer
-        //
-        logger.info("Customer created: " +
-                customerService.createCustomer(
-                        "michael15@example.com",
-                        "password",
-                        "customer-michael15",
-                        "michael",
-                        "hartwig",
-                        "DE"
-                )
-                        .thenComposeAsync(signInResult -> customerService.createEmailVerificationToken(signInResult, 5))
-                        .thenComposeAsync(customerService::verifyEmail)
-                        .toCompletableFuture().get()
-                        .getBody()
-        );
-
-
-        client.close();
+            apiRoot.categories()
+                    .create(
+                            cb -> cb
+                                    .key("clearance")
+                                    .name(lsb -> lsb.addValue("en-US", "Clearance"))
+                                    .slug(lsb -> lsb.addValue("en-US", "clearance-sale-summer"))
+                    )
+                    .execute()
+                    .thenAccept(categoryApiHttpResponse ->
+                            logger.info("Category created: {}",
+                                    categoryApiHttpResponse.getBody().getId())
+                    )
+                    .exceptionally(throwable -> {
+                        logger.error("Exception: {}", throwable.getMessage());
+                        return null;
+                    }).join();
+        }
     }
 }
