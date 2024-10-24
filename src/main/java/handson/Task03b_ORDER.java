@@ -43,30 +43,10 @@ public class Task03b_ORDER {
 
             //  TODO: LOGIN customer or signup, if not found
             //
-            customerService.loginCustomer(
-                            customerEmail,
-                            "password",
-                            cartId,
-                            AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART
-                    )
-                    .exceptionally(ex -> {
-                        logger.info("exception: {}", ex.getMessage());
-                        try {
-                            return customerService.createCustomer(
-                                    customerEmail,
-                                    "password",
-                                    cartId
-                            ).get();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .thenAccept(customerSignInResult -> {
-                        logger.info("Login successful {}", customerSignInResult.getBody().getCustomer().getEmail());
-                    }).join();
 
-//            // TODO: ADD shipping address from customer profile
-//            // TODO Add a new address if no default shipping address found
+
+//            // TODO: GET default shipping address from customer profile
+//            // TODO Optionally add a new address and save it as default for the customer
 //            //
 //            customerService
 //                    .getCustomerByKey(customerKey)
@@ -91,18 +71,9 @@ public class Task03b_ORDER {
 //                                );
 //                            } catch (Exception e) {throw new RuntimeException(e);}
 //                        }
-//
-//                        cartService.getCartById(cartId)
-//                                .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, shippingAddress))
-//                                .thenComposeAsync(cartService::setShipping)
-//                                .thenComposeAsync(cartService::recalculate)
-//                                .thenAccept(cartApiHttpResponse -> {
-//                                    logger.info("cart updated with shipping info {}", cartApiHttpResponse.getBody().getId());
-//                                })
-//                                .exceptionally(throwable -> {
-//                                    logger.error("Exception: {}", throwable.getMessage());
-//                                    return null;
-//                                }).join();
+//                        // TODO: UPDATE cart shipping address
+//                        // TODO: SET default shipping method
+//                        // TODO: RECALCULATE cart
 //                    })
 //                    .exceptionally(ex -> {
 //                        logger.error("Error retrieving customer: {}", ex.getMessage());
@@ -126,29 +97,12 @@ public class Task03b_ORDER {
 //                        return null;
 //                    }).join();
 
-//            // TODO: Place the order
-//            // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
-//            // customerService.loginCustomer(customerEmail, "password")
-//            //
-//            cartService.getCartById(cartId)
-//                    .thenApply(cartApiHttpResponse -> {
-//                            logger.info("Cart ID {}", cartApiHttpResponse.getBody().getId());
-//                            return cartApiHttpResponse.getBody();
-//                        }
-//                    )
-//                    .thenComposeAsync(orderService::createOrder)
-//                    // orderService.getOrderByOrderNumber(orderNumber)
-//                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeState(
-//                            orderApiHttpResponse,
-//                            OrderState.CONFIRMED
-//                    ))
-//                    .thenAccept(orderApiHttpResponse ->
-//                            logger.info("Order placed {}", orderApiHttpResponse.getBody().getOrderNumber())
-//                    )
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
+            // TODO: Place the order
+            // TODO: Set order status to CONFIRMED, set custom workflow state to initial state
+            // customerService.loginCustomer(customerEmail, "password") // Sign in and find last customer cart
+            // or
+            // cartService.getCartById(cartId)      // Get cart by Id
+
         }
     }
 }

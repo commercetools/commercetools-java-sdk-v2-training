@@ -94,7 +94,7 @@ public class Task04c_STATEMACHINE {
                         return null;
                     }).join();
 
-//            // TODO Create an order in the Merchant Center and verify that custom workflow states are available
+//            // TODO Check your last order in the Merchant Center and verify that custom workflow states are available
 //            //
 //             orderService.getOrderByOrderNumber("")
 //                    .thenComposeAsync(orderApiHttpResponse -> orderService.changeWorkflowState(

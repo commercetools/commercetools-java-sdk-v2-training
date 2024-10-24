@@ -28,7 +28,7 @@ public class Task05d_ORDER_REPLICATE {
             final String storeKey = getStoreKey(apiClientPrefix);
             CartService cartService = new CartService(apiRoot, storeKey);
 
-            final String orderNumber = "CT620421735518958";
+            final String orderNumber = "";
 
             // TODO: REPLICATE your last order
 

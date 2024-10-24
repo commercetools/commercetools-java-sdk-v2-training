@@ -42,35 +42,11 @@ public class Task01a_GET_QUERY {
                 Project project = apiRoot.get().executeBlocking().getBody();
                 logger.info("Project key: {}", project.getKey());
 
-//                // TODO: GET tax categories
-//                //
-//
-//                TaxCategoryPagedQueryResponse taxCategoryPagedQueryResponse = apiRoot.taxCategories().get().executeBlocking().getBody();
-//                if (taxCategoryPagedQueryResponse != null && taxCategoryPagedQueryResponse.getResults() != null) {
-//                    logger.info("Tax categories: {}",
-//                            taxCategoryPagedQueryResponse.getResults().stream().map(TaxCategory::getKey).collect(Collectors.toList())
-//                    );
-//                } else {
-//                    logger.warn("No tax categories found.");
-//                }
-//
-//                // TODO Get Tax category by Key
-//                //
-//                apiRoot.taxCategories()
-//                        .withKey("standard-tax")
-//                        .get()
-//                        .execute()
-//                        .thenApply(ApiHttpResponse::getBody)
-//                        .thenAccept(taxCategory -> {
-//                            logger.info("Tax category ID: {}", taxCategory.getId());
-//                            try {
-//                                System.out.println(JsonUtils.prettyPrint(JsonUtils.toJsonString(taxCategory)));
-//                            } catch (JsonProcessingException ignored) { }
-//                        })
-//                        .exceptionally(throwable -> {
-//                            logger.error("Exception: {}", throwable.getMessage());
-//                            return null;
-//                        }).join();
+                // TODO: GET tax categories
+                //
+
+                // TODO: GET a Tax category by Key
+                //
             }
     }
 }

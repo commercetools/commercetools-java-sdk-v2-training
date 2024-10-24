@@ -53,20 +53,9 @@ public class Task03a_CHECKOUT {
                         return null;
                     }).join();
 
-//            // TODO: Perform cart operations: add products to a new customer cart
-//            //
-//            customerService.getCustomerByKey("")
-//                    .thenCombineAsync(storeService.getCurrentStore(), ((customerApiHttpResponse, storeApiHttpResponse) ->
-//                            cartService.createCustomerCart(customerApiHttpResponse, storeApiHttpResponse, "RB-01", 2L, supplyChannelKey, distChannelKey)))
-//                    .get()
-//                    .thenAccept(cartApiHttpResponse -> logger.info("cart created {}", cartApiHttpResponse.getBody().getId()))
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
 
-
-//            // TODO: Perform cart operations: add products to a new anonymous cart
+//            // TODO: Perform cart operations:
+//            //  TODO Create an anonymous cart and add a product to it
 //            //
 //            storeService.getCurrentStore()
 //                    .thenComposeAsync(storeApiHttpResponse ->
@@ -76,35 +65,17 @@ public class Task03a_CHECKOUT {
 //                        logger.error("Exception: {}", throwable.getMessage());
 //                        return null;
 //                    }).join();
+//            // TODO UPDATE cartId variable above
 
-//            // TODO Add a new address if no default shipping address found
+//            // TODO ADD a shipping address to the cart
 //            //
-//            Address shippingAddress = AddressBuilder.of()
-//                    .firstName("commercetools")
-//                    .lastName("Customer")
-//                    .country("DE")
-//                    .key("default-address")
-//                    .build();
-//
-//            cartService.getCartById(cartId)
-//                    .thenComposeAsync(cartApiHttpResponse -> cartService.addShippingAddress(cartApiHttpResponse, shippingAddress))
-//                    .thenAccept(cartApiHttpResponse -> {
-//                        logger.info("cart updated with shipping info {}", cartApiHttpResponse.getBody().getId());
-//                    })
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
+
+//            // TODO Recalculate cart
+//            //
 
 //            // TODO Freeze cart
 //            //
-//            cartService.getCartById(cartId)
-//                    .thenComposeAsync(cartService::freezeCart)
-//                    .thenAccept(cartApiHttpResponse -> logger.info("cart is now in frozen state {}", cartApiHttpResponse.getBody().getId()))
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
+
 
 //            // TODO Unfreeze cart
 //            //
@@ -116,15 +87,6 @@ public class Task03a_CHECKOUT {
 //                        return null;
 //                    }).join();
 
-//            // TODO Recalculate cart
-//            //
-//            cartService.getCartById(cartId)
-//                    .thenComposeAsync(cartService::recalculate)
-//                    .thenAccept(cartApiHttpResponse -> logger.info("cart has been recalculated {}", cartApiHttpResponse.getBody().getId()))
-//                    .exceptionally(throwable -> {
-//                        logger.error("Exception: {}", throwable.getMessage());
-//                        return null;
-//                    }).join();
         }
     }
 }

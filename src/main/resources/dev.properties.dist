@@ -10,10 +10,10 @@ dev-admin.storeKey=
 
 ## API Client for store
 
-ctp-store.projectKey=training-dev-dryrun1-20241017
-ctp-store.clientId=ANtERkXHOg0XXBFMhcL2pBzx
-ctp-store.clientSecret=6lVbdgiS0ONT_eSeKNL3Kmrh3DgO5JJj
+ctp-store.projectKey=
+ctp-store.clientId=
+ctp-store.clientSecret=
 ctp-store.authUrl=https://auth.europe-west1.gcp.commercetools.com
 ctp-store.apiUrl=https://api.europe-west1.gcp.commercetools.com
-ctp-store.scopes=manage_discount_codes:training-dev-dryrun1-20241017 manage_states:training-dev-dryrun1-20241017 manage_customers:training-dev-dryrun1-20241017:nagesh-store manage_categories:training-dev-dryrun1-20241017 manage_cart_discounts:training-dev-dryrun1-20241017:nagesh-store manage_import_containers:training-dev-dryrun1-20241017 manage_tax_categories:training-dev-dryrun1-20241017 manage_product_selections:training-dev-dryrun1-20241017 manage_payments:training-dev-dryrun1-20241017 view_project_settings:training-dev-dryrun1-20241017 manage_types:training-dev-dryrun1-20241017 manage_customer_groups:training-dev-dryrun1-20241017 view_shipping_methods:training-dev-dryrun1-20241017 manage_connectors_deployments:training-dev-dryrun1-20241017 manage_stores:training-dev-dryrun1-20241017 view_published_products:training-dev-dryrun1-20241017 manage_order_edits:training-dev-dryrun1-20241017 manage_connectors:training-dev-dryrun1-20241017 manage_extensions:training-dev-dryrun1-20241017 manage_orders:training-dev-dryrun1-20241017:nagesh-store manage_subscriptions:training-dev-dryrun1-20241017
+ctp-store.scopes=manage_discount_codes:projectKey manage_states:projectKey manage_customers:projectKey:storeKey manage_categories:projectKey manage_cart_discounts:projectKey:storeKey manage_import_containers:projectKey manage_tax_categories:projectKey manage_product_selections:projectKey manage_payments:projectKey view_project_settings:projectKey manage_types:projectKey manage_customer_groups:projectKey view_shipping_methods:projectKey manage_connectors_deployments:projectKey manage_stores:projectKey view_published_products:projectKey manage_order_edits:projectKey manage_connectors:projectKey manage_extensions:projectKey manage_orders:projectKey:storeKey manage_subscriptions:projectKey
 ctp-store.storeKey=store-key

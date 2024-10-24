@@ -29,34 +29,14 @@ public class Task07a_IMPORT_API {
 
             final ImportService importService = new ImportService(apiRoot);
 
-            final String containerKey = "boston-store-customers";
+            final String containerKey = "my-store-customers";
 
             // TODO:  CREATE an import container
             //
-            importService.createImportContainer(containerKey)
-                    .thenAccept(importContainerApiHttpResponse ->
-                        logger.info("Created import container {} ", importContainerApiHttpResponse.getBody().getKey())
-                    )
-                    .exceptionally(throwable -> {
-                            logger.error("Exception: {}", throwable.getMessage());
-                            return null;
-                        }).join();
 
-//            // TODO: CREATE a customers import request
-//            //
-//            importService.importCustomersFromCsv(
-//                containerKey,
-//                "customers.csv"
-//            )
-//                .thenApply(ApiHttpResponse::getBody)
-//                .thenAccept(response -> {
-//                            logger.info("Importing {} customer(s) ", response.getOperationStatus().size());
-//                        }
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                }).join();
+            // TODO: CREATE a customers import request
+            //
+
 
 //            // TODO:  CHECK the status of your import requests
 //            //

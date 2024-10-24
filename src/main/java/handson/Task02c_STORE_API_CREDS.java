@@ -23,35 +23,16 @@ public class Task02c_STORE_API_CREDS {
 
             final String projectKey = getProjectKey(apiClientPrefix);
             
-            final String storeKey = "boston-store";
+            final String storeKey = "your-store-key";
             
             final String scopeString = "manage_discount_codes:projectKey manage_states:projectKey manage_customers:projectKey:storeKey manage_categories:projectKey manage_cart_discounts:projectKey:storeKey manage_import_containers:projectKey manage_tax_categories:projectKey manage_product_selections:projectKey manage_payments:projectKey view_project_settings:projectKey manage_types:projectKey manage_customer_groups:projectKey view_shipping_methods:projectKey manage_connectors_deployments:projectKey manage_stores:projectKey view_published_products:projectKey manage_order_edits:projectKey manage_connectors:projectKey manage_extensions:projectKey manage_orders:projectKey:storeKey manage_subscriptions:projectKey";
 
             final String scope = scopeString.replaceAll("projectKey", projectKey)
                     .replaceAll("storeKey", storeKey);
 
+            // TODO: Create store api client
+            //
 
-          // TODO: Create store api client
-          //
-            apiRoot.apiClients()
-                    .post(
-                            apiClientDraftBuilder -> apiClientDraftBuilder
-                                    .name("store client " + System.nanoTime())
-                                    .scope(scope)
-                    )
-                    .execute()
-                    .thenAccept(
-                            apiClientApiHttpResponse ->
-                            {
-                                try {
-                                    System.out.println(JsonUtils.prettyPrint(JsonUtils.toJsonString(apiClientApiHttpResponse.getBody())));
-                                } catch (JsonProcessingException ignored) {}
-                            }
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
         }
     }
 }

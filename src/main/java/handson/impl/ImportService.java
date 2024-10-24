@@ -43,15 +43,7 @@ public class ImportService {
         final String csvFile) {
 
         return
-                apiRoot
-                        .customers()
-                        .importContainers()
-                        .withImportContainerKeyValue(containerKey)
-                        .post(
-                                priceImportRequestBuilder -> priceImportRequestBuilder
-                                        .resources(getCustomersImportFromCsv(csvFile))
-                        )
-                        .execute();
+                null;
     }
 
     private List<CustomerImport> getCustomersImportFromCsv(final String csvFile) {
@@ -93,11 +85,6 @@ public class ImportService {
 
     public CompletableFuture<ApiHttpResponse<ImportSummary>> getImportContainerSummary(final String containerKey) {
         return
-                apiRoot
-                        .importContainers()
-                        .withImportContainerKeyValue(containerKey)
-                        .importSummaries()
-                        .get()
-                        .execute();
+                null;
     }
 }

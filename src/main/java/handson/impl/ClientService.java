@@ -25,30 +25,8 @@ public class ClientService {
      * @throws IOException exception
      */
     public static ProjectApiRoot createApiClient(final String prefix) throws IOException {
-        Properties props = new Properties();
-        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
 
-        String clientId = props.getProperty(prefix + "clientId");
-        String clientSecret = props.getProperty(prefix + "clientSecret");
-        String projectKey = props.getProperty(prefix + "projectKey");
-
-        projectApiRoot = ApiRootBuilder.of()
-                .defaultClient(
-                        ClientCredentials.of()
-                                .withClientId(clientId)
-                                .withClientSecret(clientSecret)
-                                .build(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getOAuthTokenUrl(),
-                        ServiceRegion.GCP_EUROPE_WEST1.getApiUrl()
-                )
-                .withPolicies(policyBuilder ->
-                        policyBuilder.withRetry(retryPolicyBuilder ->
-                            retryPolicyBuilder.maxRetries(3).statusCodes(Arrays.asList(502, 503, 504))))
-                .withErrorMiddleware(ErrorMiddleware.ExceptionMode.UNWRAP_COMPLETION_EXCEPTION)
-                .addConcurrentModificationMiddleware()
-                .addCorrelationIdProvider(() -> projectKey + "/" + UUID.randomUUID())
-                .build(projectKey);
-
+        // TODO: create project api root using client credentials flow
         return projectApiRoot;
     }
 
@@ -111,32 +89,6 @@ public class ClientService {
             .build(projectKey);
 
         return importApiRoot;
-    }
-
-
-    public static ProjectApiRoot createStoreMeApiClient(final String prefix) throws IOException {
-
-        Properties props = new Properties();
-        props.load(ClientService.class.getResourceAsStream("/dev.properties"));
-
-        String projectKey = props.getProperty(prefix + "projectKey");
-        String storeKey = props.getProperty(prefix + "storeKey");
-        String storeCustomerEmail = props.getProperty(prefix + "customerEmail");
-        String storeCustomerPassword = props.getProperty(prefix + "customerPassword");
-        String clientId = props.getProperty(prefix + "clientId");
-        String clientSecret = props.getProperty(prefix + "clientSecret");
-
-        return ApiRootBuilder.of().defaultClient(ServiceRegion.GCP_EUROPE_WEST1.getApiUrl())
-            .withGlobalCustomerPasswordFlow(
-                ClientCredentials.of()
-                    .withClientId(clientId)
-                    .withClientSecret(clientSecret)
-                    .build(),
-                storeCustomerEmail,
-                storeCustomerPassword,
-            ServiceRegion.GCP_EUROPE_WEST1.getAuthUrl() + "/oauth/" + projectKey + "/in-store/key=" + storeKey + "/customers/token"
-                )
-                .build(projectKey);
     }
 
 

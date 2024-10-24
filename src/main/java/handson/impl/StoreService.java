@@ -37,43 +37,6 @@ public class StoreService {
                         .execute();
     }
 
-    /**
-     * Creates a store by key.
-     *
-     * @return the store completion stage
-     */
-    public CompletableFuture<ApiHttpResponse<Store>> createStore() {
-            return apiRoot
-                    .stores()
-                    .post(storeDraftBuilder -> storeDraftBuilder.key(storeKey))
-                    .execute();
-    }
-
-    /**
-     * Adds a product selection to a Store.
-     * @return the product selection completion stage
-     */
-    public CompletableFuture<ApiHttpResponse<Store>> addProductSelectionToCurrentStore(
-            final String productSelectionKey) {
-
-        return
-//                getCurrentStore().thenComposeAsync(storeApiHttpResponse ->
-                        apiRoot
-                                .stores()
-                                .withKey(storeKey)
-                                .post(
-                                        storeUpdateBuilder -> storeUpdateBuilder
-                                                .version(1L)
-                                                .plusActions(
-                                                        storeUpdateActionBuilder -> storeUpdateActionBuilder.addProductSelectionBuilder()
-                                                                .productSelection(productSelectionResourceIdentifierBuilder -> productSelectionResourceIdentifierBuilder.key(productSelectionKey))
-                                                                .active(true)
-                                                )
-                                )
-                                .execute()
-                ;
-    }
-
     public CompletableFuture<ApiHttpResponse<ProductsInStorePagedQueryResponse>> getProductsInCurrentStore() {
 
         return

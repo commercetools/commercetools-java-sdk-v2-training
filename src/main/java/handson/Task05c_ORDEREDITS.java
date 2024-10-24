@@ -28,50 +28,30 @@ public class Task05c_ORDEREDITS {
 
             final String storeKey = getStoreKey(apiClientPrefix);
             OrderService orderService = new OrderService(apiRoot, storeKey);
-            final String supplyChannelKey = "boston-store-channel";
-            final String distChannelKey = "boston-store-channel";
 
-            final String orderNumber = "CT620421735518958";
-            final String orderEditKey = "CTOE-621471466982375";
+            final String orderNumber = "";
+            final String orderEditKey = "";
 
-//            // TODO: Create and Apply an Order Edit
+            // TODO: CREATE staged order update action for OrderEdit
+
+            // final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
+            //        .build();
+
+            // TODO: GET order and Create an Order Edit to update it
+
+            // TODO: update orderEditKey above
+
+//            //  TODO: Apply OrderEdit
 //            //
-//            final StagedOrderUpdateAction stagedOrderUpdateAction = StagedOrderUpdateActionBuilder.of()
-//                    .addLineItemBuilder()
-//                    .sku("RCC-09")
-//                    .supplyChannel(channelResourceIdentifierBuilder ->
-//                            channelResourceIdentifierBuilder.key(supplyChannelKey))
-//                    .distributionChannel(channelResourceIdentifierBuilder ->
-//                            channelResourceIdentifierBuilder.key(distChannelKey))
-//                    .build();
-//
-//            orderService.getOrderByOrderNumber(orderNumber)
-//                    .thenComposeAsync(orderApiHttpResponse ->
-//                            orderService.createOrderEdit(
-//                                    orderApiHttpResponse,
-//                                    "CTOE-" + System.nanoTime(),
-//                                    stagedOrderUpdateAction))
+//            orderService.getOrderEditByKey(orderEditKey)
+//                    .thenComposeAsync(orderService::applyOrderEdit)
 //                    .thenAccept(orderEditApiHttpResponse ->
-//                            logger.info("orderEdit {} created with {} type", orderEditApiHttpResponse.getBody().getKey(), orderEditApiHttpResponse.getBody().getResult().getType())
+//                            logger.info("orderEdit {} ", orderEditApiHttpResponse.getBody().getResult().getType())
 //                    )
 //                    .exceptionally(throwable -> {
 //                        logger.error("Exception: {}", throwable.getMessage());
 //                        return null;
 //                    }).join();
-//            // TODO update orderEditKey above
-
-
-            //  TODO: Apply OrderEdit
-            //
-            orderService.getOrderEditByKey(orderEditKey)
-                    .thenComposeAsync(orderService::applyOrderEdit)
-                    .thenAccept(orderEditApiHttpResponse ->
-                            logger.info("orderEdit {} ", orderEditApiHttpResponse.getBody().getResult().getType())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
         }
     }
 }

@@ -33,22 +33,6 @@ public class Task02a_CREATE {
             // TODO: CREATE a Category
             //
 
-            apiRoot.categories()
-                    .create(
-                            cb -> cb
-                                    .key("clearance")
-                                    .name(lsb -> lsb.addValue("en-US", "Clearance"))
-                                    .slug(lsb -> lsb.addValue("en-US", "clearance-sale-summer"))
-                    )
-                    .execute()
-                    .thenAccept(categoryApiHttpResponse ->
-                            logger.info("Category created: {}",
-                                    categoryApiHttpResponse.getBody().getId())
-                    )
-                    .exceptionally(throwable -> {
-                        logger.error("Exception: {}", throwable.getMessage());
-                        return null;
-                    }).join();
         }
     }
 }

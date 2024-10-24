@@ -36,45 +36,7 @@ public class Task04a_CUSTOMTYPES {
             Logger logger = LoggerFactory.getLogger("commercetools");
             final String storeKey = getStoreKey(apiClientPrefix);
 
-            // TODO CREATE labels for the type and fields
-            //
-            Map<String, String> labelsForFieldInstructions = new HashMap<String, String>() {
-                {
-                    put("de-DE", "Instructions");
-                    put("en-US", "Instructions");
-                }
-            };
-            Map<String, String> labelsForFieldCode = new HashMap<String, String>() {
-                {
-                    put("de-DE", "Buzz code");
-                    put("en-US", "Buzz code");
-                }
-            };
-
-            // TODO DEFINE fields
-            //
-            List<FieldDefinition> definitions = Arrays.asList(
-                FieldDefinitionBuilder.of()
-                    .name("instructions")
-                    .required(true)
-                    .label(LocalizedStringBuilder.of()
-                        .values(labelsForFieldInstructions)
-                        .build()
-                    )
-                    .type(CustomFieldStringType.of())
-                    .build(),
-                FieldDefinitionBuilder.of()
-                    .name("code")
-                    .required(true)
-                    .label(LocalizedStringBuilder.of()
-                        .values(labelsForFieldCode)
-                        .build()
-                    )
-                    .type(CustomFieldNumberType.of())
-                    .build()
-            );
-
-            // TODO CREATE type
+            // TODO CREATE labels for the type and its fields
             //
             Map<String, String> nameForType = new HashMap<String, String>() {
                 {
@@ -83,104 +45,36 @@ public class Task04a_CUSTOMTYPES {
                 }
             };
 
-            apiRoot
-                .types()
-                .post(
-                    typeDraftBuilder -> typeDraftBuilder
-                        .key("delivery-instructions")
-                        .name(LocalizedStringBuilder.of().values(nameForType).build())
-                        .resourceTypeIds(
-                            ResourceTypeId.CUSTOMER,
-                            ResourceTypeId.ORDER
-                        )
-                        .fieldDefinitions(definitions)
-                ).execute()
-                .thenAccept(typeApiHttpResponse ->
-                        logger.info("Custom Type ID: " + typeApiHttpResponse.getBody().getId())
-                )
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
+            // TODO DEFINE fields
+            //
+            // List<FieldDefinition> definitions = Arrays.asList()
 
-//            //TODO UPDATE the Order with custom type
-//            //
-//            Order order = apiRoot
-//                    .inStore(storeKey)
-//                    .orders()
-//                    .withOrderNumber("")
-//                    .get()
-//                    .executeBlocking().getBody();
-//
-//            apiRoot
-//                .inStore(storeKey)
-//                .orders()
-//                .withId(order.getId())
-//                .post(
-//                    updateBuilder -> updateBuilder
-//                        .version(order.getVersion())
-//                        .actions(
-//                            Arrays.asList(
-//                                OrderSetCustomTypeActionBuilder.of()
-//                                    .type(typeResourceIdentifierBuilder -> typeResourceIdentifierBuilder.key("delivery-instructions"))
-//                                    .build(),
-//                                OrderSetCustomFieldActionBuilder.of()
-//                                    .name("code")
-//                                    .value(1221)
-//                                    .build(),
-//                                OrderSetCustomFieldActionBuilder.of()
-//                                    .name("instructions")
-//                                    .value("Leave at door")
-//                                    .build()
-//                            )
-//                        )
-//                ).execute()
-//                .thenAccept(orderApiHttpResponse ->
-//                        logger.info("Order updated {}", orderApiHttpResponse.getBody().getOrderNumber())
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                }).join();
-//
-//
-//            //TODO UPDATE the customer with custom type
-//            //
-//            Customer customer = apiRoot
-//                    .inStore(storeKey)
-//                    .customers()
-//                    .withKey("")
-//                    .get()
-//                    .executeBlocking().getBody();
-//
-//            apiRoot
-//                .inStore(storeKey)
-//                .customers()
-//                .withId(customer.getId())
-//                .post(
-//                    customerUpdateBuilder -> customerUpdateBuilder
-//                        .version(customer.getVersion())
-//                        .actions(
-//                            CustomerSetCustomTypeActionBuilder.of()
-//                                .type(typeResourceIdentifierBuilder -> typeResourceIdentifierBuilder.key("delivery-instructions"))
-//                                .fields(fieldContainerBuilder -> fieldContainerBuilder.values(
-//                                    new HashMap<String, Object>() {
-//                                        {
-//                                            put("instructions", "Leave at door");
-//                                            put("code", 1223);
-//                                        }
-//                                    }
-//                                ))
-//                                .build()
-//                            )
-//                ).execute()
-//                .thenAccept(customerApiHttpResponse ->
-//                        logger.info("Customer updated {}", customerApiHttpResponse.getBody().getKey())
-//                )
-//                .exceptionally(throwable -> {
-//                    logger.error("Exception: {}", throwable.getMessage());
-//                    return null;
-//                }).join();
+            // TODO CREATE type
+            //
+            // client.types.post().execute()
+
+
+            Order order = apiRoot       // GET order by order number
+                    .inStore(storeKey)
+                    .orders()
+                    .withOrderNumber("")
+                    .get()
+                    .executeBlocking().getBody();
+            //TODO UPDATE the Order with custom type
+            //
+            //  apiRoot.inStore(storeKey).orders().withId(order.getId()).post().execute()
+
+
+            Customer customer = apiRoot   // GET customer by key
+                    .inStore(storeKey)
+                    .customers()
+                    .withKey("")
+                    .get()
+                    .executeBlocking().getBody();
+
+            // TODO UPDATE the customer with custom type
+            //
+            // client.inStore(storeKey).customers().withKey(customerKey).post().execute()
         }
     }
 }

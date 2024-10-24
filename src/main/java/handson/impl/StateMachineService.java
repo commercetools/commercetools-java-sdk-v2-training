@@ -58,18 +58,7 @@ public class StateMachineService {
     public CompletableFuture<ApiHttpResponse<State>> setStateTransitions(final State stateToBeUpdated, final List<StateResourceIdentifier> states) {
 
         return
-            apiRoot
-                .states()
-                .withId(stateToBeUpdated.getId())
-                .post(
-                    stateUpdateBuilder -> stateUpdateBuilder
-                        .version(stateToBeUpdated.getVersion())
-                        .plusActions(
-                            stateUpdateActionBuilder -> stateUpdateActionBuilder.setTransitionsBuilder()
-                                .transitions(states)
-                        )
-                )
-                .execute();
+                null;
     }
 
 }

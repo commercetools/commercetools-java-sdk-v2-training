@@ -21,30 +21,13 @@ public class Task02b_UPDATE {
         try (ProjectApiRoot apiRoot = createApiClient(apiClientPrefix)) {
             Logger logger = LoggerFactory.getLogger("commercetools");
 
-
-          // TODO: Assign Product Selection to your store
-          //
             Product product = apiRoot.products()
-                    .withKey("emerald-velvet-chair")
+                    .withKey("")
                     .get()
                     .executeBlocking().getBody();
 
-            apiRoot.products()
-                    .withId(product.getId())
-                    .post(pu -> pu
-                            .plusActions(
-                                    ab -> ab.addToCategoryBuilder()
-                                            .category(cri -> cri.key("clearance"))
-                            )
-                            .version(product.getVersion())
-                    )
-                    .execute()
-                    .thenAccept(productApiHttpResponse ->
-                            logger.info("Product {} added to category.", product.getKey()))
-                .exceptionally(throwable -> {
-                    logger.error("Exception: {}", throwable.getMessage());
-                    return null;
-                }).join();
+            // TODO: UPDATE product categories
+            //
         }
     }
 }
